@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - Step 1</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-container-highest": "#dae2fd",
+                        "surface-bright": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-primary-fixed": "#0f0069",
+                        "on-surface": "#131b2e",
+                        "inverse-on-surface": "#eef0ff",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed": "#341100",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb690",
+                        "inverse-surface": "#283044",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "background": "#faf8ff",
+                        "on-error-container": "#93000a",
+                        "surface": "#faf8ff",
+                        "secondary-container": "#fd761a",
+                        "on-surface-variant": "#464555",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "tertiary": "#7e3000",
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-container": "#eaedff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary": "#9d4300",
+                        "on-secondary-container": "#5c2400",
+                        "on-background": "#131b2e",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#dad7ff",
+                        "outline": "#777587",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "surface-variant": "#dae2fd",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-container-high": "#e2e7ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary-container": "#a44100",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-tint": "#4d44e3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1.5rem",
+                        "sm": "1rem",
+                        "base": "4px",
+                        "xl": "3rem",
+                        "gutter": "1rem",
+                        "container-max": "1280px",
+                        "xs": "0.5rem",
+                        "lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h3": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h2": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col relative pb-28 font-body-md text-body-md text-on-surface antialiased">
+<!-- Progress Bar (33%) -->
+<div class="fixed top-0 left-0 w-full h-1 bg-surface-variant z-50">
+<div class="h-full bg-primary w-1/3 rounded-r-full"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-xl mx-auto px-6 pt-16 md:pt-24 flex flex-col gap-8">
+<!-- Header Section -->
+<header class="flex flex-col gap-2">
+<h1 class="font-h2 text-h2 text-on-surface">Eğitmen Profiliniz</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Öğrencilerin sizi keşfedebilmesi için temel bilgilerinizi girelim.</p>
+</header>
+<!-- Form Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-6 md:p-8 flex flex-col gap-8 border border-outline-variant/30">
+<!-- Select Field: Branşınız nedir? -->
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="subject">Branşınız nedir?</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow cursor-pointer" id="subject" name="subject">
+<option disabled="" selected="" value="">Seçiniz...</option>
+<option value="matematik">Matematik</option>
+<option value="fizik">Fizik</option>
+<option value="ingilizce">İngilizce</option>
+<option value="tenis">Tenis</option>
+<option value="piyano">Piyano</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Input Field: Saatlik ders ücretiniz? -->
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="price">Saatlik ders ücretiniz?</label>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-4 pr-12 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-shadow text-right" id="price" name="price" placeholder="0" type="number"/>
+<div class="absolute right-0 top-0 bottom-0 flex items-center pr-4 pointer-events-none">
+<span class="font-body-lg text-body-lg text-on-surface-variant font-medium">₺</span>
+</div>
+</div>
+</div>
+<!-- Toggle Group: Ders verme şekli -->
+<div class="flex flex-col gap-3">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Ders verme şekli</label>
+<div class="grid grid-cols-3 gap-3">
+<!-- Toggle 1: Yüz yüze (Checked State Example) -->
+<label class="cursor-pointer group relative">
+<input checked="" class="peer sr-only" name="teaching_mode" type="radio" value="yuz_yuze"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-transparent bg-primary-container text-on-primary-container transition-colors h-full">
+<span class="material-symbols-outlined mb-2" data-icon="group">group</span>
+<span class="font-label-caps text-label-caps text-center">Yüz yüze</span>
+</div>
+<!-- Focus ring fallback for accessibility -->
+<div class="absolute inset-0 rounded-xl peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-primary pointer-events-none"></div>
+</label>
+<!-- Toggle 2: Online -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="teaching_mode" type="radio" value="online"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low peer-checked:bg-primary-container peer-checked:text-on-primary-container peer-checked:border-transparent transition-colors h-full">
+<span class="material-symbols-outlined mb-2" data-icon="laptop_mac">laptop_mac</span>
+<span class="font-label-caps text-label-caps text-center">Online</span>
+</div>
+<div class="absolute inset-0 rounded-xl peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-primary pointer-events-none"></div>
+</label>
+<!-- Toggle 3: Hibrit -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="teaching_mode" type="radio" value="hibrit"/>
+<div class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low peer-checked:bg-primary-container peer-checked:text-on-primary-container peer-checked:border-transparent transition-colors h-full">
+<span class="material-symbols-outlined mb-2" data-icon="sync_alt">sync_alt</span>
+<span class="font-label-caps text-label-caps text-center">Hibrit</span>
+</div>
+<div class="absolute inset-0 rounded-xl peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-primary pointer-events-none"></div>
+</label>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant/30 px-6 py-4 z-40 shadow-[0_-4px_24px_rgba(0,0,0,0.06)]">
+<div class="max-w-xl mx-auto flex justify-end">
+<button class="w-full md:w-auto bg-secondary-container hover:opacity-90 text-on-primary font-body-lg text-body-lg py-3 px-8 rounded-full shadow-sm transition-opacity flex items-center justify-center gap-2 font-semibold">
+<span>Devam Et</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

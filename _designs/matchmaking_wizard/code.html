@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LessonRadar - Eşleşme Sihirbazı</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e2dfff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-background": "#131b2e",
+                        "inverse-surface": "#283044",
+                        "primary-container": "#4f46e5",
+                        "inverse-primary": "#c3c0ff",
+                        "on-secondary-fixed": "#341100",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "background": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-error-container": "#93000a",
+                        "surface": "#faf8ff",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary-fixed": "#ffdbca",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-container": "#5c2400",
+                        "surface-bright": "#faf8ff",
+                        "surface-dim": "#d2d9f4",
+                        "tertiary-fixed": "#ffdbcc",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary": "#7e3000",
+                        "on-error": "#ffffff",
+                        "on-surface": "#131b2e",
+                        "outline": "#777587",
+                        "on-tertiary-fixed": "#351000",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface-variant": "#464555",
+                        "surface-container": "#eaedff",
+                        "surface-tint": "#4d44e3",
+                        "tertiary-container": "#a44100",
+                        "secondary-container": "#fd761a",
+                        "secondary-fixed-dim": "#ffb690",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-container-highest": "#dae2fd",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary": "#3525cd",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#9d4300",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-variant": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "2rem",
+                        "base": "4px",
+                        "sm": "1rem",
+                        "xl": "3rem",
+                        "xs": "0.5rem",
+                        "md": "1.5rem",
+                        "container-max": "1280px",
+                        "gutter": "1rem"
+                    },
+                    "fontFamily": {
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h2": ["36px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen text-on-background flex flex-col antialiased">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-black tracking-tighter text-indigo-600 dark:text-indigo-400">
+                LessonRadar
+            </div>
+<nav class="hidden md:flex gap-8">
+<!-- Navigation suppressed as this is a focused task/wizard -->
+</nav>
+<div class="flex items-center gap-4">
+<button class="font-sans text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+                    Giriş Yap
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Area - Centered Modal for Desktop, Bottom Sheet for Mobile -->
+<main class="flex-grow flex items-end md:items-center justify-center p-0 md:p-gutter pt-[80px] md:pt-[120px] relative z-10">
+<!-- Backdrop for mobile/desktop modal feel -->
+<div class="fixed inset-0 bg-on-background/20 backdrop-blur-sm z-0"></div>
+<!-- MatchmakingWizard Container -->
+<div class="w-full max-w-[600px] h-[819px] md:h-auto bg-surface-container-lowest rounded-t-[32px] md:rounded-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative z-10 flex flex-col overflow-hidden">
+<!-- Mobile Drag Handle -->
+<div class="w-full flex justify-center py-4 md:hidden">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Header / Title -->
+<div class="px-6 md:px-10 pt-4 md:pt-10 pb-6 text-center">
+<h2 class="font-h2 text-h2 text-on-background">En İyi Eşleşmeyi Bulalım</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Adım 1 / 3</p>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-variant h-1">
+<div class="bg-primary h-1 w-1/3 rounded-r-full"></div>
+</div>
+<!-- Wizard Content Canvas -->
+<div class="flex-grow overflow-y-auto px-6 md:px-10 py-8 flex flex-col gap-8">
+<h3 class="font-h3 text-h3 text-on-background text-center md:text-left">Hangi seviye için ders arıyorsunuz?</h3>
+<!-- Options Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Option 1: Unselected -->
+<button class="flex items-center gap-4 p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:border-primary-fixed-dim hover:bg-surface-container-low transition-all text-left">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">school</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-background">İlkokul</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">1-4. Sınıflar</div>
+</div>
+</button>
+<!-- Option 2: Selected -->
+<button class="flex items-center gap-4 p-4 rounded-xl border-2 border-primary bg-primary-fixed/20 text-left relative overflow-hidden">
+<div class="absolute top-3 right-3 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">book</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-background">LGS Hazırlık</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Ortaokul son sınıf</div>
+</div>
+</button>
+<!-- Option 3: Unselected -->
+<button class="flex items-center gap-4 p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:border-primary-fixed-dim hover:bg-surface-container-low transition-all text-left">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-background">YKS</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Lise ve mezunlar</div>
+</div>
+</button>
+<!-- Option 4: Unselected -->
+<button class="flex items-center gap-4 p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:border-primary-fixed-dim hover:bg-surface-container-low transition-all text-left">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_balance</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-semibold text-on-background">Üniversite</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Lisans ve üstü</div>
+</div>
+</button>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 md:p-10 bg-surface-container-lowest border-t border-surface-variant">
+<button class="w-full bg-primary text-on-primary font-body-lg text-body-lg py-4 rounded-xl shadow-sm hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2">
+                    İleri
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar suppressed as this is a focused task/wizard -->
+</body></html>

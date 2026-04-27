@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gaziantep LGS Matematik Özel Ders | LessonRadar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e2dfff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-background": "#131b2e",
+                        "inverse-surface": "#283044",
+                        "primary-container": "#4f46e5",
+                        "inverse-primary": "#c3c0ff",
+                        "on-secondary-fixed": "#341100",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "background": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-error-container": "#93000a",
+                        "surface": "#faf8ff",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary-fixed": "#ffdbca",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-container": "#5c2400",
+                        "surface-bright": "#faf8ff",
+                        "surface-dim": "#d2d9f4",
+                        "tertiary-fixed": "#ffdbcc",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary": "#7e3000",
+                        "on-error": "#ffffff",
+                        "on-surface": "#131b2e",
+                        "outline": "#777587",
+                        "on-tertiary-fixed": "#351000",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface-variant": "#464555",
+                        "surface-container": "#eaedff",
+                        "surface-tint": "#4d44e3",
+                        "tertiary-container": "#a44100",
+                        "secondary-container": "#fd761a",
+                        "secondary-fixed-dim": "#ffb690",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-container-highest": "#dae2fd",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary": "#3525cd",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#9d4300",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-variant": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "2rem",
+                        "base": "4px",
+                        "sm": "1rem",
+                        "xl": "3rem",
+                        "xs": "0.5rem",
+                        "md": "1.5rem",
+                        "container-max": "1280px",
+                        "gutter": "1rem"
+                    },
+                    "fontFamily": {
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h2": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
+<div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+<a class="text-xl font-black tracking-tighter text-indigo-600 dark:text-indigo-400 font-h3 text-h3 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">radar</span>
+                LessonRadar
+            </a>
+<button class="font-sans text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-surface-container-high px-4 py-2 rounded-lg transition-colors border border-transparent hover:border-indigo-200">
+                Giriş Yap
+            </button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-20">
+<!-- Hero Section -->
+<section class="bg-surface-container-low py-12 md:py-20 px-6">
+<div class="max-w-3xl mx-auto text-center space-y-6">
+<h1 class="font-h1 text-h1 text-on-surface">Gaziantep LGS Matematik Özel Ders</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    Gaziantep'teki en iyi LGS matematik öğretmenlerini keşfedin. Hemen size en uygun hocayı bulun ve hedeflerinize ulaşın.
+                </p>
+<div class="flex flex-wrap justify-center gap-4 pt-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+                        Her Semtte
+                    </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">card_giftcard</span>
+                        İlk Ders Ücretsiz
+                    </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+                        Onaylı Eğitmenler
+                    </span>
+</div>
+</div>
+</section>
+<!-- Tutor List Section -->
+<section class="max-w-3xl mx-auto px-6 py-12 space-y-6">
+<!-- Teacher Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-shadow">
+<div class="relative flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden mx-auto sm:mx-0">
+<img alt="Ayşe Y. Matematik Öğretmeni" class="w-full h-full object-cover" data-alt="Professional headshot of a friendly female teacher with glasses smiling in a bright classroom setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCeFeFovqeAc6CdenYdBVM3E2fFwLtOuEt87Xh1I7Fl6MhWzqOcjGuIQEq7pOoUS5RvmWJ5BKvQNkgazEBnaNrrBzAtqYlS45GhDqC5Ez4o0VFEbtcx4xSIf4asq06H6bvAFzEzMzSpOu31pCEXZUFLPI7TDHnLNzH31fB-lburs9CPyEOYXCF_L1mQYswUrO9yEHLB425Y0f0GGpmjD52dt8eweDGxHeuuYRQZefpG-tDqhuumO-3BEshqJxSP_SQ2GSVpLWKiZ8E"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+                                    Ayşe Y.
+                                    <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;" title="Onaylı Eğitmen">verified</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">LGS Matematik Uzmanı &amp; Eğitim Koçu</p>
+</div>
+<div class="text-right">
+<div class="font-h3 text-h3 text-on-surface">₺600<span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/saat</span></div>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">(42 değerlendirme)</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-primary font-label-caps text-label-caps rounded">LGS</span>
+<span class="px-2 py-1 bg-surface-container text-primary font-label-caps text-label-caps rounded">YENİ NESİL SORULAR</span>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="px-4 py-2 border border-primary text-primary rounded-lg font-body-sm text-body-sm font-medium hover:bg-surface-container-high transition-colors">
+                            Takvimi Gör
+                        </button>
+</div>
+</div>
+</article>
+<!-- Teacher Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-shadow">
+<div class="relative flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden mx-auto sm:mx-0">
+<img alt="Mehmet K. Matematik Öğretmeni" class="w-full h-full object-cover" data-alt="Professional headshot of a friendly male teacher smiling in a modern bright office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_peD_81GD7aIu2OjwY0JOcGkn5WvorzdS7ks-uy-t2E3tKxBi3Kw_OxiADuABP7pihA1RnXCp8l8p7SIW99PWOA2IPvvffu0tOPItZAVeyiB5rjJtyc2O_vpYOJARLu-1j7HJ7bLy2hnvYlI4UIhv9B1RRYmLxPP2lS_d1O1mM2MB29_lwRMn6a_qaWnqpSe1sy3M-pmJkyXSE3q1jQS98YMY-TFiumlfDS1q91NaF26LnZ3GufKJqJ5KiD9L2zO2-9jMLCP6frnJ"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+                                    Mehmet K.
+                                    <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;" title="Onaylı Eğitmen">verified</span>
+</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Deneyimli Ortaokul Matematik Öğretmeni</p>
+</div>
+<div class="text-right">
+<div class="font-h3 text-h3 text-on-surface">₺550<span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/saat</span></div>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]">star_half</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">(28 değerlendirme)</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-primary font-label-caps text-label-caps rounded">LGS</span>
+<span class="px-2 py-1 bg-surface-container text-primary font-label-caps text-label-caps rounded">HIZLI OKUMA</span>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="px-4 py-2 border border-primary text-primary rounded-lg font-body-sm text-body-sm font-medium hover:bg-surface-container-high transition-colors">
+                            Takvimi Gör
+                        </button>
+</div>
+</div>
+</article>
+<!-- Teacher Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-outline-variant/30 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-shadow">
+<div class="relative flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden mx-auto sm:mx-0">
+<img alt="Zeynep A. Matematik Öğretmeni" class="w-full h-full object-cover" data-alt="Professional headshot of a friendly female teacher looking at camera in a library setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7mcUNcCWJ7dJDWSfZAkEUaxKHFjqYl0NsnuL5RJztt68d7DOLcROEGlzh876abHJO-sbqTCXVhJW_lyOek9G3c0b0B4XNEGlksgAUFZ3RjnTgH2ZnXr9XLAbOgiKPwZdnQ4iRQNMIT_vLAliOtBa6QwMlPd_LxL2xX2tPIEeKM6DKU8tw-IU5VG2omlOBYhPTZG9JLNFh-9osJn0bU-44K6C9RLbBbEdtACQ1QZQJOCnUrGmX1nvKJvMtchSkEnnwt0mXlJs16EgV"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-h3 text-h3 text-on-surface flex items-center gap-2">
+                                    Zeynep A.
+                                </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">ODTÜ Matematik Mezunu Eğitmen</p>
+</div>
+<div class="text-right">
+<div class="font-h3 text-h3 text-on-surface">₺700<span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/saat</span></div>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#f59e0b] text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">(15 değerlendirme)</span>
+</div>
+<div class="mt-3 flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-primary font-label-caps text-label-caps rounded">LGS</span>
+<span class="px-2 py-1 bg-surface-container text-primary font-label-caps text-label-caps rounded">OLİMPİYAT</span>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button class="px-4 py-2 border border-primary text-primary rounded-lg font-body-sm text-body-sm font-medium hover:bg-surface-container-high transition-colors">
+                            Takvimi Gör
+                        </button>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-white dark:bg-slate-900 font-sans text-xs font-bold uppercase tracking-wider fixed bottom-0 w-full z-50 rounded-t-2xl border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] fixed bottom-0 left-0 w-full z-50 flex justify-center pb-safe">
+<a class="bg-orange-500 text-white flex items-center justify-center gap-2 py-3 px-6 rounded-xl mx-4 my-2 hover:bg-orange-600 transition-all Active: scale-95 duration-150 w-full" href="#">
+<span class="material-symbols-outlined" data-icon="auto_fix_high">auto_fix_high</span>
+            Sana Uygun Hocayı Bul
+        </a>
+</nav>
+<!-- Footer (Desktop Only visible slightly above bottom on mobile to avoid overlap) -->
+<footer class="bg-slate-50 dark:bg-slate-950 text-indigo-600 dark:text-indigo-400 font-sans text-sm text-slate-500 w-full py-12 border-t border-slate-200 dark:border-slate-800 flat no shadows grid grid-cols-2 md:grid-cols-4 gap-8 px-8 max-w-7xl mx-auto hidden md:grid mb-24 md:mb-0">
+<div>
+<div class="text-lg font-bold text-slate-900 dark:text-white mb-4">LessonRadar</div>
+<p>© 2024 LessonRadar. Akademik başarıya giden en kısa yol.</p>
+</div>
+<div>
+<ul class="space-y-2">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 underline Standard link hover transitions" href="#">Öğretmen Ol</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 underline Standard link hover transitions" href="#">Hakkımızda</a></li>
+</ul>
+</div>
+<div>
+<ul class="space-y-2">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 underline Standard link hover transitions" href="#">Yardım</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 underline Standard link hover transitions" href="#">Gizlilik</a></li>
+</ul>
+</div>
+</footer>
+</body></html>

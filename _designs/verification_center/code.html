@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profilini Doğrula ve Öne Çık - Teacher Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-container-highest": "#dae2fd",
+                        "surface-bright": "#faf8ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-primary-fixed": "#0f0069",
+                        "on-surface": "#131b2e",
+                        "inverse-on-surface": "#eef0ff",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed": "#341100",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#ffb690",
+                        "inverse-surface": "#283044",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "background": "#faf8ff",
+                        "on-error-container": "#93000a",
+                        "surface": "#faf8ff",
+                        "secondary-container": "#fd761a",
+                        "on-surface-variant": "#464555",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "tertiary": "#7e3000",
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-container": "#eaedff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary": "#9d4300",
+                        "on-secondary-container": "#5c2400",
+                        "on-background": "#131b2e",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#dad7ff",
+                        "outline": "#777587",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "surface-variant": "#dae2fd",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-container-high": "#e2e7ff",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary-container": "#a44100",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-tint": "#4d44e3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1.5rem",
+                        "sm": "1rem",
+                        "base": "4px",
+                        "xl": "3rem",
+                        "gutter": "1rem",
+                        "container-max": "1280px",
+                        "xs": "0.5rem",
+                        "lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h3": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h2": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen font-body-md text-on-background flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-sans font-semibold tracking-tight text-slate-900 dark:text-slate-100 docked full-width top-0 sticky z-40 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-center h-16 px-4 md:px-8 max-w-7xl mx-auto">
+<div class="text-xl font-black tracking-tighter text-indigo-600 dark:text-indigo-400">Teacher Portal</div>
+<!-- Web Navigation -->
+<nav class="hidden md:flex space-x-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 duration-150 ease-in-out px-3 py-2 rounded-md" href="#">Home</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 duration-150 ease-in-out px-3 py-2 rounded-md" href="#">Calendar</a>
+<a class="text-indigo-600 dark:text-indigo-400 font-bold border-b-2 border-indigo-600 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 duration-150 ease-in-out px-3 py-2" href="#">Verify</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 duration-150 ease-in-out px-3 py-2 rounded-md" href="#">Inbox</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-95 duration-150 ease-in-out px-3 py-2 rounded-md" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400" data-icon="notifications">notifications</span>
+<img alt="Teacher profile photo" class="w-8 h-8 rounded-full border border-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPNtF81ThVKxQwXPPzYLL38Xru71KMKXelGl6Hyadj8SqZaUzTPI9_zlIYl2S576YSuKEJek6pacIw2DnmUIvY82i4rmrD1oKOY7Hy4KO29-QTzvVwfyP3-Q5ACenGbjVmTlIhFAJoGt0Dev936_wK9luvenvw_dPJIg38fvMpAJvKcqWpkkhrM_jn5g1PS-OEG-djr0sEkGLWx_I72Hear_m84h1ULmN1Y4HBnVBqCXVZvyRVSAHSEsxqQeZWCsJvu2oT5-ISyt0R"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow pt-lg pb-xl px-gutter md:px-lg max-w-container-max mx-auto w-full mb-16 md:mb-0">
+<!-- Header Section -->
+<div class="text-center mb-xl">
+<h1 class="font-h1 text-h1 text-on-surface mb-xs">Profilini Doğrula ve Öne Çık</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Güvenilir bir eğitmen olduğunuzu kanıtlayın. Doğrulanmış profiller, öğrencilerden %300 daha fazla talep alır.
+            </p>
+</div>
+<!-- Verification Motivation Banner -->
+<div class="bg-surface-container-low rounded-xl p-6 mb-xl border border-surface-variant flex items-center justify-between shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-on-surface text-[20px]">Doğrulanmış Eğitmen Rozeti</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tüm belgelerinizi yükleyerek profilinizde bu rozeti sergileyin.</p>
+</div>
+</div>
+<div class="hidden md:block">
+<span class="bg-surface-tint text-on-primary font-label-caps text-label-caps px-3 py-1 rounded-full">Hedef</span>
+</div>
+</div>
+<!-- Cards Container (Bento-style Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Card 1: Diploma -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col hover:border-surface-tint transition-colors">
+<div class="flex items-start justify-between mb-md">
+<div class="w-10 h-10 bg-surface-container text-on-surface-variant rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<span class="bg-error-container text-on-error-container font-label-caps text-label-caps px-2 py-1 rounded">Eksik</span>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-2">E-Devlet Mezuniyet Belgesi (PDF)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg flex-grow">
+                    E-Devlet üzerinden alınan barkodlu mezuniyet belgenizi PDF formatında yükleyin.
+                </p>
+<button class="w-full bg-surface-tint hover:bg-primary text-on-primary font-label-caps text-label-caps py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload_file">upload_file</span>
+                    Dosya Seç
+                </button>
+</div>
+<!-- Card 2: Criminal Record -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col hover:border-surface-tint transition-colors">
+<div class="flex items-start justify-between mb-md">
+<div class="w-10 h-10 bg-surface-container text-on-surface-variant rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+</div>
+<span class="bg-error-container text-on-error-container font-label-caps text-label-caps px-2 py-1 rounded">Eksik</span>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface mb-2">Adli Sicil Kaydı</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg flex-grow">
+                    E-Devlet üzerinden son 1 ay içinde alınmış barkodlu adli sicil kaydı belgenizi yükleyin.
+                </p>
+<button class="w-full bg-surface-tint hover:bg-primary text-on-primary font-label-caps text-label-caps py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload_file">upload_file</span>
+                    Dosya Seç
+                </button>
+</div>
+</div>
+<!-- Trust Signal Footer -->
+<div class="mt-lg text-center flex items-center justify-center gap-2 text-outline">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock">lock</span>
+<span class="font-label-caps text-label-caps">KVKK Uyumlu &amp; Şifreli</span>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-white dark:bg-slate-900 docked full-width bottom-0 fixed rounded-t-2xl border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] text-[10px] font-medium leading-none fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe pt-2">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1.5 hover:text-indigo-500 dark:hover:text-indigo-400 tap-highlight-transparent active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+            Home
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1.5 hover:text-indigo-500 dark:hover:text-indigo-400 tap-highlight-transparent active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="calendar_month">calendar_month</span>
+            Calendar
+        </a>
+<a class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-xl px-3 py-1.5 hover:text-indigo-500 dark:hover:text-indigo-400 tap-highlight-transparent active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+            Verify
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1.5 hover:text-indigo-500 dark:hover:text-indigo-400 tap-highlight-transparent active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="mail">mail</span>
+            Inbox
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-3 py-1.5 hover:text-indigo-500 dark:hover:text-indigo-400 tap-highlight-transparent active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+            Settings
+        </a>
+</nav>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 full-width py-12 border-t border-slate-200 dark:border-slate-800 flat no-shadows hidden md:block">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-8 gap-6">
+<div class="font-bold text-slate-900 dark:text-slate-100 text-sm">
+                © 2024 EduExpert SaaS. All rights reserved.
+            </div>
+<div class="flex gap-6 text-sm text-slate-500 dark:text-slate-400">
+<a class="text-slate-500 hover:text-indigo-600 transition-colors hover:underline" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-indigo-600 transition-colors hover:underline" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-indigo-600 transition-colors hover:underline" href="#">Help Center</a>
+<a class="text-slate-500 hover:text-indigo-600 transition-colors hover:underline" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

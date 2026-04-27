@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LessonRadar - Teacher Card</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#e2dfff",
+                      "error-container": "#ffdad6",
+                      "error": "#ba1a1a",
+                      "on-background": "#131b2e",
+                      "inverse-surface": "#283044",
+                      "primary-container": "#4f46e5",
+                      "inverse-primary": "#c3c0ff",
+                      "on-secondary-fixed": "#341100",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "background": "#faf8ff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "on-error-container": "#93000a",
+                      "surface": "#faf8ff",
+                      "surface-container-high": "#e2e7ff",
+                      "secondary-fixed": "#ffdbca",
+                      "surface-container-low": "#f2f3ff",
+                      "on-secondary-container": "#5c2400",
+                      "surface-bright": "#faf8ff",
+                      "surface-dim": "#d2d9f4",
+                      "tertiary-fixed": "#ffdbcc",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-primary-container": "#dad7ff",
+                      "tertiary": "#7e3000",
+                      "on-error": "#ffffff",
+                      "on-surface": "#131b2e",
+                      "outline": "#777587",
+                      "on-tertiary-fixed": "#351000",
+                      "on-primary-fixed": "#0f0069",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-surface-variant": "#464555",
+                      "surface-container": "#eaedff",
+                      "surface-tint": "#4d44e3",
+                      "tertiary-container": "#a44100",
+                      "secondary-container": "#fd761a",
+                      "secondary-fixed-dim": "#ffb690",
+                      "outline-variant": "#c7c4d8",
+                      "on-secondary-fixed-variant": "#783200",
+                      "surface-container-highest": "#dae2fd",
+                      "inverse-on-surface": "#eef0ff",
+                      "primary": "#3525cd",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#9d4300",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-tertiary-container": "#ffd2be",
+                      "surface-variant": "#dae2fd"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "2rem",
+                      "base": "4px",
+                      "sm": "1rem",
+                      "xl": "3rem",
+                      "xs": "0.5rem",
+                      "md": "1.5rem",
+                      "container-max": "1280px",
+                      "gutter": "1rem"
+              },
+              "fontFamily": {
+                      "h3": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "h2": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "h3": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h2": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex items-center justify-center p-sm">
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_1px_3px_rgba(0,0,0,0.05)] w-full max-w-[400px] flex flex-row gap-md">
+<!-- Left: Avatar -->
+<div class="relative shrink-0">
+<img alt="Portrait of a young woman with a friendly smile, professional academic setting" class="w-24 h-24 rounded-lg object-cover bg-surface-container-high border border-outline-variant/30" data-alt="Portrait of a young woman with a friendly smile, professional academic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4kQbNCxT2aZqdItjF2n_SbP23m7JQHdOy2lbXfnmgWaZwvA5bo1_8kd4FWy12qUbJ52Oz0N4dXIkdCDgTqahH8uQk7Xdc64zU19fPL4lSVVoQnNAU7j8xb_XtRBwU7n2Fk0nRSLJyOMLR_zMvIhqTS302sYhNGe6IBa8vXzpcPXl96N_9WJoWPRnCj0u-93fn4XIpfLiUSBIxfHvYYHzMH7t8vQ-41SNwSmzJ-lSM3ppTI7HCe_I4zpP6-DxlGTLtsMf0OxYGxspS"/>
+<div class="absolute -bottom-2 -right-2 bg-primary text-on-primary rounded-full w-8 h-8 flex items-center justify-center shadow-md border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<!-- Right: Info -->
+<div class="flex flex-col flex-1 min-w-0">
+<!-- Header -->
+<div class="flex items-center gap-xs mb-xs">
+<h3 class="font-h3 text-h3 text-on-surface truncate">Ayşe Y.</h3>
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<!-- Rating -->
+<div class="flex items-center gap-xs mb-sm">
+<div class="flex text-[#f59e0b]">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">(42 Yorum)</span>
+</div>
+<!-- Price -->
+<div class="mb-md">
+<span class="font-body-lg text-body-lg font-semibold text-on-surface">₺600/saat</span>
+</div>
+<!-- Action -->
+<button class="w-full py-2 px-4 rounded-lg border border-primary text-primary font-body-md text-body-md font-semibold hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                Takvimi Gör
+            </button>
+</div>
+</div>
+</body></html>

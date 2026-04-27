@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gaziantep LGS Matematik Özel Ders | LessonRadar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#283044",
+                        "outline-variant": "#c7c4d8",
+                        "on-surface": "#131b2e",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "inverse-on-surface": "#eef0ff",
+                        "secondary-container": "#fd761a",
+                        "surface-variant": "#dae2fd",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "on-tertiary-fixed": "#351000",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#5c2400",
+                        "surface-container-highest": "#dae2fd",
+                        "tertiary": "#7e3000",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#341100",
+                        "outline": "#777587",
+                        "surface-bright": "#faf8ff",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eaedff",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-fixed-variant": "#783200",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-primary-fixed": "#0f0069",
+                        "on-background": "#131b2e",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-dim": "#d2d9f4",
+                        "surface-container-low": "#f2f3ff",
+                        "surface": "#faf8ff",
+                        "primary-container": "#4f46e5",
+                        "secondary": "#9d4300",
+                        "primary": "#3525cd",
+                        "background": "#faf8ff",
+                        "on-primary-fixed-variant": "#3323cc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "sm": "1rem",
+                        "gutter": "1rem",
+                        "base": "4px",
+                        "xl": "3rem",
+                        "lg": "2rem",
+                        "xs": "0.5rem",
+                        "md": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h3": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h3": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "h2": ["36px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm">
+<div class="flex items-center justify-between px-4 md:px-8 h-16 w-full max-w-7xl mx-auto">
+<a class="text-2xl font-black tracking-tight text-indigo-600 dark:text-indigo-400" href="#">LessonRadar</a>
+<nav class="hidden md:flex items-center space-x-6">
+<a class="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-1 font-sans antialiased text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 active:scale-95" href="#">Find Tutors</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 font-sans antialiased text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 active:scale-95" href="#">Subjects</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 font-sans antialiased text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 active:scale-95" href="#">How it Works</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="font-sans antialiased text-sm font-medium text-slate-600 hover:text-indigo-600 hidden md:block">Log In</button>
+<button class="font-sans antialiased text-sm font-medium bg-primary-container text-on-primary px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">Sign Up</button>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-16 px-4 md:px-8 max-w-7xl mx-auto w-full">
+<!-- Hero Section -->
+<section class="text-center max-w-3xl mx-auto mb-12">
+<h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 text-on-surface">Gaziantep LGS Matematik Özel Ders</h1>
+<p class="text-lg md:text-xl text-on-surface-variant mb-8">Gaziantep'teki en iyi öğretmenleri keşfedin.</p>
+<div class="flex flex-wrap justify-center gap-3 mb-8">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Her Semtte
+                </span>
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    İlk Ders Ücretsiz
+                </span>
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Doğrulanmış Kimlik
+                </span>
+</div>
+<!-- Refinement Bar -->
+<div class="bg-surface-container-lowest rounded-full border border-outline-variant shadow-sm p-2 flex items-center justify-between max-w-xl mx-auto">
+<div class="flex items-center flex-1 px-4 border-r border-outline-variant">
+<span class="material-symbols-outlined text-outline mr-2">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-md" readonly="" type="text" value="Matematik"/>
+</div>
+<div class="flex items-center flex-1 px-4">
+<span class="material-symbols-outlined text-outline mr-2">location_on</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-md" readonly="" type="text" value="Gaziantep"/>
+</div>
+<button class="bg-primary text-on-primary rounded-full p-2 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Results Section -->
+<section class="max-w-4xl mx-auto mb-16">
+<h2 class="text-xl font-bold text-on-surface mb-6 font-h3">Gaziantep'teki En İyi 3 Eşleşme</h2>
+<div class="flex flex-col gap-4">
+<!-- Teacher Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 hover:shadow-md transition-shadow">
+<div class="relative flex-shrink-0">
+<img alt="Profile picture of Ayşe Y." class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover" data-alt="Professional portrait of a young female teacher smiling warmly in a bright classroom setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBis9Dq_neAwPvoOHZeZ9ZW1uDw8cTVUO9tK8geBWTHtEHZJoso5tcT1xMNM4imz-K4fJE_IXkkwHLqW1ctaCcZ61BLBcrM11LXRFT2xtTGq0HaWCP6FQWFYg0Lpo0Jn0yXOmPvenGusPXx3kHKoyLB6YIqoHix2dcxOoEWMTh_oT0R9Eyl6bKewlILTpcDb1V-2w11hpUubjZVPjE1N7H0NqwtWz8tM0PVDgnCp0iUORVxBqVHgMPzuXH2-rKg_Zhyj1onNY0iFoC5"/>
+<span class="absolute bottom-0 right-0 bg-primary-container text-on-primary rounded-full p-0.5 border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-h3 text-on-surface text-lg">Ayşe Y.</h3>
+<div class="flex items-center text-secondary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-sm font-medium ml-1">5.0 (42)</span>
+</div>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-2">Boğaziçi Mezunu • 8 Yıllık LGS Deneyimi</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-primary text-xs rounded-md font-medium">Şehitkamil</span>
+<span class="px-2 py-1 bg-surface-container text-primary text-xs rounded-md font-medium">Online / Yüz Yüze</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+<span class="font-h3 text-on-surface text-lg whitespace-nowrap">₺600<span class="text-sm font-normal text-on-surface-variant">/saat</span></span>
+<button class="w-full sm:w-auto bg-primary text-on-primary px-4 py-2 rounded-lg font-body-sm font-medium hover:bg-primary-container transition-colors">Takvimi Gör</button>
+</div>
+</div>
+<!-- Teacher Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 hover:shadow-md transition-shadow">
+<div class="relative flex-shrink-0">
+<img alt="Profile picture of Mehmet K." class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover" data-alt="Professional headshot of a male teacher with glasses in a modern office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS2kyD_4yDVlBf5tPvk-slt7xLxKEaFe7p_TYFDey2VcPSRmDOUKFBb69XQ5FnoC4p2ChDM7mFy2AvA19BHcTtnVXvfCPBYjevwVN_YA08k-mkNi_kvo9h3EvHnCInLzylVkE8Wv7VmRcGPTE5-N2xuMfvLogbyvdvMJQcljc8Uh9sAbPvGOT323xG2QjKXSI04bQcxaAOos3iuT5WKY6SMhLQeUrEj0CdSrIiRqlf3YBbaiy7eW5VogxwoENHXpoIw6XaUAPmjAiq"/>
+<span class="absolute bottom-0 right-0 bg-primary-container text-on-primary rounded-full p-0.5 border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-h3 text-on-surface text-lg">Mehmet K.</h3>
+<div class="flex items-center text-secondary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-sm font-medium ml-1">4.9 (28)</span>
+</div>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-2">ODTÜ Mezunu • Yeni Nesil Sorular Uzmanı</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-primary text-xs rounded-md font-medium">Şahinbey</span>
+<span class="px-2 py-1 bg-surface-container text-primary text-xs rounded-md font-medium">Sadece Yüz Yüze</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+<span class="font-h3 text-on-surface text-lg whitespace-nowrap">₺550<span class="text-sm font-normal text-on-surface-variant">/saat</span></span>
+<button class="w-full sm:w-auto bg-primary text-on-primary px-4 py-2 rounded-lg font-body-sm font-medium hover:bg-primary-container transition-colors">Takvimi Gör</button>
+</div>
+</div>
+<!-- Teacher Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 sm:p-6 shadow-sm border border-outline-variant flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 hover:shadow-md transition-shadow">
+<div class="relative flex-shrink-0">
+<img alt="Profile picture of Zeynep A." class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover" data-alt="Portrait of a friendly female tutor reviewing papers at a bright desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxboRwlAic9dNnNvENF2BxWSjROVlz8oAxTejbclJ-NWd2F61O-2AcozM2HI_DWjmYOdbIuA87hWb1FsCN8nSdS5nQxJPc8pTpnJaYXjV5HjyztIuuPLtu7lRk7o7z0N82U97XE9aDTyn6QdLpDjallFLPMY2i8_eymTodfx0pb5uP1KmAXPY2OF0sw41Eo5EsK4Iu-fJ2Mkihrf9E6_doHK02IFYyi3VxFHyX3gm-8BDj7-CQMKKJUZxzNAlAnPYshhRvi20zdXsu"/>
+<span class="absolute bottom-0 right-0 bg-primary-container text-on-primary rounded-full p-0.5 border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">verified</span>
+</span>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-h3 text-on-surface text-lg">Zeynep A.</h3>
+<div class="flex items-center text-secondary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-body-sm font-medium ml-1">4.8 (15)</span>
+</div>
+</div>
+<p class="font-body-sm text-on-surface-variant mb-2">Gaziantep Üniv. • Sabırlı ve Motive Edici</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container text-primary text-xs rounded-md font-medium">İbrahimli</span>
+<span class="px-2 py-1 bg-surface-container text-primary text-xs rounded-md font-medium">Online Seçeneği</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+<span class="font-h3 text-on-surface text-lg whitespace-nowrap">₺500<span class="text-sm font-normal text-on-surface-variant">/saat</span></span>
+<button class="w-full sm:w-auto bg-primary text-on-primary px-4 py-2 rounded-lg font-body-sm font-medium hover:bg-primary-container transition-colors">Takvimi Gör</button>
+</div>
+</div>
+</div>
+<div class="text-center mt-8">
+<button class="border border-outline text-primary px-6 py-2 rounded-full font-body-sm font-medium hover:bg-surface-container transition-colors">Daha Fazla Öğretmen Gör</button>
+</div>
+</section>
+<!-- Trust Section -->
+<section class="bg-surface-container-low rounded-2xl p-8 max-w-4xl mx-auto border border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-primary text-2xl">shield</span>
+</div>
+<div>
+<h4 class="font-h3 text-on-surface text-lg mb-2">Güvenilir Eğitim</h4>
+<p class="font-body-sm text-on-surface-variant">Tüm öğretmenlerin belgeleri kontrol edilir.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-primary text-2xl">monitoring</span>
+</div>
+<div>
+<h4 class="font-h3 text-on-surface text-lg mb-2">Sürekli Takip</h4>
+<p class="font-body-sm text-on-surface-variant">Ödev takibi ve gelişim raporları uygulama üzerinden yapılır.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-200 dark:border-slate-800 py-12 mt-auto bg-slate-50 dark:bg-slate-950 text-xs md:text-sm text-slate-500 dark:text-slate-400">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-6 max-w-7xl mx-auto">
+<div>
+<p class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">LessonRadar</p>
+<p>© 2024 LessonRadar. Verified professionals only.</p>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 hover:text-indigo-600 hover:underline underline-offset-4 transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-indigo-600 hover:underline underline-offset-4 transition-colors duration-200" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 hover:text-indigo-600 hover:underline underline-offset-4 transition-colors duration-200" href="#">Become a Tutor</a>
+<a class="text-slate-500 hover:text-indigo-600 hover:underline underline-offset-4 transition-colors duration-200" href="#">Help Center</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 hover:text-indigo-600 hover:underline underline-offset-4 transition-colors duration-200" href="#">Local Tutors</a>
+</div>
+</div>
+</footer>
+</body></html>
