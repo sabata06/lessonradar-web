@@ -1,0 +1,219 @@
+{
+  "common": {
+    "app_name": "LessonRadar",
+    "tagline": "Find a verified private tutor in your city",
+    "skip_to_content": "Skip to content",
+    "loading": "Loading",
+    "error_generic": "Something went wrong. Please try again."
+  },
+  "nav": {
+    "discover": "Find Tutors",
+    "request": "Post a Lesson Request",
+    "become_teacher": "Become a Tutor",
+    "pricing": "Pricing Guide",
+    "blog": "Blog",
+    "language": "Language",
+    "menu": "Menu"
+  },
+  "cta": {
+    "find_teacher": "Find a Tutor",
+    "request_lesson": "Post a Free Lesson Request",
+    "view_profile": "View Profile",
+    "contact": "Contact",
+    "compare": "Compare"
+  },
+  "trust": {
+    "verified": "Verified",
+    "rating": "{rating} ({count} reviews)",
+    "responds_in": "Responds in {time}",
+    "last_active": "Last active: {time}",
+    "hourly_range": "₺{min}–{max}/hour"
+  },
+  "home": {
+    "hero": {
+      "kicker": "Live in Gaziantep · Expanding across Türkiye",
+      "title": "Find your tutor in minutes.",
+      "subtitle": "In person or online — match with a verified tutor in your district, no app required.",
+      "search_discipline_label": "Subject",
+      "search_discipline_placeholder": "YKS math, guitar, English…",
+      "search_city_label": "City",
+      "search_city_placeholder": "Pick a city",
+      "search_button": "Search",
+      "or_skip": "Can't find what you need?",
+      "or_skip_link": "post a lesson request"
+    },
+    "subjects": {
+      "title": "Popular subjects"
+    },
+    "featured": {
+      "kicker": "Featured",
+      "title": "Most-booked tutors in Gaziantep",
+      "description": "Verified identity, fast response, transparent prices.",
+      "see_all": "See all"
+    },
+    "trust": {
+      "kicker": "Why LessonRadar?",
+      "title": "Not the platform you trust your child to — the platform you stay in control of.",
+      "items": {
+        "verified": {
+          "title": "Verified tutors",
+          "description": "Every tutor passes identity and diploma checks. You see the badge on their profile."
+        },
+        "fast": {
+          "title": "Fast response",
+          "description": "Offers start landing within an hour of posting your request."
+        },
+        "local": {
+          "title": "Your district, your block",
+          "description": "Not just city — pick Şahinbey, Şehitkamil, or online."
+        }
+      }
+    },
+    "how": {
+      "kicker": "How it works",
+      "title": "Three steps, no app required.",
+      "steps": {
+        "one": {
+          "title": "Tell us subject and city",
+          "description": "Post a lesson request in 60 seconds with phone verification."
+        },
+        "two": {
+          "title": "Get offers from verified tutors",
+          "description": "Tutors in your city reach out — see their prices and availability."
+        },
+        "three": {
+          "title": "Pick one and pay them directly",
+          "description": "We do not mediate. Contact the tutor and arrange the lesson yourself."
+        }
+      }
+    },
+    "popular": {
+      "title": "Popular searches",
+      "description": "Most-searched city × subject combinations."
+    },
+    "lead_cta": {
+      "kicker": "Couldn't find what you need?",
+      "title": "Tell us the subject. Tutors will reach you.",
+      "description": "Fill one short form. Tutors in your city write to you. Free, no app needed.",
+      "button": "Post a Free Lesson Request"
+    }
+  },
+  "lead": {
+    "meta": {
+      "title": "Post a free lesson request",
+      "description": "Tell us the subject and city — verified tutors will reach you. Free, no app required."
+    },
+    "breadcrumb": "Lesson request",
+    "kicker": "Lesson request · Free",
+    "title": "Tell us what you need. Tutors will reach you.",
+    "subtitle": "Takes 60 seconds. Verified tutors in your city send offers; you pick the one that fits.",
+    "submit": "Submit Request",
+    "submit_loading": "Submitting…",
+    "submit_footnote": "Free · No app required · Your phone is shared only with matching tutors.",
+    "error_generic": "Couldn't submit your request. Please try again.",
+    "sections": {
+      "what": {
+        "title": "What do you want to learn?",
+        "description": "Pick a subject and level, set the lesson modality."
+      },
+      "where": {
+        "title": "Where?",
+        "description": "For in-person lessons, give your city and district."
+      },
+      "details": {
+        "title": "Details (optional)",
+        "description": "Budget, schedule, notes — leave blank if not sure."
+      },
+      "contact": {
+        "title": "How can we reach you?",
+        "description": "Tutors need a phone number to contact you."
+      }
+    },
+    "fields": {
+      "discipline": {
+        "label": "Subject",
+        "placeholder": "Pick a subject"
+      },
+      "level": {
+        "label": "Level",
+        "placeholder": "Pick a level"
+      },
+      "modality": {
+        "label": "Lesson type"
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "Pick a city"
+      },
+      "district": {
+        "label": "District",
+        "placeholder": "Pick a district",
+        "disabled_placeholder": "Pick a city first"
+      },
+      "budget_min": {
+        "label": "Min. budget (₺/hour)",
+        "placeholder": "e.g. 300"
+      },
+      "budget_max": {
+        "label": "Max. budget (₺/hour)",
+        "placeholder": "e.g. 600"
+      },
+      "schedule": {
+        "label": "Preferred schedule",
+        "placeholder": "e.g. weekday evenings, weekends"
+      },
+      "notes": {
+        "label": "Notes",
+        "placeholder": "Student's current level, target exam, specific needs…"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "5XX XXX XX XX",
+        "hint": "Shared only with matching tutors."
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "you@email.com"
+      }
+    },
+    "kvkk": {
+      "label": "I have read the <privacy>KVKK & Privacy Policy</privacy> and consent to the processing of my personal data."
+    },
+    "errors": {
+      "phone_invalid": "Enter a valid TR mobile number (5XX XXX XX XX).",
+      "kvkk_required": "Tick the KVKK consent to continue.",
+      "budget_range_invalid": "Max budget cannot be lower than min budget."
+    },
+    "aside": {
+      "title": "What happens after you submit?",
+      "item_free": "The form is free — no payment taken.",
+      "item_no_app": "No app needed — everything happens on the web.",
+      "item_verified": "Only verified tutors can see your request.",
+      "item_response": "First offers usually arrive within an hour.",
+      "item_no_payment": "You pay the tutor directly — we don't mediate."
+    },
+    "success": {
+      "meta_title": "Request received",
+      "title": "Your request is in.",
+      "subtitle": "Verified tutors in your city are seeing it now. First offers usually land in your SMS within an hour.",
+      "step1_title": "SMS notifications",
+      "step1_description": "We text you each time a new offer comes in.",
+      "step2_title": "Track in one place",
+      "step2_description": "Use the free mobile app to compare offers side-by-side.",
+      "app_title": "Track offers from one screen",
+      "app_description": "Instant notifications, in-app messaging, and side-by-side comparison live in the mobile app.",
+      "back_home": "Back to homepage"
+    }
+  },
+  "footer": {
+    "rights": "© {year} LessonRadar. All rights reserved.",
+    "kvkk": "KVKK Disclosure",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "contact": "Contact",
+    "for_teachers": "For tutors",
+    "for_students": "For students",
+    "popular_cities": "Popular cities",
+    "popular_subjects": "Popular subjects"
+  }
+}

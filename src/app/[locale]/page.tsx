@@ -1,0 +1,125 @@
+import { getTranslations, setRequestLocale } from "next-intl/server";
+
+import { Container } from "@/components/layout/Container";
+import { SearchHero } from "@/components/discovery/SearchHero";
+import { SubjectChips } from "@/components/discovery/SubjectChips";
+import { FeaturedTeachers } from "@/components/discovery/FeaturedTeachers";
+import { TrustStrip } from "@/components/discovery/TrustStrip";
+import { HowItWorks } from "@/components/discovery/HowItWorks";
+import { PopularSearches } from "@/components/discovery/PopularSearches";
+import { LeadCTA } from "@/components/discovery/LeadCTA";
+
+import type { Locale } from "@/i18n/routing";
+import { TR_CITIES } from "@/lib/data/mock/cities";
+import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
+import { MOCK_TEACHERS } from "@/lib/data/mock/teachers";
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("home.hero");
+  const typedLocale = locale as Locale;
+  const nowIso = new Date().toISOString();
+
+  const featured = MOCK_TEACHERS
+    .filter((t) => t.citySlug === "gaziantep")
+    .sort((a, b) => {
+      const score = (x: typeof a) =>
+        (x.isPremium ? 2 : 0) + (x.trust.isVerified ? 1 : 0) + x.trust.ratingAverage / 5;
+      return score(b) - score(a);
+    })
+    .slice(0, 3);
+
+  return (
+    <>
+      {/* Hero — search + quick chips inside one focal block */}
+      <section
+        aria-label={t("title")}
+        className="relative overflow-hidden border-b border-border/60"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(60% 60% at 50% 0%, oklch(0.94 0.025 195 / 0.55) 0%, transparent 70%)," +
+              "radial-gradient(50% 50% at 100% 100%, oklch(0.96 0.04 80 / 0.5) 0%, transparent 70%)",
+          }}
+        />
+        <Container className="flex flex-col items-center py-12 text-center sm:py-16 lg:py-24">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/15 bg-brand-soft px-3 py-1 text-xs font-medium text-brand-soft-foreground">
+            <span
+              aria-hidden
+              className="size-1.5 rounded-full bg-success"
+              style={{ boxShadow: "0 0 0 3px oklch(0.94 0.04 165)" }}
+            />
+            {t("kicker")}
+          </span>
+          <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+            {t("title")}
+          </h1>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {t("subtitle")}
+          </p>
+
+          <div className="mt-10 w-full max-w-3xl">
+            <SearchHero
+              locale={typedLocale}
+              domains={MOCK_DOMAINS}
+              disciplines={MOCK_DISCIPLINES}
+              cities={TR_CITIES}
+            />
+
+            <div className="mt-6">
+              <SubjectChips
+                disciplines={MOCK_DISCIPLINES}
+                citySlug="gaziantep"
+                locale={typedLocale}
+              />
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Featured teachers */}
+      <Container className="py-14 sm:py-20">
+        <FeaturedTeachers
+          locale={typedLocale}
+          nowIso={nowIso}
+          teachers={featured}
+          seeAllHref="/gaziantep"
+        />
+      </Container>
+
+      {/* Trust strip */}
+      <Container className="py-14 sm:py-20">
+        <TrustStrip />
+      </Container>
+
+      {/* How it works */}
+      <section className="border-y border-border/60 bg-card/40">
+        <Container className="py-14 sm:py-20">
+          <HowItWorks />
+        </Container>
+      </section>
+
+      {/* Popular searches (pSEO link grid) */}
+      <Container className="py-14 sm:py-20">
+        <PopularSearches
+          locale={typedLocale}
+          cities={TR_CITIES}
+          disciplines={MOCK_DISCIPLINES}
+        />
+      </Container>
+
+      {/* Lead CTA */}
+      <Container className="pb-20">
+        <LeadCTA />
+      </Container>
+    </>
+  );
+}

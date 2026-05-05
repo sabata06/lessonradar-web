@@ -1,0 +1,219 @@
+{
+  "common": {
+    "app_name": "LessonRadar",
+    "tagline": "Şehrindeki doğrulanmış özel ders öğretmenini bul",
+    "skip_to_content": "İçeriğe geç",
+    "loading": "Yükleniyor",
+    "error_generic": "Bir şeyler ters gitti. Lütfen tekrar dene."
+  },
+  "nav": {
+    "discover": "Öğretmen Keşfet",
+    "request": "Ders Talebi Oluştur",
+    "become_teacher": "Öğretmen Ol",
+    "pricing": "Fiyat Rehberi",
+    "blog": "Blog",
+    "language": "Dil",
+    "menu": "Menü"
+  },
+  "cta": {
+    "find_teacher": "Öğretmen Bul",
+    "request_lesson": "Ücretsiz Ders Talebi Oluştur",
+    "view_profile": "Profili Gör",
+    "contact": "İletişime Geç",
+    "compare": "Karşılaştır"
+  },
+  "trust": {
+    "verified": "Doğrulanmış",
+    "rating": "{rating} ({count} değerlendirme)",
+    "responds_in": "{time} içinde yanıtlar",
+    "last_active": "Son aktiflik: {time}",
+    "hourly_range": "{min}–{max} ₺/saat"
+  },
+  "home": {
+    "hero": {
+      "kicker": "Gaziantep'te canlı · Büyükşehirlere yayılıyor",
+      "title": "Öğretmenini dakikalar içinde bul.",
+      "subtitle": "Yüz yüze ya da çevrimiçi — ilçendeki doğrulanmış öğretmenle anlaş, app indirmeden.",
+      "search_discipline_label": "Branş",
+      "search_discipline_placeholder": "YKS matematik, gitar, İngilizce…",
+      "search_city_label": "Şehir",
+      "search_city_placeholder": "Şehrini seç",
+      "search_button": "Ara",
+      "or_skip": "Aradığını bulamıyorsan",
+      "or_skip_link": "ders talebi bırak"
+    },
+    "subjects": {
+      "title": "Popüler branşlar"
+    },
+    "featured": {
+      "kicker": "Öne çıkan",
+      "title": "Gaziantep'te en çok tercih edilen öğretmenler",
+      "description": "Doğrulanmış kimlik, hızlı yanıt süresi ve şeffaf fiyatla.",
+      "see_all": "Tümünü gör"
+    },
+    "trust": {
+      "kicker": "Neden LessonRadar?",
+      "title": "Çocuğunu emanet edeceğin platform değil — kontrolünde tuttuğun platform.",
+      "items": {
+        "verified": {
+          "title": "Doğrulanmış eğitmenler",
+          "description": "Her öğretmen kimlik ve diploma kontrolünden geçer. Profilinde rozetli görürsün."
+        },
+        "fast": {
+          "title": "Hızlı yanıt",
+          "description": "Talep bıraktıktan sonra ortalama 1 saat içinde teklifler gelmeye başlar."
+        },
+        "local": {
+          "title": "İlçende, mahallende",
+          "description": "Sadece şehir değil — Şahinbey'de mi, Şehitkamil'de mi, çevrimiçi mi seçersin."
+        }
+      }
+    },
+    "how": {
+      "kicker": "Nasıl çalışır?",
+      "title": "Üç adım, app indirmeden.",
+      "steps": {
+        "one": {
+          "title": "Branşını ve şehrini söyle",
+          "description": "Telefon doğrulamasıyla 60 saniyede ders talebi oluştur."
+        },
+        "two": {
+          "title": "Doğrulanmış öğretmenlerden teklif al",
+          "description": "Şehrindeki uygun öğretmenler sana ulaşsın, fiyatları ve müsaitliklerini gör."
+        },
+        "three": {
+          "title": "Anlaş, ödemeyi sen halledersin",
+          "description": "Aracılık etmiyoruz. Öğretmenle direkt iletişime geç, ders saatini ayarla."
+        }
+      }
+    },
+    "popular": {
+      "title": "Popüler aramalar",
+      "description": "En çok aranan şehir × branş kombinasyonları."
+    },
+    "lead_cta": {
+      "kicker": "Aradığını bulamadın mı?",
+      "title": "Branşını söyle, öğretmenler sana ulaşsın.",
+      "description": "Sen bir form doldurursun. Şehrindeki uygun öğretmenler sana yazar. Ücretsiz, app gerekmez.",
+      "button": "Ücretsiz Ders Talebi Oluştur"
+    }
+  },
+  "lead": {
+    "meta": {
+      "title": "Ücretsiz ders talebi oluştur",
+      "description": "Branşını ve şehrini söyle, doğrulanmış öğretmenler sana ulaşsın. Ücretsiz, app gerekmez."
+    },
+    "breadcrumb": "Ders talebi",
+    "kicker": "Ders talebi · Ücretsiz",
+    "title": "Branşını söyle, öğretmenler sana ulaşsın.",
+    "subtitle": "60 saniye sürer. Şehrindeki doğrulanmış öğretmenler talebine göre teklif sunar; sen seçersin.",
+    "submit": "Talebi Gönder",
+    "submit_loading": "Gönderiliyor…",
+    "submit_footnote": "Ücretsiz · App gerekmez · Telefon numaran sadece eşleşen öğretmenlerle paylaşılır.",
+    "error_generic": "Talep gönderilemedi. Lütfen tekrar dene.",
+    "sections": {
+      "what": {
+        "title": "Ne öğrenmek istiyorsun?",
+        "description": "Branş ve seviye seç; ders türünü belirt."
+      },
+      "where": {
+        "title": "Nerede?",
+        "description": "Yüz yüze dersler için şehrini ve mümkünse ilçeni belirt."
+      },
+      "details": {
+        "title": "Detaylar (opsiyonel)",
+        "description": "Bütçe, program ve ek notlar — boş bırakabilirsin."
+      },
+      "contact": {
+        "title": "Sana nasıl ulaşalım?",
+        "description": "Öğretmenlerin ulaşabilmesi için telefon numaran şart."
+      }
+    },
+    "fields": {
+      "discipline": {
+        "label": "Branş",
+        "placeholder": "Branş seç"
+      },
+      "level": {
+        "label": "Seviye",
+        "placeholder": "Seviye seç"
+      },
+      "modality": {
+        "label": "Ders türü"
+      },
+      "city": {
+        "label": "Şehir",
+        "placeholder": "Şehir seç"
+      },
+      "district": {
+        "label": "İlçe",
+        "placeholder": "İlçe seç",
+        "disabled_placeholder": "Önce şehir seç"
+      },
+      "budget_min": {
+        "label": "Min. bütçe (₺/saat)",
+        "placeholder": "ör. 300"
+      },
+      "budget_max": {
+        "label": "Maks. bütçe (₺/saat)",
+        "placeholder": "ör. 600"
+      },
+      "schedule": {
+        "label": "Tercih edilen program",
+        "placeholder": "ör. hafta içi akşam, hafta sonu"
+      },
+      "notes": {
+        "label": "Notlar",
+        "placeholder": "Çocuğun seviyesi, hedeflediğin sınav, özel istekler…"
+      },
+      "phone": {
+        "label": "Telefon",
+        "placeholder": "5XX XXX XX XX",
+        "hint": "Sadece eşleşen öğretmenlerle paylaşılır."
+      },
+      "email": {
+        "label": "E-posta",
+        "placeholder": "ornek@email.com"
+      }
+    },
+    "kvkk": {
+      "label": "<privacy>KVKK Aydınlatma Metni</privacy> ve gizlilik politikasını okudum, kişisel verilerimin işlenmesine onay veriyorum."
+    },
+    "errors": {
+      "phone_invalid": "Geçerli bir TR cep numarası gir (5XX XXX XX XX).",
+      "kvkk_required": "Devam etmek için KVKK onayını işaretle.",
+      "budget_range_invalid": "Maksimum bütçe minimumdan küçük olamaz."
+    },
+    "aside": {
+      "title": "Talep gönderince ne olur?",
+      "item_free": "Form ücretsiz, hiçbir ödeme alınmaz.",
+      "item_no_app": "App indirmen gerekmez — her şey web'den.",
+      "item_verified": "Sadece doğrulanmış öğretmenler talebi görür.",
+      "item_response": "Ortalama 1 saat içinde teklifler gelmeye başlar.",
+      "item_no_payment": "Ödemeyi öğretmenle doğrudan halledersin; biz aracılık etmeyiz."
+    },
+    "success": {
+      "meta_title": "Talebin alındı",
+      "title": "Talebin alındı.",
+      "subtitle": "Şehrindeki doğrulanmış öğretmenler talebini şu an görüyor. Ortalama 1 saat içinde ilk teklifler SMS ile sana ulaşır.",
+      "step1_title": "SMS ile bildirim",
+      "step1_description": "Yeni teklif geldikçe telefonuna kısa mesaj gönderiyoruz.",
+      "step2_title": "Tek noktadan takip",
+      "step2_description": "Tüm teklifleri karşılaştırmak için ücretsiz mobil uygulamayı kullanabilirsin.",
+      "app_title": "Teklifleri tek ekrandan takip et",
+      "app_description": "Mobil uygulamada anında bildirim, in-app mesajlaşma ve karşılaştırma araçları seni bekliyor.",
+      "back_home": "Ana sayfaya dön"
+    }
+  },
+  "footer": {
+    "rights": "© {year} LessonRadar. Tüm hakları saklıdır.",
+    "kvkk": "KVKK Aydınlatma Metni",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları",
+    "contact": "İletişim",
+    "for_teachers": "Öğretmenler için",
+    "for_students": "Öğrenciler için",
+    "popular_cities": "Popüler şehirler",
+    "popular_subjects": "Popüler branşlar"
+  }
+}

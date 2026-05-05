@@ -1,162 +1,128 @@
 ---
-name: Academic Authority
-colors:
-  surface: '#faf8ff'
-  surface-dim: '#d2d9f4'
-  surface-bright: '#faf8ff'
-  surface-container-lowest: '#ffffff'
-  surface-container-low: '#f2f3ff'
-  surface-container: '#eaedff'
-  surface-container-high: '#e2e7ff'
-  surface-container-highest: '#dae2fd'
-  on-surface: '#131b2e'
-  on-surface-variant: '#464555'
-  inverse-surface: '#283044'
-  inverse-on-surface: '#eef0ff'
-  outline: '#777587'
-  outline-variant: '#c7c4d8'
-  surface-tint: '#4d44e3'
-  primary: '#3525cd'
-  on-primary: '#ffffff'
-  primary-container: '#4f46e5'
-  on-primary-container: '#dad7ff'
-  inverse-primary: '#c3c0ff'
-  secondary: '#9d4300'
-  on-secondary: '#ffffff'
-  secondary-container: '#fd761a'
-  on-secondary-container: '#5c2400'
-  tertiary: '#7e3000'
-  on-tertiary: '#ffffff'
-  tertiary-container: '#a44100'
-  on-tertiary-container: '#ffd2be'
-  error: '#ba1a1a'
-  on-error: '#ffffff'
-  error-container: '#ffdad6'
-  on-error-container: '#93000a'
-  primary-fixed: '#e2dfff'
-  primary-fixed-dim: '#c3c0ff'
-  on-primary-fixed: '#0f0069'
-  on-primary-fixed-variant: '#3323cc'
-  secondary-fixed: '#ffdbca'
-  secondary-fixed-dim: '#ffb690'
-  on-secondary-fixed: '#341100'
-  on-secondary-fixed-variant: '#783200'
-  tertiary-fixed: '#ffdbcc'
-  tertiary-fixed-dim: '#ffb695'
-  on-tertiary-fixed: '#351000'
-  on-tertiary-fixed-variant: '#7b2f00'
-  background: '#faf8ff'
-  on-background: '#131b2e'
-  surface-variant: '#dae2fd'
+name: Warm Trust
+palette: warm-trust
+tokens_source: src/app/globals.css
 typography:
-  h1:
-    fontFamily: Inter
-    fontSize: 48px
-    fontWeight: '700'
-    lineHeight: '1.2'
-    letterSpacing: -0.02em
-  h2:
-    fontFamily: Inter
-    fontSize: 36px
-    fontWeight: '700'
-    lineHeight: '1.2'
-    letterSpacing: -0.02em
-  h3:
-    fontFamily: Inter
-    fontSize: 24px
-    fontWeight: '600'
-    lineHeight: '1.3'
-  body-lg:
-    fontFamily: Inter
-    fontSize: 18px
-    fontWeight: '400'
-    lineHeight: '1.6'
-  body-md:
-    fontFamily: Inter
-    fontSize: 16px
-    fontWeight: '400'
-    lineHeight: '1.6'
-  body-sm:
-    fontFamily: Inter
-    fontSize: 14px
-    fontWeight: '400'
-    lineHeight: '1.5'
-  label-caps:
-    fontFamily: Inter
-    fontSize: 12px
-    fontWeight: '600'
-    lineHeight: '1'
-    letterSpacing: 0.05em
-rounded:
-  sm: 0.25rem
-  DEFAULT: 0.5rem
+  family: Plus Jakarta Sans
+  scale:
+    h1: { size: 48px, weight: 700, lineHeight: 1.1, tracking: -0.02em }
+    h2: { size: 32px, weight: 700, lineHeight: 1.2, tracking: -0.018em }
+    h3: { size: 22px, weight: 600, lineHeight: 1.3, tracking: -0.012em }
+    body-lg: { size: 18px, weight: 400, lineHeight: 1.6 }
+    body-md: { size: 16px, weight: 400, lineHeight: 1.6 }
+    body-sm: { size: 14px, weight: 400, lineHeight: 1.5 }
+    label-caps: { size: 12px, weight: 600, lineHeight: 1, tracking: 0.06em }
+radius:
+  sm: 0.5rem
   md: 0.75rem
   lg: 1rem
   xl: 1.5rem
+  2xl: 2rem
   full: 9999px
 spacing:
   base: 4px
-  xs: 0.5rem
-  sm: 1rem
-  md: 1.5rem
-  lg: 2rem
-  xl: 3rem
+  rhythm: 8px
   container-max: 1280px
-  gutter: 1rem
+  gutter-mobile: 1rem
+  gutter-desktop: 2rem
 ---
 
 ## Brand & Style
 
-The brand personality of this design system is built on the intersection of academic reliability and modern efficiency. It targets students and parents seeking immediate educational solutions, requiring a UI that feels both authoritative and frictionless. 
+LessonRadar's brand voice sits at the intersection of **academic authority** and **warm, local trust**. We are not a SaaS template, not a bank, not a cartoon edtech: we are the platform a Turkish parent or a YKS student lands on at 23:00 looking for a tutor and feels — within five seconds — that the people listed here are real, vetted, and reachable tonight.
 
-The design style follows a **Corporate / Modern** aesthetic with **Minimalist** influences. By utilizing heavy whitespace and high-contrast typography, the system directs focus toward conversion-driving elements. The emotional response is one of "informed confidence"—users should feel that the platform is high-end, secure, and populated by verified professionals.
+Aesthetic is **"Calm Editorial"**: heavy whitespace, restrained color, high-contrast typography, no decorative gradients. Trust is communicated through what we *omit* (clutter, sales pressure, fake urgency) as much as what we show (verification badges, real response times, transparent prices). The emotional north star is **informed confidence — without coldness**.
 
-## Colors
+## Colors — Warm Trust palette
 
-The palette is strategically split between "Trust" and "Action." Indigo-600 serves as the primary brand anchor, used for navigation, branding, and secondary interactions to establish stability. Orange-500 is reserved strictly for high-value conversion points—such as "Book Now" buttons or "Limited Availability" alerts—to create a clear visual hierarchy of urgency.
+The palette breaks deliberately from the indigo-and-orange SaaS convention that dominates Turkish edtech competitors. It is built on three intentions:
 
-The background uses a subtle Slate-50 to provide a soft contrast against the pure white of the content cards, helping to define the layout without heavy borders. Text utilizes Slate-900 for maximum legibility in headings, while Slate-500 provides a legible but distinct hierarchy for supporting body copy and metadata.
+- **Differentiate:** every TR tutoring competitor lives in the same banking-blue pool. Petrol/teal carries the same "trust + intellect" semantic without the sterile institutional feel.
+- **Resonate locally:** İznik petrol-teal and honey/amber are part of Turkish visual heritage (tile, calligraphy, market). They read as *warm authority*, not generic tech.
+- **Sustain attention:** a parent comparing 5 tutor profiles at night should not be assaulted by saturated orange. Honey amber claims attention without screaming.
+
+| Role | Token | Approx. value | Use |
+|---|---|---|---|
+| Trust / brand anchor | `--brand` / `--primary` | deep İznik teal `oklch(0.42 0.075 195)` | Logo, links, "View Profile", brand surfaces |
+| Brand soft (badge bg) | `--brand-soft` | light teal tint | Verified badge, tag chips, accent panels |
+| Action (CTA) | `--action` | honey amber `oklch(0.71 0.155 65)` | "Contact", "Request Lesson", "Pay" — high-intent buttons only |
+| Action foreground | `--action-foreground` | warm near-black | Text on amber buttons (white fails AA) |
+| Surface (page) | `--background` | cream `oklch(0.985 0.006 85)` | Default page background |
+| Surface (card) | `--card` | pure white | Tutor cards, modals, inputs |
+| Foreground | `--foreground` | warm near-black `oklch(0.22 0.022 65)` | Body and headings |
+| Muted | `--muted-foreground` | warm gray | Metadata, helper text |
+| Border | `--border` | warm light gray | Card edges, dividers |
+| Gold (rating) | `--gold` | bright amber `oklch(0.82 0.16 85)` | Star ratings only — kept yellower than action so users do not confuse the two |
+| Success | `--success` | muted emerald | Verified state, "responds fast", confirmation |
+| Destructive | `--destructive` | warm red | Errors and destructive confirmations |
+
+**Strict rule:** the action color is sacred. Use it *only* for primary conversion CTAs (lesson request, contact, pay). Brand teal carries everything else (navigation, secondary actions, links, branding). Two action buttons on the same fold is a red flag — pick one.
+
+**Dark mode:** reserved for the teacher operations panel (Faz 6+). Customer-facing pages render in light mode only for now.
 
 ## Typography
 
-This design system utilizes **Inter** exclusively to ensure a clean, systematic, and utilitarian feel across all devices. The typographic scale emphasizes high contrast between weights (Bold for headings, Regular for body) to facilitate quick scanning—essential for users comparing multiple tutor profiles.
+The system uses **Plus Jakarta Sans** as the single typeface across UI and content. Inter is intentionally avoided — it has become the default of every AI-generated SaaS template and dilutes brand identity. Plus Jakarta Sans has full Turkish glyph support (`latin-ext`) and a slightly humanist character that complements the warm palette.
 
-Tight letter-spacing is applied to larger headlines to maintain a modern, "tight" look, while body text uses a generous line height (1.6) to ensure long-form tutor biographies remain accessible and easy to read.
+- Headings: weight 600–800, tight tracking (−0.015 to −0.02em).
+- Body: weight 400, line-height 1.6 for tutor biographies and long-form content.
+- Numerals: rely on default tabular for stat displays.
+- Locale-aware formatting (currency, dates) lives in `src/lib/format.ts` — never hard-code Turkish strings into formatters.
 
 ## Layout & Spacing
 
-The system employs a **Fixed Grid** model for desktop and a fluid, single-column model for mobile. On desktop, content is housed within a 1280px central container with a 12-column structure. Spacing is governed by an 8px baseline grid to ensure mathematical harmony across all components.
+Desktop content lives inside a 1280px container with a 12-column rhythm. Mobile uses a fluid single column with 16px safe margins. Spacing follows an **8px baseline rhythm** (use Tailwind's `gap-2/4/6/8`, not arbitrary pixel values).
 
-Mobile layouts prioritize "Safe Margins" of 1rem (16px) to ensure touch targets do not bleed into screen edges. Horizontal scrolling "Shelves" are recommended for mobile tutor categories to maximize vertical screen real estate for search results.
+Mobile-first is non-negotiable: every screen is designed at 375px first, then progressively enhanced. Critical CTAs surface as a sticky bottom bar on small screens (`MobileBottomBar`). Card-in-card layouts are forbidden — flatten one level.
 
 ## Elevation & Depth
 
-Hierarchy is achieved through **Tonal Layers** and **Ambient Shadows**. The base layer is the Slate-50 background. Content sits on Layer 1 (White Cards) with a very soft, diffused shadow (Y: 1px, Blur: 3px, Opacity: 0.05) to distinguish them from the page.
+Three layers, no more:
 
-Higher elevation tiers, such as Dialogs or Sheets, use a more pronounced shadow with a larger blur radius to create a physical sense of "overlay." This system avoids heavy borders, relying instead on subtle value changes to communicate depth and interactivity.
+1. **Page (cream).** Where you stand.
+2. **Card (white) with `--shadow-card`.** Repeated content units, sit one rest above the page.
+3. **Overlay (white) with `--shadow-elevated`.** Sheets, dialogs, popovers — physically lifted off the page.
+
+Hover lifts use `-translate-y-0.5` plus `--shadow-elevated`. CTAs may carry `--shadow-action` (subtle amber glow) for added emphasis on hero placements only — never inside dense lists.
 
 ## Shapes
 
-The design system uses a **Rounded** (Level 2) shape language. This ensures that UI elements feel approachable and modern rather than clinical or sharp. 
+Rounded but not playful.
 
-- Standard components (Buttons, Inputs) use a 0.5rem (8px) radius.
-- Large containers (Cards, Dialogs) use a 1rem (16px) radius.
-- Specific elements like Avatars and "Verified" badges should use a full pill/circular radius to denote personality and status respectively.
+- Buttons, inputs, chips: 0.5–0.75rem (`rounded-md`/`rounded-lg`).
+- Cards, dialogs: 1rem–1.5rem (`rounded-2xl`/`rounded-3xl`).
+- Avatars: full circle for round photo style, `rounded-2xl` for editorial squares.
+- Verified rosettes and rating badges: full pill / circle.
 
 ## Components
 
 ### Buttons
-- **Primary Action (Orange-500):** Reserved for "Book," "Contact," and "Pay." Uses white text and a subtle hover shift to Orange-600.
-- **Brand Action (Indigo-600):** Used for "View Profile," "Search," and "Filter."
-- **Ghost/Outline:** Used for secondary navigation items.
+- **Action (`bg-action`):** the only orange/amber on the page. Reserved for primary conversion (lesson request, contact, pay). Uses dark warm text, never white.
+- **Brand (`bg-primary`):** teal. Used for "View Profile", "Search", branded selections.
+- **Outline / Ghost:** secondary navigation, tertiary actions.
 
-### Cards & Trust Signals
-- **Tutor Cards:** Must feature a prominent Avatar with a "Verified" badge overlay. Ratings (Stars) should appear in a specialized "Gold" text color (#f59e0b) for immediate recognition.
-- **Badges:** Use Indigo-50 backgrounds with Indigo-600 text for skills/tags to maintain brand consistency without competing with CTAs.
+### Trust Signals (TeacherCard)
+- **Verified badge:** teal-soft pill with shield icon. Only when both identity *and* diploma checks pass.
+- **Premium badge:** amber-soft pill, distinct from `--action` button so users don't read it as a CTA.
+- **Rating:** gold stars (`--gold`), 0.0–5.0 with one decimal, count in muted gray.
+- **Response time:** clock pill — turns success-green if under 30 minutes.
+- **Last active:** dot + relative time. Dot is success-green if active within 24h, otherwise muted.
 
 ### Inputs & Selection
-- **Search Bar:** Large, centered, with a 1rem roundedness to feel like a focal point of the landing page.
-- **Slider (shadcn):** Used for price filtering, utilizing the Indigo-600 color for the track and thumb.
+- Search bar is a focal point on landing pages — large height, `rounded-2xl`, never compressed.
+- Sliders (price filter): teal track and thumb.
+- Forms group with `react-hook-form` + `zod`. Error styles use `--destructive` only on submit, not on every keystroke.
 
 ### Mobile Navigation
-- **Sheets/Drawers:** Use for filtering menus on mobile to maintain a "thumb-friendly" interface. Bottom-aligned drawers are preferred for selecting tutor subjects or date ranges.
+- Drawers/Sheets via radix `Sheet`, side-anchored on mobile. Filter menus and locale switcher live here.
+- A sticky bottom CTA bar (`MobileBottomBar`) carries the lead-request action on customer-facing pages — hidden on the lead form itself to avoid CTA-on-CTA.
+
+## What this design system explicitly avoids
+
+- Indigo + orange (overused in SaaS; doesn't differentiate from competitors).
+- Cool slate-blue grays (banking-cold; signals "kurumsal" not "insan").
+- Inter typeface (dilutes identity).
+- Multi-color gradient backgrounds (cheap, distracts from trust signals).
+- Decorative cartoon illustrations of students (childish; conflicts with parent audience).
+- Drop-in stock photo collages (anonymous; defeats the verified-teacher message).
+- Excessive viewport-unit font scaling (introduces hydration risk and unstable widths).
