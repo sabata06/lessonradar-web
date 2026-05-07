@@ -54,6 +54,8 @@ export const loginSchema = z.object({
 export type LoginInput = z.infer<typeof loginSchema>;
 
 // ── Register ────────────────────────────────────────────────────────────────
+// Web register intentionally has no role chooser (hybrid mimari kararı):
+// the BFF hard-codes `role: "customer"`. Teachers onboard through /ogretmen-ol.
 export const registerSchema = z
   .object({
     firstName: z
@@ -69,8 +71,10 @@ export const registerSchema = z
     email: emailSchema,
     password: strongPasswordSchema,
     passwordConfirm: z.string().min(1, { message: "password_confirm_required" }),
-    /** KVKK consent — required, must be true. */
+    /** KVKK Disclosure consent — required, must be true. */
     consentKvkk: z.literal(true, { message: "kvkk_required" }),
+    /** Privacy Policy consent — required, must be true (separate from KVKK). */
+    consentPrivacy: z.literal(true, { message: "privacy_required" }),
     /** Terms of Service consent — required, must be true. */
     consentTerms: z.literal(true, { message: "terms_required" }),
     turnstileToken: z.string().optional(),
@@ -91,6 +95,20 @@ export const forgotPasswordSchema = z.object({
 });
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+// ── Verify email (OTP code) ─────────────────────────────────────────────────
+// Backend issues a 6-digit numeric code. Forward-compatible: when backend
+// later adds `link_token`, the page accepts `?token=<hex>` and bypasses this
+// form entirely (see WEB-BACKEND-INTEGRATION-PLAN decisions log: A → D path).
+export const verifyEmailSchema = z.object({
+  email: emailSchema,
+  code: z
+    .string()
+    .min(1, { message: "code_required" })
+    .regex(/^\d{6}$/, { message: "code_invalid" }),
+});
+
+export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
 
 // ── Reset password ──────────────────────────────────────────────────────────
 export const resetPasswordSchema = z
