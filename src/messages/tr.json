@@ -366,7 +366,8 @@
         "city_required": "Şehir seç.",
         "modality_required": "En az bir ders türü seç.",
         "kvkk_required": "Devam etmek için KVKK onayını işaretle.",
-        "teacher_terms_required": "Devam etmek için Öğretmen Sözleşmesi onayını işaretle."
+        "teacher_terms_required": "Devam etmek için Öğretmen Sözleşmesi onayını işaretle.",
+        "turnstile_error": "Güvenlik doğrulaması başarısız. Lütfen tekrar dene."
       }
     },
     "success": {
