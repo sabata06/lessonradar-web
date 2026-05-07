@@ -126,12 +126,13 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
     setResendNotice(null);
     setServerError(null);
 
-    const res = await fetch("/api/auth/forgot-password", {
+    // Dedicated resend endpoint (not /forgot-password) — see route comment for
+    // why this loop is exempt from Turnstile. Cooldown + Django unknown-email
+    // guard are the bot bar.
+    const res = await fetch("/api/auth/resend-reset-code", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
-      // No turnstile token in this loop — user is already past the gate; the
-      // cooldown is the new bot bar. If we observe abuse, gate behind Turnstile.
       body: JSON.stringify({ email }),
     });
     setResending(false);
