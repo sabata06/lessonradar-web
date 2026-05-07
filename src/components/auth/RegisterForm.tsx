@@ -179,7 +179,9 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
         </label>
       </div>
 
-      {serverError && (
+      {/* Field-level errors are shown inline next to each input — only render
+          the top banner when there's no field detail (server-wide failure). */}
+      {serverError && Object.keys(fieldErrors).length === 0 && (
         <div
           role="alert"
           className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-sm text-destructive"
@@ -191,6 +193,14 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
             className="mt-0.5 shrink-0"
           />
           <span>{translateError(serverError)}</span>
+        </div>
+      )}
+      {serverError && Object.keys(fieldErrors).length > 0 && (
+        <div
+          role="alert"
+          className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-xs text-destructive"
+        >
+          {translateError("VALIDATION_ERROR")}
         </div>
       )}
 
