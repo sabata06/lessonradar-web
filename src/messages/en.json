@@ -706,6 +706,51 @@
       "unknown_error": "Unexpected error. Please try again."
     }
   },
+  "panel": {
+    "common": {
+      "soon_pill": "Coming soon",
+      "greeting": "Hi {name}"
+    },
+    "customer": {
+      "meta_title": "Dashboard",
+      "meta_description": "Manage your LessonRadar account — requests, offers, payments.",
+      "title": "Your dashboard is on the way",
+      "subtitle": "Soon you'll track your lesson requests, incoming offers, and past payments — all in one place.",
+      "features_heading": "Coming to this dashboard",
+      "features": {
+        "offers_title": "Incoming offers",
+        "offers_description": "Compare tutors who responded to your request — price, availability, ratings.",
+        "history_title": "Lesson history",
+        "history_description": "Past and upcoming lessons with notes, in a single list.",
+        "payments_title": "Payments",
+        "payments_description": "Receipts for what you've paid and a clean spending summary."
+      },
+      "actions_heading": "What you can do right now",
+      "action_request_title": "Request a new lesson",
+      "action_request_description": "Tell us your subject and city — verified tutors will reach out.",
+      "action_request_cta": "Request a lesson",
+      "action_search_title": "Browse tutors",
+      "action_search_description": "Discover verified tutors in your city.",
+      "action_search_cta": "See tutors"
+    },
+    "teacher": {
+      "meta_title": "Teacher Panel",
+      "meta_description": "LessonRadar teacher panel — incoming requests, availability, earnings.",
+      "title": "Your teacher panel is on the way",
+      "subtitle": "Soon you'll manage incoming lesson requests, your availability calendar, and earnings — all from here.",
+      "features_heading": "Coming to this panel",
+      "features": {
+        "requests_title": "Incoming requests",
+        "requests_description": "See new lesson requests in your city and send an offer in one tap.",
+        "schedule_title": "Availability calendar",
+        "schedule_description": "Share the days and time slots when you're free to teach.",
+        "earnings_title": "Earnings & payouts",
+        "earnings_description": "Earnings summary for completed lessons, with payout receipts."
+      },
+      "support_prefix": "Questions or feedback:",
+      "support_email": "support@lessonradar.com"
+    }
+  },
   "footer": {
     "rights": "© {year} LessonRadar. All rights reserved.",
     "kvkk": "KVKK Disclosure",

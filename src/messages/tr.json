@@ -707,6 +707,51 @@
       "unknown_error": "Beklenmeyen bir hata oluştu. Lütfen tekrar dene."
     }
   },
+  "panel": {
+    "common": {
+      "soon_pill": "Yakında",
+      "greeting": "Merhaba {name}"
+    },
+    "customer": {
+      "meta_title": "Panelim",
+      "meta_description": "LessonRadar hesabını yönet — talepler, teklifler, ödemeler.",
+      "title": "Panelin hazırlanıyor",
+      "subtitle": "Yakında talep ettiğin dersleri, gelen teklifleri ve geçmiş ödemelerini buradan tek ekranda takip edeceksin.",
+      "features_heading": "Yakında bu panelde",
+      "features": {
+        "offers_title": "Gelen teklifler",
+        "offers_description": "Talebine yanıt veren öğretmenleri karşılaştır, fiyat ve müsaitliklerini gör.",
+        "history_title": "Ders geçmişi",
+        "history_description": "Geçmiş ve yaklaşan derslerini, notlarını tek listede topla.",
+        "payments_title": "Ödemeler",
+        "payments_description": "Yaptığın ödemelerin makbuzlarını ve harcama özetini gör."
+      },
+      "actions_heading": "Şimdi ne yapabilirsin?",
+      "action_request_title": "Yeni ders talebi oluştur",
+      "action_request_description": "Branşını ve şehrini söyle, öğretmenler sana yazsın.",
+      "action_request_cta": "Talep oluştur",
+      "action_search_title": "Öğretmen ara",
+      "action_search_description": "Şehrindeki doğrulanmış öğretmenleri keşfet.",
+      "action_search_cta": "Öğretmenleri gör"
+    },
+    "teacher": {
+      "meta_title": "Öğretmen Panelim",
+      "meta_description": "LessonRadar öğretmen paneli — gelen talepler, müsaitlik, kazançlar.",
+      "title": "Öğretmen panelin hazırlanıyor",
+      "subtitle": "Yakında gelen ders taleplerini, müsaitlik takvimini ve kazançlarını buradan yöneteceksin.",
+      "features_heading": "Yakında bu panelde",
+      "features": {
+        "requests_title": "Gelen ders talepleri",
+        "requests_description": "Şehrindeki yeni talepleri görüp tek tıkla teklif gönder.",
+        "schedule_title": "Müsaitlik takvimi",
+        "schedule_description": "Hangi gün/saat aralıklarında ders verebileceğini paylaş.",
+        "earnings_title": "Kazançlar ve ödemeler",
+        "earnings_description": "Tamamlanan derslerin kazanç özeti, ödeme makbuzları."
+      },
+      "support_prefix": "Sorun ya da öneri için:",
+      "support_email": "destek@lessonradar.com"
+    }
+  },
   "footer": {
     "rights": "© {year} LessonRadar. Tüm hakları saklıdır.",
     "kvkk": "KVKK Aydınlatma Metni",
