@@ -1,0 +1,53 @@
+/**
+ * Single source of truth for Django REST API paths.
+ *
+ * Paths are relative to `DJANGO_API_BASE` (server) or to `/api/proxy/...`
+ * via Nginx (production same-origin). Always start with a leading slash.
+ *
+ * Group conventions:
+ *   AUTH_*       — JWT and account management (already implemented in backend)
+ *   ACCOUNT_*    — authenticated user profile / preferences
+ *   MARKETPLACE_*— public marketplace endpoints (B3 — not yet implemented backend-side;
+ *                   see WEB-BACKEND-INTEGRATION-PLAN.md §2.3.F)
+ *   LEAD_*       — anonymous lead capture (B4 — backend wiring pending)
+ *   TEACHER_APP_*— teacher application submission (B5 — backend wiring pending)
+ */
+
+export const ENDPOINTS = {
+  // ── JWT (rest_framework_simplejwt) ──────────────────────────────────────
+  AUTH_TOKEN_OBTAIN: "/api/token/",
+  AUTH_TOKEN_REFRESH: "/api/token/refresh/",
+
+  // ── Account / Auth (lessonradar app) ────────────────────────────────────
+  AUTH_REGISTER: "/api/auth/register/",
+  AUTH_BOOTSTRAP: "/api/auth/bootstrap/",
+  AUTH_FORGOT_PASSWORD: "/api/auth/forgot-password/",
+  AUTH_RESET_PASSWORD: "/api/auth/reset-password/",
+  AUTH_CHANGE_PASSWORD: "/api/auth/change-password/",
+  AUTH_VERIFY_EMAIL: "/api/auth/verify-email/",
+  AUTH_RESEND_VERIFICATION: "/api/auth/resend-verification/",
+  AUTH_GOOGLE: "/api/auth/google/",
+  AUTH_PROFILE: "/api/auth/profile/",
+  AUTH_CUSTOMER_PROFILE: "/api/auth/customer-profile/",
+  AUTH_TEACHER_PROFILE: "/api/auth/teacher-profile/",
+  AUTH_REGISTER_DEVICE: "/api/auth/register-device/",
+  AUTH_LOGOUT: "/api/auth/logout/",
+
+  // ── Marketplace public (B3 — backend pending) ───────────────────────────
+  MARKETPLACE_TAXONOMY: "/api/marketplace/taxonomy/",
+  MARKETPLACE_TEACHERS: "/api/marketplace/teachers/",
+  /** Append `<slug>/` */
+  MARKETPLACE_TEACHER_DETAIL: (slug: string) =>
+    `/api/marketplace/teachers/${encodeURIComponent(slug)}/`,
+  MARKETPLACE_CITIES: "/api/marketplace/cities/",
+
+  // ── Anonymous lead capture (B4 — backend pending) ───────────────────────
+  LEAD_CREATE: "/api/marketplace/leads/",
+  LEAD_PHONE_OTP_REQUEST: "/api/marketplace/leads/phone-otp/request/",
+  LEAD_PHONE_OTP_VERIFY: "/api/marketplace/leads/phone-otp/verify/",
+
+  // ── Teacher application (B5 — backend pending) ──────────────────────────
+  TEACHER_APPLICATION_SUBMIT: "/api/teacher-applications/",
+} as const;
+
+export type EndpointKey = keyof typeof ENDPOINTS;
