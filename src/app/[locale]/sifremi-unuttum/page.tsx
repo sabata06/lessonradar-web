@@ -4,7 +4,6 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 
 import { Container } from "@/components/layout/Container";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
-import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { getSession } from "@/lib/auth/cookies";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -50,9 +49,6 @@ export default async function ForgotPasswordPage({ params }: PageProps) {
     <Container className="py-10 md:py-16">
       <div className="mx-auto max-w-md">
         <header className="mb-6 text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary">
-            {t("kicker")}
-          </p>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             {t("title")}
           </h1>
@@ -62,16 +58,6 @@ export default async function ForgotPasswordPage({ params }: PageProps) {
         <div className="rounded-2xl border border-border bg-card p-6 shadow-card md:p-8">
           <ForgotPasswordForm />
         </div>
-
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          {t("no_account")}{" "}
-          <Link
-            href="/kayit"
-            className="font-medium text-primary underline-offset-4 hover:underline"
-          >
-            {t("register_link")}
-          </Link>
-        </p>
       </div>
     </Container>
   );

@@ -47,24 +47,10 @@ export default async function ResetPasswordPage({
     <Container className="py-10 md:py-16">
       <div className="mx-auto max-w-md">
         <header className="mb-6 text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary">
-            {t("kicker")}
-          </p>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             {t("title")}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {email
-              ? t.rich("subtitle", {
-                  email,
-                  strong: (chunks) => (
-                    <strong className="font-semibold text-foreground">
-                      {chunks}
-                    </strong>
-                  ),
-                })
-              : t("subtitle_no_email")}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{t("subtitle")}</p>
         </header>
 
         <div className="rounded-2xl border border-border bg-card p-6 shadow-card md:p-8">

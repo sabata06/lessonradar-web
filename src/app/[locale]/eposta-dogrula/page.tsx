@@ -47,9 +47,6 @@ export default async function VerifyEmailPage({ params, searchParams }: PageProp
     <Container className="py-10 md:py-16">
       <div className="mx-auto max-w-md">
         <header className="mb-6 text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary">
-            {t("kicker")}
-          </p>
           <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
             {t("title")}
           </h1>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -49,6 +49,13 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
   const [code, setCode] = useState("");
+  const [resending, setResending] = useState(false);
+  const [resendNotice, setResendNotice] = useState<string | null>(null);
+  // Cooldown: countdown seconds; 0 = ready. Prevents spam-clicking the resend
+  // button (each backend call invalidates the previous code), and signals to
+  // the user that the system is rate-limiting them on purpose.
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const resendTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // B2.S4 spirit — strip ?email= from URL after mount so the email isn't
   // leaked via Referer / browser history when the user hits an outbound link.
@@ -97,6 +104,52 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
       return tErrors(key as never);
     } catch {
       return tErrors("unknown_error");
+    }
+  };
+
+  // 30-second client cooldown — server-side rate-limits also apply, but this
+  // gives immediate feedback and prevents accidental double-fires.
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    resendTimerRef.current = setInterval(() => {
+      setResendCooldown((s) => (s <= 1 ? 0 : s - 1));
+    }, 1000);
+    return () => {
+      if (resendTimerRef.current) clearInterval(resendTimerRef.current);
+    };
+  }, [resendCooldown]);
+
+  const handleResend = async () => {
+    const email = watch("email");
+    if (!email || resending || resendCooldown > 0) return;
+    setResending(true);
+    setResendNotice(null);
+    setServerError(null);
+
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      // No turnstile token in this loop — user is already past the gate; the
+      // cooldown is the new bot bar. If we observe abuse, gate behind Turnstile.
+      body: JSON.stringify({ email }),
+    });
+    setResending(false);
+
+    if (res.ok) {
+      // Clear the input so the user can't accidentally submit the OLD code.
+      setCode("");
+      setResendNotice(t("resend_notice"));
+      setResendCooldown(30);
+      return;
+    }
+    const data = (await res.json().catch(() => null)) as
+      | { error?: string }
+      | null;
+    if (res.status === 429) {
+      setServerError("rate_limited");
+    } else {
+      setServerError((data?.error ?? "unknown_error") as ServerErrorCode);
     }
   };
 
@@ -182,6 +235,16 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
           />
           <span>{translateError(serverError)}</span>
         </div>
+      )}
+
+      {resendNotice && (
+        <p
+          role="status"
+          aria-live="polite"
+          className="rounded-lg border border-success/30 bg-success/5 px-3 py-2.5 text-sm text-success"
+        >
+          {resendNotice}
+        </p>
       )}
 
       <label className="block space-y-1.5">
@@ -329,15 +392,18 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
         )}
       </Button>
 
-      <p className="text-center text-sm text-muted-foreground">
-        {t("resend_prefix")}{" "}
-        <Link
-          href="/sifremi-unuttum"
-          className="font-medium text-primary underline-offset-4 hover:underline"
-        >
-          {t("resend_link")}
-        </Link>
-      </p>
+      <button
+        type="button"
+        onClick={handleResend}
+        disabled={resending || resendCooldown > 0 || !watch("email")}
+        className="block w-full text-center text-sm font-medium text-primary underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
+      >
+        {resending
+          ? t("resend_sending")
+          : resendCooldown > 0
+            ? t("resend_cooldown", { seconds: resendCooldown })
+            : t("resend_button")}
+      </button>
     </form>
   );
 }

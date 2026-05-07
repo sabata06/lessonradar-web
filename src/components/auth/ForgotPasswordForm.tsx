@@ -106,7 +106,7 @@ export function ForgotPasswordForm() {
           <h2 className="text-xl font-semibold text-foreground">
             {t("sent_title")}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             {t.rich("sent_body", {
               email: submittedEmail,
               strong: (chunks) => (
@@ -115,9 +115,6 @@ export function ForgotPasswordForm() {
                 </strong>
               ),
             })}
-          </p>
-          <p className="mt-3 text-xs text-muted-foreground">
-            {t("sent_spam_hint")}
           </p>
         </div>
         <Button
