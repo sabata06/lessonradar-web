@@ -11,10 +11,9 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 
-const LABELS: Record<string, string> = { tr: "Türkçe", en: "English" };
+const FULL_LABELS: Record<string, string> = { tr: "Türkçe", en: "English" };
 
 export function LocaleSwitcher() {
   const locale = useLocale();
@@ -32,15 +31,22 @@ export function LocaleSwitcher() {
       <SelectTrigger
         size="sm"
         aria-label={t("language")}
-        className="h-9 gap-2 rounded-full border-border bg-transparent px-3 text-sm font-medium text-muted-foreground hover:bg-muted"
+        className="h-9 gap-2 rounded-full border-border bg-transparent px-3 text-sm font-medium text-muted-foreground hover:bg-muted [&>svg:last-child]:opacity-60"
       >
         <HugeiconsIcon icon={GlobalIcon} size={16} strokeWidth={1.6} />
-        <SelectValue />
+        {/* Compact 2-letter code in the trigger; the dropdown shows full names.
+            Avoids the trigger/content width mismatch that pushed the popover
+            off to the side under Radix's default `item-aligned` positioning. */}
+        <span aria-hidden>{locale.toUpperCase()}</span>
       </SelectTrigger>
-      <SelectContent align="end">
+      {/* `position="popper"` anchors the popover under the trigger instead of
+          aligning the active item to the trigger label — the latter (Radix
+          default) caused the dropdown to drift left when our trigger
+          ("🌐 Türkçe") was wider than the content rows ("Türkçe"). */}
+      <SelectContent position="popper" align="end" sideOffset={6} className="min-w-[10rem]">
         {routing.locales.map((l) => (
           <SelectItem key={l} value={l}>
-            {LABELS[l] ?? l}
+            {FULL_LABELS[l] ?? l}
           </SelectItem>
         ))}
       </SelectContent>
