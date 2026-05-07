@@ -9,8 +9,12 @@ import {
   refreshAccessToken,
   SESSION_COOKIE_MAX_AGE,
   SESSION_COOKIE_NAME,
+  type SafeUser,
   type SessionPayload,
 } from "./server";
+
+/** Re-export for callers that prefer the next/headers shape. */
+type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
 const IS_PROD = process.env.NODE_ENV === "production";
 
@@ -55,6 +59,19 @@ export async function clearSessionCookie(): Promise<void> {
  */
 export async function getSession(): Promise<SessionPayload | null> {
   const store = await cookies();
+  return getSessionFromStore(store);
+}
+
+/**
+ * Variant that consumes an externally-acquired cookie store (or its promise),
+ * so the caller can hold the `cookies()` promise without awaiting it inside a
+ * layout — keeping the route prerenderable until something downstream actually
+ * `use()`s the resulting session promise (Context7: "push dynamic access down").
+ */
+export async function getSessionFromStore(
+  storeOrPromise: CookieStore | Promise<CookieStore>,
+): Promise<SessionPayload | null> {
+  const store = await storeOrPromise;
   const raw = store.get(SESSION_COOKIE_NAME)?.value;
   if (!raw) return null;
 
@@ -73,6 +90,17 @@ export async function getSession(): Promise<SessionPayload | null> {
   }
   await setSessionCookie(next);
   return next;
+}
+
+/**
+ * Public-only projection of the session for the client. The full SessionPayload
+ * holds Django access/refresh JWTs which must never cross the server boundary.
+ */
+export async function getSafeUserPromise(
+  storeOrPromise: CookieStore | Promise<CookieStore>,
+): Promise<SafeUser | null> {
+  const session = await getSessionFromStore(storeOrPromise);
+  return session?.user ?? null;
 }
 
 /** Convenience accessor — returns just the access token, refreshing if needed. */

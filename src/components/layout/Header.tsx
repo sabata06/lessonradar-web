@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 
 import { Container } from "./Container";
+import { HeaderAuth } from "./HeaderAuth";
 import { Logo } from "./Logo";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { MobileMenu } from "./MobileMenu";
@@ -26,6 +27,8 @@ export async function Header() {
           <div className="hidden lg:block">
             <LocaleSwitcher />
           </div>
+
+          <HeaderAuth />
 
           <Button
             asChild

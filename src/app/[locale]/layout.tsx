@@ -11,6 +11,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { AuthProvider } from "@/lib/auth/client";
 import { websiteJsonLd } from "@/lib/seo/jsonld";
 import { buildHreflangAlternates, buildLocaleUrl, SITE_NAME, SITE_URL } from "@/lib/seo/site";
 
@@ -73,23 +74,31 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   const tCommon = await getTranslations({ locale, namespace: "common" });
 
+  // Auth is intentionally client-hydrated (mount-time GET /api/auth/me).
+  // Tried server-streaming via cookies() promise + Suspense (Context7 pattern)
+  // and via `cacheComponents: true` PPR — both forced every route into
+  // dynamic rendering and killed pSEO SSG. PPR migration is a separate phase.
+  // Cost of current approach: ~50ms `/api/auth/me` round-trip on first paint
+  // for authed users; SSG and SEO crawl HTML are fully preserved.
   return (
     <html lang={locale} className={cn(sans.variable, mono.variable)}>
       <body className="min-h-dvh bg-background font-sans text-foreground antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-foreground focus:px-3 focus:py-2 focus:text-background"
-          >
-            {tCommon("skip_to_content")}
-          </a>
-          <Header />
-          <main id="main" className="flex min-h-[calc(100dvh-4rem)] flex-col pb-24 lg:pb-0">
-            {children}
-          </main>
-          <Footer />
-          <MobileBottomBar />
-          <JsonLd data={websiteJsonLd(locale as Locale)} />
+          <AuthProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-foreground focus:px-3 focus:py-2 focus:text-background"
+            >
+              {tCommon("skip_to_content")}
+            </a>
+            <Header />
+            <main id="main" className="flex min-h-[calc(100dvh-4rem)] flex-col pb-24 lg:pb-0">
+              {children}
+            </main>
+            <Footer />
+            <MobileBottomBar />
+            <JsonLd data={websiteJsonLd(locale as Locale)} />
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>
