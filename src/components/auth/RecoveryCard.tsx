@@ -47,14 +47,17 @@ export function RecoveryCard({
   // On mount, smooth-scroll the card into view AND move keyboard focus to it.
   // The form is long enough that without this, a user who submits from the
   // bottom never sees the error and assumes the click was silently ignored.
-  // Respects prefers-reduced-motion via CSS scroll-behavior.
+  //
+  // `block: "start"` aligns the card's TOP with the viewport top — paired with
+  // `scroll-mt-24` (Tailwind utility on the section) so the sticky header
+  // doesn't overlap the card. On mobile this avoids the "only the bottom 30%
+  // is visible" problem `block: "center"` caused on small viewports.
   useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
-    card.scrollIntoView({ behavior: "smooth", block: "center" });
-    // Focus after the scroll begins so screen readers announce on the new viewport.
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
     requestAnimationFrame(() => card.focus());
-  }, [variant]); // re-run if user changes which recovery state they're in
+  }, [variant]);
 
   const titleKey =
     variant === "already_registered"
@@ -75,7 +78,7 @@ export function RecoveryCard({
       role="alert"
       aria-live="polite"
       tabIndex={-1}
-      className="rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+      className="scroll-mt-24 rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
     >
       <div className="flex items-start gap-3">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
