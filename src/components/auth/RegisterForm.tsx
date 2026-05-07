@@ -77,7 +77,7 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
       consentKvkk: false as unknown as true,
       consentPrivacy: false as unknown as true,
       consentTerms: false as unknown as true,
-      email_confirm: "",
+      lr_extra_field: "",
     },
     mode: "onSubmit",
   });
@@ -99,11 +99,6 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
 
   const onSubmit = handleSubmit(
     async (values) => {
-      console.log("[register] submit OK — sending to BFF", {
-        hasTurnstile: !!turnstileToken,
-        turnstileEnabled,
-        email: values.email,
-      });
       setServerError(null);
       setFieldErrors({});
 
@@ -155,11 +150,6 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
       }
       setServerError((data?.error ?? "unknown_error") as ServerErrorCode);
     },
-    (errors) => {
-      // Validation failed — RHF zod resolver caught it. This is THE missing
-      // signal when "submit does nothing": zod blocked the call before fetch.
-      console.warn("[register] zod validation failed — submit blocked", errors);
-    },
   );
 
   // stopPropagation: link is inside a <label>, so without it a click on the
@@ -177,28 +167,22 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
   );
 
   return (
-    <form
-      onSubmit={(e) => {
-        console.log("[register] <form> onSubmit event fired", {
-          submitBlocked,
-          submitting,
-          turnstileEnabled,
-          hasTurnstileToken: !!turnstileToken,
-        });
-        return onSubmit(e);
-      }}
-      noValidate
-      className="space-y-5"
-    >
-      {/* Honeypot */}
-      <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px]">
+    <form onSubmit={onSubmit} noValidate className="space-y-5">
+      {/* Honeypot — `inert` blocks Chrome autofill from filling a hidden
+          input (which silently triggered zod max(0) and killed submit).
+          Generic field name avoids matching bot pattern too. */}
+      <div
+        {...({ inert: "" } as Record<string, string>)}
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden"
+      >
         <label>
-          Email confirm
+          lr_extra_field
           <input
             type="text"
             tabIndex={-1}
             autoComplete="off"
-            {...register("email_confirm")}
+            {...register("lr_extra_field")}
           />
         </label>
       </div>

@@ -48,7 +48,7 @@ export const loginSchema = z.object({
   /** "Beni hatırla" — extends cookie to 30 days when true. */
   remember: z.boolean().optional(),
   /** Honeypot — bots fill, humans don't. Reject anything non-empty. */
-  email_confirm: z.string().max(0, { message: "honeypot_filled" }).optional(),
+  lr_extra_field: z.string().max(0, { message: "honeypot_filled" }).optional(),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -78,7 +78,7 @@ export const registerSchema = z
     /** Terms of Service consent — required, must be true. */
     consentTerms: z.literal(true, { message: "terms_required" }),
     turnstileToken: z.string().optional(),
-    email_confirm: z.string().max(0, { message: "honeypot_filled" }).optional(),
+    lr_extra_field: z.string().max(0, { message: "honeypot_filled" }).optional(),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: "passwords_do_not_match",
@@ -91,7 +91,7 @@ export type RegisterInput = z.infer<typeof registerSchema>;
 export const forgotPasswordSchema = z.object({
   email: emailSchema,
   turnstileToken: z.string().optional(),
-  email_confirm: z.string().max(0, { message: "honeypot_filled" }).optional(),
+  lr_extra_field: z.string().max(0, { message: "honeypot_filled" }).optional(),
 });
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;

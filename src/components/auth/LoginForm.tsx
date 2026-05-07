@@ -73,7 +73,7 @@ export function LoginForm({ next }: LoginFormProps) {
       email: "",
       password: "",
       remember: false,
-      email_confirm: "",
+      lr_extra_field: "",
     },
     mode: "onSubmit",
   });
@@ -118,15 +118,22 @@ export function LoginForm({ next }: LoginFormProps) {
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">
-      {/* Honeypot — keep visually hidden + autocomplete off so real users skip it */}
-      <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px]">
+      {/* Honeypot — `inert` keeps browsers (esp. Chrome autofill) from
+          touching this field. `aria-hidden` alone wasn't enough, autofill
+          dropped a value into the previous "email_confirm" input. The cryptic
+          field name avoids triggering generic bot-form fillers too. */}
+      <div
+        {...({ inert: "" } as Record<string, string>)}
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden"
+      >
         <label>
-          Email confirm
+          lr_extra_field
           <input
             type="text"
             tabIndex={-1}
             autoComplete="off"
-            {...register("email_confirm")}
+            {...register("lr_extra_field")}
           />
         </label>
       </div>
