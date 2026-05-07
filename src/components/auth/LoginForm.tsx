@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -20,6 +20,11 @@ import { loginSchema, type LoginInput } from "@/lib/auth/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import {
+  TurnstileWidget,
+  isTurnstileEnabled,
+  type TurnstileWidgetHandle,
+} from "./TurnstileWidget";
 
 interface LoginFormProps {
   /** Server-validated next path (already passed through `safeRedirect`). */
@@ -53,7 +58,10 @@ export function LoginForm({ next }: LoginFormProps) {
 
   const [serverError, setServerError] = useState<ErrorCode | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const turnstileRef = useRef<TurnstileWidgetHandle | null>(null);
+  const turnstileEnabled = isTurnstileEnabled();
 
   const {
     register,
@@ -71,6 +79,10 @@ export function LoginForm({ next }: LoginFormProps) {
   });
 
   const submitting = isSubmitting || isPending;
+  // Block submission until the Turnstile token is present (managed mode usually
+  // resolves silently within ~500ms). When the site key is unset (dev), the
+  // widget is hidden and the BFF bypasses verification.
+  const submitBlocked = submitting || (turnstileEnabled && !turnstileToken);
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null);
@@ -78,13 +90,16 @@ export function LoginForm({ next }: LoginFormProps) {
       await login({
         email: values.email,
         password: values.password,
-        turnstileToken: values.turnstileToken,
+        turnstileToken: turnstileToken ?? undefined,
       });
       startTransition(() => {
         router.push(next);
         router.refresh(); // pull SSR back in sync with new session
       });
     } catch (error) {
+      // Token is one-time-use — regenerate after any auth/network error.
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
       if (error instanceof AuthError) {
         setServerError(statusToCode(error.status, error.code));
       } else {
@@ -195,10 +210,19 @@ export function LoginForm({ next }: LoginFormProps) {
         </a>
       </div>
 
+      <TurnstileWidget
+        ref={turnstileRef}
+        onVerify={setTurnstileToken}
+        onError={() => setTurnstileToken(null)}
+        onExpire={() => setTurnstileToken(null)}
+        action="login"
+        className="flex justify-center"
+      />
+
       <Button
         type="submit"
         size="lg"
-        disabled={submitting}
+        disabled={submitBlocked}
         aria-busy={submitting}
         className="w-full bg-action text-action-foreground shadow-action hover:bg-action/90"
       >
