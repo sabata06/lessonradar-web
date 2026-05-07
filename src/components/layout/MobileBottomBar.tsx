@@ -10,9 +10,12 @@ import { Link, usePathname } from "@/i18n/navigation";
  * Mobile-only sticky bottom CTA. Reinforces the web lead conversion priority
  * without occupying screen real estate on desktop.
  *
- * Auto-hides on the lead form / success pages so we don't stack CTA on CTA.
+ * Auto-hides on:
+ *   - /ders-talebi          → already on the lead form, no CTA-on-CTA
+ *   - /ogretmen/*           → profile page renders its own teacher-scoped CTA
+ *   - /ogretmen-ol          → tutor-facing, the student lead CTA is contextually wrong
  */
-const HIDDEN_PATHS = ["/ders-talebi"];
+const HIDDEN_PATHS = ["/ders-talebi", "/ogretmen", "/ogretmen-ol"];
 
 export function MobileBottomBar() {
   const t = useTranslations("cta");

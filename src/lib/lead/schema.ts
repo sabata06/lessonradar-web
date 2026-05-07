@@ -39,6 +39,7 @@ export const leadRequestSchema = z
     level: z.enum(STUDENT_LEVELS),
     citySlug: z.string().min(1),
     districtSlug: z.string().optional(),
+    teacherSlug: z.string().optional(),
     modality: z.enum(MODALITIES),
     budgetMin: z
       .union([z.number().int().min(0).max(100000), z.nan()])

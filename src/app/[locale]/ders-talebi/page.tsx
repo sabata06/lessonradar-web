@@ -8,6 +8,7 @@ import { Breadcrumb } from "@/components/discovery/Breadcrumb";
 import { routing, type Locale } from "@/i18n/routing";
 import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
+import { getTeacherBySlug } from "@/lib/data/mock/teachers";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 export function generateStaticParams() {
@@ -34,7 +35,13 @@ interface SearchParams {
   discipline?: string;
   city?: string;
   district?: string;
-  teacher?: string; // currently unused; reserved for future "directly contact this teacher" flow
+  /**
+   * Optional teacher slug — when present, the lead form pre-fills the
+   * intended recipient and shows a "scoped to this tutor" banner. The
+   * slug also rides into the payload so the backend can fan out to that
+   * teacher first before broadcasting to the rest of the city.
+   */
+  teacher?: string;
 }
 
 export default async function LeadRequestPage({
@@ -57,6 +64,7 @@ export default async function LeadRequestPage({
     validCitySlug && sp.district
       ? TR_DISTRICTS.find((d) => d.citySlug === validCitySlug && d.slug === sp.district)?.slug
       : undefined;
+  const targetTeacher = sp.teacher ? getTeacherBySlug(sp.teacher) : undefined;
 
   return (
     <>
@@ -93,7 +101,9 @@ export default async function LeadRequestPage({
               disciplineSlug: validDisciplineSlug,
               citySlug: validCitySlug,
               districtSlug: validDistrictSlug,
+              teacherSlug: targetTeacher?.slug,
             }}
+            targetTeacherName={targetTeacher?.fullName}
           />
         </div>
 

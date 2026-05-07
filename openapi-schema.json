@@ -1,0 +1,2865 @@
+openapi: 3.0.3
+info:
+  title: LessonRadar API
+  version: 1.0.0
+  description: LessonRadar API dokümantasyonu
+paths:
+  /api/assignments/:
+    get:
+      operationId: assignments_list
+      description: ViewSet for Assignment model.
+      tags:
+      - assignments
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assignment'
+          description: ''
+    post:
+      operationId: assignments_create
+      description: ViewSet for Assignment model.
+      tags:
+      - assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+  /api/assignments/{id}/:
+    get:
+      operationId: assignments_retrieve
+      description: ViewSet for Assignment model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignment.
+        required: true
+      tags:
+      - assignments
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+    put:
+      operationId: assignments_update
+      description: ViewSet for Assignment model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignment.
+        required: true
+      tags:
+      - assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+    patch:
+      operationId: assignments_partial_update
+      description: ViewSet for Assignment model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignment.
+        required: true
+      tags:
+      - assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignmentRequest'
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+    delete:
+      operationId: assignments_destroy
+      description: ViewSet for Assignment model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignment.
+        required: true
+      tags:
+      - assignments
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '204':
+          description: No response body
+  /api/assignments/{id}/mark_completed/:
+    post:
+      operationId: assignments_mark_completed_create
+      description: Mark assignment as completed.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignment.
+        required: true
+      tags:
+      - assignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+  /api/auth/bootstrap/:
+    get:
+      operationId: auth_bootstrap_retrieve
+      description: |-
+        Get role-aware auth bootstrap payload for shell routing.
+
+        GET /api/auth/bootstrap/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/auth/change-password/:
+    post:
+      operationId: auth_change_password_create
+      description: |-
+        Change password for authenticated user.
+
+        POST /api/auth/change-password/
+        {
+            "current_password": "MevcutSifre123",
+            "new_password": "YeniSifre123",
+            "new_password_confirm": "YeniSifre123"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/auth/customer-profile/:
+    get:
+      operationId: auth_customer_profile_retrieve
+      description: Get or update the authenticated customer profile.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_customer_profile_update
+      description: Get or update the authenticated customer profile.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: auth_customer_profile_partial_update
+      description: Get or update the authenticated customer profile.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/auth/forgot-password/:
+    post:
+      operationId: auth_forgot_password_create
+      description: |-
+        Request password reset code.
+
+        POST /api/auth/forgot-password/
+        {
+            "email": "email@example.com"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/google/:
+    post:
+      operationId: auth_google_create
+      description: |-
+        Google ID Token ile giriş/kayıt.
+
+        POST /api/auth/google/
+        {
+            "id_token": "google_id_token_string"
+        }
+
+        Returns:
+            - access: JWT access token
+            - refresh: JWT refresh token
+            - is_new_user: Yeni kullanıcı mı
+            - user: Kullanıcı bilgileri
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      description: |-
+        Get/update authenticated user profile.
+
+        GET /api/auth/profile/
+        PATCH /api/auth/profile/
+        PUT /api/auth/profile/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_profile_update
+      description: |-
+        Get/update authenticated user profile.
+
+        GET /api/auth/profile/
+        PATCH /api/auth/profile/
+        PUT /api/auth/profile/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: auth_profile_partial_update
+      description: |-
+        Get/update authenticated user profile.
+
+        GET /api/auth/profile/
+        PATCH /api/auth/profile/
+        PUT /api/auth/profile/
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: |-
+        Register a new user and send email verification code.
+
+        POST /api/auth/register/
+        {
+            "username": "kullanici_adi",
+            "email": "email@example.com",
+            "password": "Sifre123",
+            "password_confirm": "Sifre123",
+            "first_name": "Ad",
+            "last_name": "Soyad"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/register-device/:
+    post:
+      operationId: auth_register_device_create
+      description: |-
+        FCM device token kaydet.
+
+        POST /api/auth/register-device/
+        {
+            "token": "fcm_device_token",
+            "platform": "android" | "ios"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/auth/resend-verification/:
+    post:
+      operationId: auth_resend_verification_create
+      description: |-
+        Resend verification code to email.
+
+        POST /api/auth/resend-verification/
+        {
+            "email": "email@example.com"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/reset-password/:
+    post:
+      operationId: auth_reset_password_create
+      description: |-
+        Reset password with the 6-digit code.
+
+        POST /api/auth/reset-password/
+        {
+            "email": "email@example.com",
+            "code": "123456",
+            "new_password": "YeniSifre123",
+            "new_password_confirm": "YeniSifre123"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/teacher-profile/:
+    get:
+      operationId: auth_teacher_profile_retrieve
+      description: Get or update the authenticated teacher profile.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_teacher_profile_update
+      description: Get or update the authenticated teacher profile.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: auth_teacher_profile_partial_update
+      description: Get or update the authenticated teacher profile.
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/auth/verify-email/:
+    post:
+      operationId: auth_verify_email_create
+      description: |-
+        Verify email with the 6-digit code.
+
+        POST /api/auth/verify-email/
+        {
+            "email": "email@example.com",
+            "code": "123456"
+        }
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/dashboard/detailed_stats/:
+    get:
+      operationId: dashboard_detailed_stats_retrieve
+      description: Get detailed statistics for dashboard.
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/dashboard/earnings_report/:
+    get:
+      operationId: dashboard_earnings_report_retrieve
+      description: Get earnings report (weekly, monthly, yearly).
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/dashboard/stats/:
+    get:
+      operationId: dashboard_stats_retrieve
+      description: Get basic dashboard statistics.
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/dashboard/today_schedule/:
+    get:
+      operationId: dashboard_today_schedule_retrieve
+      description: Get today's lesson schedule.
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/dashboard/upcoming_lessons/:
+    get:
+      operationId: dashboard_upcoming_lessons_retrieve
+      description: Get upcoming lessons.
+      tags:
+      - dashboard
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/lessons/:
+    get:
+      operationId: lessons_list
+      description: ViewSet for Lesson model.
+      tags:
+      - lessons
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lesson'
+          description: ''
+    post:
+      operationId: lessons_create
+      description: Create a new lesson with conflict checking.
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/{id}/:
+    get:
+      operationId: lessons_retrieve
+      description: ViewSet for Lesson model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    put:
+      operationId: lessons_update
+      description: Update a lesson with conflict checking.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    patch:
+      operationId: lessons_partial_update
+      description: Partial update with conflict checking.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLessonRequest'
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    delete:
+      operationId: lessons_destroy
+      description: ViewSet for Lesson model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '204':
+          description: No response body
+  /api/lessons/{id}/cancel_with_reason/:
+    post:
+      operationId: lessons_cancel_with_reason_create
+      description: Cancel lesson with a reason.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/{id}/mark_cancelled/:
+    post:
+      operationId: lessons_mark_cancelled_create
+      description: Mark lesson as cancelled.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/{id}/mark_completed/:
+    post:
+      operationId: lessons_mark_completed_create
+      description: Mark lesson as completed.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/{id}/mark_paid/:
+    post:
+      operationId: lessons_mark_paid_create
+      description: Mark lesson payment as paid.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/{id}/quick_complete/:
+    post:
+      operationId: lessons_quick_complete_create
+      description: Quick complete lesson with all related operations.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/{id}/update_schedule/:
+    post:
+      operationId: lessons_update_schedule_create
+      description: Update lesson schedule time.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/mark_all_pending_paid/:
+    post:
+      operationId: lessons_mark_all_pending_paid_create
+      description: Mark all pending payments as paid.
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/mark_multiple_paid/:
+    post:
+      operationId: lessons_mark_multiple_paid_create
+      description: Mark multiple lessons as paid.
+      tags:
+      - lessons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/LessonRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/lessons/pending_payments/:
+    get:
+      operationId: lessons_pending_payments_retrieve
+      description: Get list of pending payments.
+      tags:
+      - lessons
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /api/notification-preferences/:
+    get:
+      operationId: notification_preferences_retrieve
+      description: |-
+        Get or create the user's notification preferences.
+
+        Returns the current notification settings for the authenticated user.
+        If no preferences exist, creates default preferences.
+      tags:
+      - notification-preferences
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: notification_preferences_partial_update
+      description: |-
+        Update the user's notification preferences.
+
+        Accepts partial updates - only fields that need to change.
+      tags:
+      - notification-preferences
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/notification-preferences/choices/:
+    get:
+      operationId: notification_preferences_choices_retrieve
+      description: |-
+        Get available choices for reminder settings.
+
+        Returns the available options for minutes and days selections.
+      tags:
+      - notification-preferences
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/notifications/:
+    get:
+      operationId: notifications_list
+      description: ViewSet for Notification model.
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+          description: ''
+    post:
+      operationId: notifications_create
+      description: ViewSet for Notification model.
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/notifications/{id}/:
+    get:
+      operationId: notifications_retrieve
+      description: ViewSet for Notification model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this notification.
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+    put:
+      operationId: notifications_update
+      description: ViewSet for Notification model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+    patch:
+      operationId: notifications_partial_update
+      description: ViewSet for Notification model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationRequest'
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+    delete:
+      operationId: notifications_destroy
+      description: ViewSet for Notification model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this notification.
+        required: true
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '204':
+          description: No response body
+  /api/notifications/{id}/mark_read/:
+    post:
+      operationId: notifications_mark_read_create
+      description: Mark notification as read.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/notifications/mark_all_read/:
+    post:
+      operationId: notifications_mark_all_read_create
+      description: Mark all notifications as read.
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/notifications/pending_payments/:
+    get:
+      operationId: notifications_pending_payments_retrieve
+      description: |-
+        Get pending payment information for notifications.
+
+        Returns students with pending lesson payments.
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/notifications/unread_count/:
+    get:
+      operationId: notifications_unread_count_retrieve
+      description: Get count of unread notifications.
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/notifications/upcoming_assignments/:
+    get:
+      operationId: notifications_upcoming_assignments_retrieve
+      description: |-
+        Get upcoming assignment due dates for notifications.
+
+        Returns assignments due in the next 7 days that are not completed.
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/notifications/upcoming_lessons/:
+    get:
+      operationId: notifications_upcoming_lessons_retrieve
+      description: |-
+        Get upcoming lessons for notification scheduling.
+
+        Returns lessons for today and tomorrow that are not cancelled.
+      tags:
+      - notifications
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+  /api/schedules/:
+    get:
+      operationId: schedules_list
+      description: ViewSet for Schedule model.
+      tags:
+      - schedules
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Schedule'
+          description: ''
+    post:
+      operationId: schedules_create
+      description: Create a new schedule with conflict checking.
+      tags:
+      - schedules
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+  /api/schedules/{id}/:
+    get:
+      operationId: schedules_retrieve
+      description: ViewSet for Schedule model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this schedule.
+        required: true
+      tags:
+      - schedules
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    put:
+      operationId: schedules_update
+      description: Update schedule with conflict checking.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this schedule.
+        required: true
+      tags:
+      - schedules
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    patch:
+      operationId: schedules_partial_update
+      description: Partial update with conflict checking.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this schedule.
+        required: true
+      tags:
+      - schedules
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedScheduleRequest'
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    delete:
+      operationId: schedules_destroy
+      description: ViewSet for Schedule model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this schedule.
+        required: true
+      tags:
+      - schedules
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '204':
+          description: No response body
+  /api/schedules/weekly_schedule/:
+    get:
+      operationId: schedules_weekly_schedule_retrieve
+      description: Get weekly schedule starting from today for 7 days.
+      tags:
+      - schedules
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+  /api/students/:
+    get:
+      operationId: students_list
+      description: ViewSet for Student model.
+      tags:
+      - students
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+          description: ''
+    post:
+      operationId: students_create
+      description: ViewSet for Student model.
+      tags:
+      - students
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+  /api/students/{id}/:
+    get:
+      operationId: students_retrieve
+      description: ViewSet for Student model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this student.
+        required: true
+      tags:
+      - students
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    put:
+      operationId: students_update
+      description: ViewSet for Student model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this student.
+        required: true
+      tags:
+      - students
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    patch:
+      operationId: students_partial_update
+      description: ViewSet for Student model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this student.
+        required: true
+      tags:
+      - students
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStudentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStudentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStudentRequest'
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    delete:
+      operationId: students_destroy
+      description: ViewSet for Student model.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this student.
+        required: true
+      tags:
+      - students
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '204':
+          description: No response body
+  /api/students/{id}/statistics/:
+    get:
+      operationId: students_statistics_retrieve
+      description: Get statistics for a specific student.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this student.
+        required: true
+      tags:
+      - students
+      security:
+      - jwtAuth: []
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+  /api/token/:
+    post:
+      operationId: token_create
+      description: Token view backed by the role-aware serializer.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleAwareTokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RoleAwareTokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RoleAwareTokenObtainPairRequest'
+        required: true
+      security:
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          description: No response body
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      security:
+      - Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+components:
+  schemas:
+    Assignment:
+      type: object
+      description: Serializer for Assignment model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        is_overdue:
+          type: string
+          readOnly: true
+        student_name:
+          type: string
+          readOnly: true
+        student_surname:
+          type: string
+          readOnly: true
+        book:
+          type: string
+          maxLength: 255
+        topic:
+          type: string
+          maxLength: 255
+        page:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        is_completed:
+          type: boolean
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        completion_date:
+          type: string
+          format: date
+          nullable: true
+        date_added:
+          type: string
+          format: date-time
+          readOnly: true
+        teacher:
+          type: integer
+          readOnly: true
+        student:
+          type: integer
+        lesson:
+          type: integer
+          nullable: true
+      required:
+      - book
+      - date_added
+      - id
+      - is_overdue
+      - page
+      - student
+      - student_name
+      - student_surname
+      - teacher
+      - topic
+    AssignmentRequest:
+      type: object
+      description: Serializer for Assignment model.
+      properties:
+        book:
+          type: string
+          minLength: 1
+          maxLength: 255
+        topic:
+          type: string
+          minLength: 1
+          maxLength: 255
+        page:
+          type: string
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        is_completed:
+          type: boolean
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        completion_date:
+          type: string
+          format: date
+          nullable: true
+        student:
+          type: integer
+        lesson:
+          type: integer
+          nullable: true
+      required:
+      - book
+      - page
+      - student
+      - topic
+    BlankEnum:
+      enum:
+      - ''
+    DayOfWeekEnum:
+      enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+      type: string
+      description: |-
+        * `monday` - Pazartesi
+        * `tuesday` - Salı
+        * `wednesday` - Çarşamba
+        * `thursday` - Perşembe
+        * `friday` - Cuma
+        * `saturday` - Cumartesi
+        * `sunday` - Pazar
+    Lesson:
+      type: object
+      description: Serializer for Lesson model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        student_name:
+          type: string
+          readOnly: true
+        student_surname:
+          type: string
+          readOnly: true
+        parent_contact:
+          type: string
+          readOnly: true
+        status_display:
+          type: string
+          readOnly: true
+        payment_status_display:
+          type: string
+          readOnly: true
+        lesson_type_display:
+          type: string
+          readOnly: true
+        is_today:
+          type: string
+          readOnly: true
+        is_upcoming:
+          type: string
+          readOnly: true
+        date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        lesson_type:
+          $ref: '#/components/schemas/LessonTypeEnum'
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        payment_status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        lesson_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        topic_covered:
+          type: string
+          nullable: true
+          maxLength: 255
+        book_progress:
+          type: string
+          nullable: true
+          maxLength: 255
+        notes:
+          type: string
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        teacher:
+          type: integer
+          readOnly: true
+        student:
+          type: integer
+        schedule:
+          type: integer
+          nullable: true
+      required:
+      - created_at
+      - date
+      - end_time
+      - id
+      - is_today
+      - is_upcoming
+      - lesson_fee
+      - lesson_type_display
+      - parent_contact
+      - payment_status_display
+      - start_time
+      - status_display
+      - student
+      - student_name
+      - student_surname
+      - teacher
+      - updated_at
+    LessonRequest:
+      type: object
+      description: Serializer for Lesson model.
+      properties:
+        date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        lesson_type:
+          $ref: '#/components/schemas/LessonTypeEnum'
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        payment_status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        lesson_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        topic_covered:
+          type: string
+          nullable: true
+          maxLength: 255
+        book_progress:
+          type: string
+          nullable: true
+          maxLength: 255
+        notes:
+          type: string
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+          maxLength: 255
+        student:
+          type: integer
+        schedule:
+          type: integer
+          nullable: true
+      required:
+      - date
+      - end_time
+      - lesson_fee
+      - start_time
+      - student
+    LessonTypeEnum:
+      enum:
+      - online
+      - physical
+      type: string
+      description: |-
+        * `online` - Online
+        * `physical` - Yüz Yüze
+    LevelEnum:
+      enum:
+      - beginner
+      - intermediate
+      - advanced
+      type: string
+      description: |-
+        * `beginner` - Başlangıç
+        * `intermediate` - Orta
+        * `advanced` - İleri
+    Notification:
+      type: object
+      description: Serializer for Notification model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        student_name:
+          type: string
+          readOnly: true
+        student_surname:
+          type: string
+          readOnly: true
+        notification_type_display:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        message:
+          type: string
+        notification_type:
+          $ref: '#/components/schemas/NotificationTypeEnum'
+        is_read:
+          type: boolean
+        is_sent:
+          type: boolean
+        send_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        teacher:
+          type: integer
+          readOnly: true
+        student:
+          type: integer
+          nullable: true
+        lesson:
+          type: integer
+          nullable: true
+      required:
+      - created_at
+      - id
+      - message
+      - notification_type
+      - notification_type_display
+      - send_at
+      - student_name
+      - student_surname
+      - teacher
+      - title
+    NotificationRequest:
+      type: object
+      description: Serializer for Notification model.
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        message:
+          type: string
+          minLength: 1
+        notification_type:
+          $ref: '#/components/schemas/NotificationTypeEnum'
+        is_read:
+          type: boolean
+        is_sent:
+          type: boolean
+        send_at:
+          type: string
+          format: date-time
+        student:
+          type: integer
+          nullable: true
+        lesson:
+          type: integer
+          nullable: true
+      required:
+      - message
+      - notification_type
+      - send_at
+      - title
+    NotificationTypeEnum:
+      enum:
+      - lesson_reminder
+      - payment_reminder
+      - assignment_reminder
+      - general
+      type: string
+      description: |-
+        * `lesson_reminder` - Ders Hatırlatması
+        * `payment_reminder` - Ödeme Hatırlatması
+        * `assignment_reminder` - Ödev Hatırlatması
+        * `general` - Genel
+    NullEnum:
+      enum:
+      - null
+    PatchedAssignmentRequest:
+      type: object
+      description: Serializer for Assignment model.
+      properties:
+        book:
+          type: string
+          minLength: 1
+          maxLength: 255
+        topic:
+          type: string
+          minLength: 1
+          maxLength: 255
+        page:
+          type: string
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+        is_completed:
+          type: boolean
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        completion_date:
+          type: string
+          format: date
+          nullable: true
+        student:
+          type: integer
+        lesson:
+          type: integer
+          nullable: true
+    PatchedLessonRequest:
+      type: object
+      description: Serializer for Lesson model.
+      properties:
+        date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        lesson_type:
+          $ref: '#/components/schemas/LessonTypeEnum'
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        payment_status:
+          $ref: '#/components/schemas/PaymentStatusEnum'
+        lesson_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        topic_covered:
+          type: string
+          nullable: true
+          maxLength: 255
+        book_progress:
+          type: string
+          nullable: true
+          maxLength: 255
+        notes:
+          type: string
+          nullable: true
+        cancel_reason:
+          type: string
+          nullable: true
+          maxLength: 255
+        student:
+          type: integer
+        schedule:
+          type: integer
+          nullable: true
+    PatchedNotificationRequest:
+      type: object
+      description: Serializer for Notification model.
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+        message:
+          type: string
+          minLength: 1
+        notification_type:
+          $ref: '#/components/schemas/NotificationTypeEnum'
+        is_read:
+          type: boolean
+        is_sent:
+          type: boolean
+        send_at:
+          type: string
+          format: date-time
+        student:
+          type: integer
+          nullable: true
+        lesson:
+          type: integer
+          nullable: true
+    PatchedScheduleRequest:
+      type: object
+      description: Serializer for Schedule model.
+      properties:
+        day_of_week:
+          $ref: '#/components/schemas/DayOfWeekEnum'
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        lesson_type:
+          $ref: '#/components/schemas/LessonTypeEnum'
+        is_active:
+          type: boolean
+        first_lesson_date:
+          type: string
+          format: date
+          nullable: true
+          description: İlk ders tarihi
+        weeks_duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          description: Kaç haftalık ders planlanacak
+        student:
+          type: integer
+    PatchedStudentRequest:
+      type: object
+      description: Serializer for Student model.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        surname:
+          type: string
+          minLength: 1
+          maxLength: 100
+        parent_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        parent_contact:
+          type: string
+          minLength: 1
+          maxLength: 15
+        grade:
+          type: string
+          minLength: 1
+          maxLength: 50
+        school:
+          type: string
+          minLength: 1
+          maxLength: 200
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 100
+        student_phone:
+          type: string
+          nullable: true
+          maxLength: 15
+        address:
+          type: string
+          nullable: true
+        birth_date:
+          type: string
+          format: date
+          nullable: true
+        level:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/LevelEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        lesson_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        last_topic:
+          type: string
+          nullable: true
+          maxLength: 255
+        book_progress:
+          type: string
+          nullable: true
+          maxLength: 255
+        last_lesson_date:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+    PaymentStatusEnum:
+      enum:
+      - pending
+      - paid
+      - overdue
+      type: string
+      description: |-
+        * `pending` - Bekliyor
+        * `paid` - Ödendi
+        * `overdue` - Vadesi Geçti
+    RoleAwareTokenObtainPairRequest:
+      type: object
+      description: Include a safe user payload in the login response.
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    Schedule:
+      type: object
+      description: Serializer for Schedule model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        student_name:
+          type: string
+          readOnly: true
+        student_surname:
+          type: string
+          readOnly: true
+        day_of_week_display:
+          type: string
+          readOnly: true
+        lesson_type_display:
+          type: string
+          readOnly: true
+        day_of_week:
+          $ref: '#/components/schemas/DayOfWeekEnum'
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        lesson_type:
+          $ref: '#/components/schemas/LessonTypeEnum'
+        is_active:
+          type: boolean
+        first_lesson_date:
+          type: string
+          format: date
+          nullable: true
+          description: İlk ders tarihi
+        weeks_duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          description: Kaç haftalık ders planlanacak
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        teacher:
+          type: integer
+          readOnly: true
+        student:
+          type: integer
+      required:
+      - created_at
+      - day_of_week
+      - day_of_week_display
+      - end_time
+      - id
+      - lesson_type_display
+      - start_time
+      - student
+      - student_name
+      - student_surname
+      - teacher
+    ScheduleRequest:
+      type: object
+      description: Serializer for Schedule model.
+      properties:
+        day_of_week:
+          $ref: '#/components/schemas/DayOfWeekEnum'
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        lesson_type:
+          $ref: '#/components/schemas/LessonTypeEnum'
+        is_active:
+          type: boolean
+        first_lesson_date:
+          type: string
+          format: date
+          nullable: true
+          description: İlk ders tarihi
+        weeks_duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          description: Kaç haftalık ders planlanacak
+        student:
+          type: integer
+      required:
+      - day_of_week
+      - end_time
+      - start_time
+      - student
+    StatusEnum:
+      enum:
+      - scheduled
+      - completed
+      - cancelled
+      - missed
+      type: string
+      description: |-
+        * `scheduled` - Planlandı
+        * `completed` - Tamamlandı
+        * `cancelled` - İptal Edildi
+        * `missed` - Katılmadı
+    Student:
+      type: object
+      description: Serializer for Student model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        assignment_completion_percentage:
+          type: string
+          readOnly: true
+        total_lessons_count:
+          type: string
+          readOnly: true
+        total_earned:
+          type: string
+          readOnly: true
+        pending_payments:
+          type: string
+          readOnly: true
+        debt_status:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        surname:
+          type: string
+          maxLength: 100
+        parent_name:
+          type: string
+          maxLength: 100
+        parent_contact:
+          type: string
+          maxLength: 15
+        grade:
+          type: string
+          maxLength: 50
+        school:
+          type: string
+          maxLength: 200
+        subject:
+          type: string
+          maxLength: 100
+        student_phone:
+          type: string
+          nullable: true
+          maxLength: 15
+        address:
+          type: string
+          nullable: true
+        birth_date:
+          type: string
+          format: date
+          nullable: true
+        level:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/LevelEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        lesson_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        last_topic:
+          type: string
+          nullable: true
+          maxLength: 255
+        book_progress:
+          type: string
+          nullable: true
+          maxLength: 255
+        last_lesson_date:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        teacher:
+          type: integer
+          readOnly: true
+      required:
+      - assignment_completion_percentage
+      - created_at
+      - debt_status
+      - id
+      - name
+      - parent_contact
+      - parent_name
+      - pending_payments
+      - surname
+      - teacher
+      - total_earned
+      - total_lessons_count
+    StudentRequest:
+      type: object
+      description: Serializer for Student model.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        surname:
+          type: string
+          minLength: 1
+          maxLength: 100
+        parent_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        parent_contact:
+          type: string
+          minLength: 1
+          maxLength: 15
+        grade:
+          type: string
+          minLength: 1
+          maxLength: 50
+        school:
+          type: string
+          minLength: 1
+          maxLength: 200
+        subject:
+          type: string
+          minLength: 1
+          maxLength: 100
+        student_phone:
+          type: string
+          nullable: true
+          maxLength: 15
+        address:
+          type: string
+          nullable: true
+        birth_date:
+          type: string
+          format: date
+          nullable: true
+        level:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/LevelEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        lesson_fee:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+        last_topic:
+          type: string
+          nullable: true
+          maxLength: 255
+        book_progress:
+          type: string
+          nullable: true
+          maxLength: 255
+        last_lesson_date:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+      required:
+      - name
+      - parent_contact
+      - parent_name
+      - surname
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+      required:
+      - access
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - refresh
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -205,6 +205,326 @@
       "back_home": "Back to homepage"
     }
   },
+  "onboarding": {
+    "meta": {
+      "title": "Become a tutor · LessonRadar",
+      "description": "Free tutor profile for private teachers in Gaziantep and major Turkish cities. Verified identity, transparent pricing, get matched with real lesson requests."
+    },
+    "breadcrumb": "Become a tutor",
+    "hero": {
+      "kicker": "Become a tutor",
+      "title": "Share what you teach. Get matched with real requests.",
+      "subtitle": "Students post lesson requests in Gaziantep and major cities every day. Build your profile, our team reviews and approves it, and matches start coming through.",
+      "cta_primary": "Start the application",
+      "cta_secondary": "How it works"
+    },
+    "value_props": {
+      "kicker": "Why LessonRadar?",
+      "title": "Built for local tutors.",
+      "items": {
+        "no_fee": {
+          "title": "Free profile",
+          "description": "No commission, no subscription. When you agree with a student, you get paid directly."
+        },
+        "verified": {
+          "title": "Verified tutor badge",
+          "description": "Identity- and diploma-verified tutors rank higher in search results."
+        },
+        "local_demand": {
+          "title": "District-level demand",
+          "description": "Match by district, not just city. Stay close to home; skip requests from across town."
+        },
+        "transparency": {
+          "title": "Transparent pricing",
+          "description": "Set your own hourly range. It's shown clearly on your profile — no hidden surprises."
+        }
+      }
+    },
+    "how": {
+      "kicker": "How it works",
+      "title": "Live in three steps.",
+      "steps": {
+        "one": {
+          "title": "Fill in the application",
+          "description": "Subject, city, hourly range, biography. Takes 5–8 minutes."
+        },
+        "two": {
+          "title": "Our team reviews it",
+          "description": "Identity and diploma verification happens in a separate step over email; we'll be in touch."
+        },
+        "three": {
+          "title": "Profile live, matches start",
+          "description": "Approved profiles appear in search and city × subject pages; matched lesson requests reach your phone."
+        }
+      },
+      "verification_note": "Document upload isn't enabled yet. Approval currently happens over email with our team."
+    },
+    "form": {
+      "kicker": "Application",
+      "title": "Start your profile",
+      "subtitle": "Fill the fields clearly — what you write here lands directly on your profile.",
+      "submit": "Submit Application",
+      "submit_loading": "Submitting…",
+      "submit_footnote": "Your application is sent to our team. The form is free, no app required.",
+      "error_generic": "Couldn't submit your application. Please try again.",
+      "sections": {
+        "you": {
+          "title": "Who are you?",
+          "description": "Name and contact. Your phone is shared only when you match a student."
+        },
+        "teach": {
+          "title": "What do you teach?",
+          "description": "Pick subjects, set the price range, add your years of experience."
+        },
+        "where": {
+          "title": "Where do you teach?",
+          "description": "City and lesson modality. District is preferred."
+        },
+        "about": {
+          "title": "Tell us about yourself",
+          "description": "Short pitch and longer bio. Both appear on your profile as written."
+        },
+        "consents": {
+          "title": "Consents",
+          "description": "Legal agreements. Both must be ticked to continue."
+        }
+      },
+      "fields": {
+        "fullName": { "label": "Full name", "placeholder": "e.g. Jane Doe" },
+        "headline": {
+          "label": "Short pitch",
+          "placeholder": "e.g. 10-year YKS math tutor",
+          "hint": "Shows on your profile card. 10–120 chars."
+        },
+        "bio": {
+          "label": "Biography",
+          "placeholder": "Your school, experience, teaching approach, achievements…",
+          "hint": "60–1500 chars. Shown verbatim on your profile."
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "5XX XXX XX XX",
+          "hint": "Shared only with matching students."
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "you@email.com",
+          "hint": "Used for the approval process."
+        },
+        "yearsExperience": {
+          "label": "Experience (years)",
+          "placeholder": "e.g. 5"
+        },
+        "hourlyMin": {
+          "label": "Min. hourly rate (₺)",
+          "placeholder": "e.g. 350"
+        },
+        "hourlyMax": {
+          "label": "Max. hourly rate (₺)",
+          "placeholder": "e.g. 600"
+        },
+        "disciplines": {
+          "label": "Subjects you teach",
+          "hint": "Pick at least 1, up to 8."
+        },
+        "city": { "label": "City", "placeholder": "Pick a city" },
+        "district": {
+          "label": "District",
+          "placeholder": "Pick a district",
+          "disabled_placeholder": "Pick a city first"
+        },
+        "modalities": {
+          "label": "Lesson type",
+          "in_person": "In person",
+          "online": "Online",
+          "hint": "Tick both if applicable."
+        },
+        "referral": {
+          "label": "How did you hear about us?",
+          "placeholder": "e.g. Google, friend, social media…"
+        }
+      },
+      "consents": {
+        "kvkk": "I have read the <privacy>KVKK & Privacy Policy</privacy> and consent to the processing of my personal data.",
+        "teacher_terms": "I have read and agree to the <terms>LessonRadar Tutor Agreement</terms>."
+      },
+      "errors": {
+        "fullname_too_short": "Name is too short.",
+        "fullname_too_long": "Name is too long.",
+        "headline_too_short": "Short pitch must be at least 10 characters.",
+        "headline_too_long": "Short pitch is too long.",
+        "bio_too_short": "Biography must be at least 60 characters.",
+        "bio_too_long": "Biography is too long.",
+        "phone_invalid": "Enter a valid TR mobile number (5XX XXX XX XX).",
+        "email_invalid": "Enter a valid email address.",
+        "hourly_required": "Enter an hourly rate.",
+        "hourly_too_low": "Hourly rate is too low.",
+        "hourly_too_high": "Hourly rate is too high.",
+        "hourly_range_invalid": "Max rate cannot be lower than min rate.",
+        "disciplines_required": "Pick at least one subject.",
+        "disciplines_too_many": "You can pick up to 8 subjects.",
+        "city_required": "Pick a city.",
+        "modality_required": "Pick at least one lesson type.",
+        "kvkk_required": "Tick the KVKK consent to continue.",
+        "teacher_terms_required": "Tick the Tutor Agreement to continue."
+      }
+    },
+    "success": {
+      "meta_title": "Application received",
+      "title": "Your application is in.",
+      "subtitle": "Our team will review it within a few business days. We'll reach out by email and may ask for additional documents.",
+      "what_next_title": "What happens next?",
+      "what_next_step1": "Our verification team reviews your application (1–3 business days).",
+      "what_next_step2": "We share the outcome by email and may request documents (ID, diploma).",
+      "what_next_step3": "Approved profiles appear in search results and city × subject pages.",
+      "back_home": "Back to homepage",
+      "see_listings": "See verified tutors"
+    },
+    "policy_notice": "This form is not an offer of employment. Verification and listing depend on our team's review."
+  },
+  "search": {
+    "meta": {
+      "title": "Search tutors",
+      "description": "Search verified private tutors on LessonRadar by subject, city and modality."
+    },
+    "breadcrumb": "Search",
+    "kicker": "Search tutors",
+    "title": "Filter verified tutors",
+    "subtitle": "Pick subject, city, district and modality — show only tutors with verified identity.",
+    "input": {
+      "placeholder": "Subject, name, keyword…",
+      "label": "Keyword",
+      "submit": "Search"
+    },
+    "result": {
+      "summary_query": "{count} tutors for “{q}”",
+      "summary_filters": "{count} tutors",
+      "summary_zero": "No matching tutors",
+      "summary_one": "1 tutor",
+      "verified_count": "{count} identity-verified"
+    },
+    "sort": {
+      "label": "Sort",
+      "relevance": "Relevance",
+      "rating": "Highest rated",
+      "response_fast": "Fastest response",
+      "price_asc": "Lowest price"
+    },
+    "filters": {
+      "title": "Filters",
+      "open_button": "Filters",
+      "open_button_with_count": "Filters ({count})",
+      "apply": "Show results",
+      "clear_all": "Clear all filters",
+      "discipline": "Subject",
+      "discipline_placeholder": "All subjects",
+      "city": "City",
+      "city_placeholder": "All cities",
+      "district": "District",
+      "district_placeholder": "All districts",
+      "district_disabled": "Pick a city first",
+      "modality": "Lesson type",
+      "modality_any": "Either",
+      "modality_online": "Online",
+      "modality_in_person": "In person",
+      "verified": "Verified tutors only"
+    },
+    "active": {
+      "remove_label": "Remove {label} filter",
+      "all_label": "Clear all",
+      "verified_label": "Verified",
+      "modality_online": "Online",
+      "modality_in_person": "In person",
+      "query_label": "Keyword: {q}"
+    },
+    "empty": {
+      "title": "No tutors match these filters",
+      "subtitle": "Loosen the filters, or post a lesson request — tutors in your city will reach out.",
+      "cta_clear": "Clear filters",
+      "cta_lead": "Post a Lesson Request"
+    },
+    "noindex_notice": "Filter URLs aren't sent to search engines; these links are for you and direct sharing only."
+  },
+  "profile": {
+    "meta": {
+      "title": "{name} · {discipline} tutor · {city}",
+      "description": "{name} — {discipline} private tutor in {city}. {ratingLine} {priceLine} Verified, transparent pricing, fast response."
+    },
+    "breadcrumb": {
+      "teachers": "Tutors"
+    },
+    "hero": {
+      "kicker": "Tutor profile",
+      "no_district": "City center"
+    },
+    "stats": {
+      "rating": "Rating",
+      "rating_unrated": "Not rated yet",
+      "reviews_count": "{count} reviews",
+      "no_reviews": "New",
+      "experience": "Experience",
+      "experience_years": "{years} yrs",
+      "response": "Response time",
+      "response_fast": "Fast response",
+      "acceptance": "Acceptance rate",
+      "completeness": "Profile completeness"
+    },
+    "bio": {
+      "title": "About"
+    },
+    "disciplines": {
+      "title": "Subjects taught",
+      "subtitle": "Hourly rate range per subject.",
+      "primary_pill": "Primary subject",
+      "view_listing": "See {discipline} listing"
+    },
+    "modality": {
+      "title": "Lesson type and location",
+      "in_person": "Teaches in person",
+      "online": "Teaches online",
+      "hybrid_note": "In person or online — whatever fits you.",
+      "location_label": "Location",
+      "location_value": "{district} · {city}",
+      "location_value_no_district": "{city}",
+      "service_area_label": "Service area"
+    },
+    "trust": {
+      "title": "Verification",
+      "subtitle": "Every tutor on LessonRadar passes two checks.",
+      "identity_verified": "Identity verified",
+      "identity_pending": "Identity check pending",
+      "diploma_verified": "Diploma verified",
+      "diploma_pending": "Diploma check pending",
+      "completeness": "{percent}% profile complete",
+      "policy_link": "How verification works"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "summary": "{count} student/parent reviews · average {rating}/5",
+      "empty_title": "No public reviews yet",
+      "empty_subtitle": "Reviews are coming soon. For now this tutor is listed based on identity and diploma checks.",
+      "policy_link": "Review policy",
+      "verified_only": "Only students who completed lessons can post reviews."
+    },
+    "similar": {
+      "title": "Similar tutors in {city}",
+      "subtitle": "Same city, related subject."
+    },
+    "sidebar": {
+      "price_from": "Hourly rate",
+      "price_value": "₺{min}–{max}",
+      "price_value_single": "₺{value}",
+      "request_cta": "Post Lesson Request",
+      "request_pretext": "Send a request to this tutor. Your phone is shared only after a match.",
+      "share_label": "Share this profile",
+      "report_label": "Report profile"
+    },
+    "sticky": {
+      "request_cta": "Post Lesson Request",
+      "from_price": "₺{min}–{max}/hour"
+    },
+    "policy_notice": "Information shown here is supplied by the tutor; identity and diploma are verified by LessonRadar. Phone and email are only shared after a match."
+  },
   "footer": {
     "rights": "© {year} LessonRadar. All rights reserved.",
     "kvkk": "KVKK Disclosure",

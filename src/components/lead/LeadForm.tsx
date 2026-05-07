@@ -53,7 +53,14 @@ interface LeadFormProps {
     disciplineSlug?: string;
     citySlug?: string;
     districtSlug?: string;
+    teacherSlug?: string;
   };
+  /**
+   * When the lead is initiated from a teacher profile we display a small
+   * banner reassuring the user that this request is scoped to that tutor.
+   * The slug itself rides along as a hidden field via `defaults.teacherSlug`.
+   */
+  targetTeacherName?: string;
 }
 
 const LEVEL_LABELS_TR: Record<(typeof STUDENT_LEVELS)[number], string> = {
@@ -99,6 +106,7 @@ export function LeadForm({
   cities,
   districts,
   defaults,
+  targetTeacherName,
 }: LeadFormProps) {
   const t = useTranslations("lead");
   const router = useRouter();
@@ -119,6 +127,7 @@ export function LeadForm({
       level: undefined,
       citySlug: defaults.citySlug ?? "",
       districtSlug: defaults.districtSlug ?? undefined,
+      teacherSlug: defaults.teacherSlug ?? undefined,
       modality: "either",
       budgetMin: undefined,
       budgetMax: undefined,
@@ -168,6 +177,30 @@ export function LeadForm({
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-6">
+      <input type="hidden" {...register("teacherSlug")} />
+      {targetTeacherName && (
+        <div
+          role="status"
+          className="flex items-start gap-3 rounded-2xl border border-brand/20 bg-brand-soft/40 px-4 py-3 text-sm text-foreground"
+        >
+          <HugeiconsIcon
+            icon={CheckmarkCircle02Icon}
+            size={18}
+            strokeWidth={2}
+            className="mt-0.5 shrink-0 text-brand"
+          />
+          <p>
+            {locale === "tr"
+              ? `Bu talep önce `
+              : `This request goes first to `}
+            <span className="font-semibold">{targetTeacherName}</span>
+            {locale === "tr"
+              ? `'e iletilecek. Aynı şehirdeki diğer doğrulanmış öğretmenler de cevap verebilir.`
+              : `. Other verified tutors in the same city may also respond.`}
+          </p>
+        </div>
+      )}
+
       {/* Section 1 — what to learn */}
       <FieldGroup
         title={t("sections.what.title")}
