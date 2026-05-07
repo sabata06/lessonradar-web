@@ -6,6 +6,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Logout03Icon,
   Menu02Icon,
+  Mortarboard01Icon,
+  Presentation01Icon,
   Settings02Icon,
   UserIcon,
 } from "@hugeicons/core-free-icons";
@@ -103,12 +105,35 @@ export function MobileMenu() {
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <MobileMenuItem href="/panel" icon={UserIcon} onClick={close}>
-                {tAuth("menu_dashboard")}
-              </MobileMenuItem>
+              {user.role === "teacher" ? (
+                <MobileMenuItem
+                  href="/panel-ogretmen"
+                  icon={Presentation01Icon}
+                  onClick={close}
+                >
+                  {tAuth("menu_teacher_panel")}
+                </MobileMenuItem>
+              ) : (
+                <MobileMenuItem
+                  href="/panel"
+                  icon={UserIcon}
+                  onClick={close}
+                >
+                  {tAuth("menu_dashboard")}
+                </MobileMenuItem>
+              )}
               <MobileMenuItem href="/ayarlar" icon={Settings02Icon} onClick={close}>
                 {tAuth("menu_settings")}
               </MobileMenuItem>
+              {user.role !== "teacher" && (
+                <MobileMenuItem
+                  href="/ogretmen-ol"
+                  icon={Mortarboard01Icon}
+                  onClick={close}
+                >
+                  {tAuth("menu_become_teacher")}
+                </MobileMenuItem>
+              )}
               <button
                 type="button"
                 onClick={handleLogout}

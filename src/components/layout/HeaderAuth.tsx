@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Logout03Icon,
+  Mortarboard01Icon,
+  Presentation01Icon,
   Settings02Icon,
   UserIcon,
 } from "@hugeicons/core-free-icons";
@@ -101,9 +103,25 @@ export function HeaderAuth() {
           <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
         <nav className="flex flex-col p-1">
-          <MenuItem href="/panel" icon={UserIcon} onClick={() => setOpen(false)}>
-            {t("menu_dashboard")}
-          </MenuItem>
+          {/* Role-aware dashboard: teachers see "Öğretmen Panelim" (single
+              operational hub), customers see "Panelim" (request/lesson list). */}
+          {user.role === "teacher" ? (
+            <MenuItem
+              href="/panel-ogretmen"
+              icon={Presentation01Icon}
+              onClick={() => setOpen(false)}
+            >
+              {t("menu_teacher_panel")}
+            </MenuItem>
+          ) : (
+            <MenuItem
+              href="/panel"
+              icon={UserIcon}
+              onClick={() => setOpen(false)}
+            >
+              {t("menu_dashboard")}
+            </MenuItem>
+          )}
           <MenuItem
             href="/ayarlar"
             icon={Settings02Icon}
@@ -111,6 +129,16 @@ export function HeaderAuth() {
           >
             {t("menu_settings")}
           </MenuItem>
+          {/* Customer-only nudge to teacher onboarding (hybrid C). */}
+          {user.role !== "teacher" && (
+            <MenuItem
+              href="/ogretmen-ol"
+              icon={Mortarboard01Icon}
+              onClick={() => setOpen(false)}
+            >
+              {t("menu_become_teacher")}
+            </MenuItem>
+          )}
           <button
             type="button"
             onClick={handleLogout}

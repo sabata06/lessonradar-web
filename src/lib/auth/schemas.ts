@@ -111,15 +111,26 @@ export const verifyEmailSchema = z.object({
 export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;
 
 // ── Reset password ──────────────────────────────────────────────────────────
+// Backend uses a 6-digit numeric OTP (same channel as email verification),
+// not a hex link token. Mirror the verify-email OTP shape; user lands on
+// /sifre-sifirla?email=... from the forgot-password flow, types the code from
+// the email, and picks a new password. Forward-compat for token-link mode is
+// tracked in the open decisions (parallel to the verify-email A→D path).
 export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1, { message: "token_missing" }),
-    password: strongPasswordSchema,
-    passwordConfirm: z.string().min(1, { message: "password_confirm_required" }),
+    email: emailSchema,
+    code: z
+      .string()
+      .min(1, { message: "code_required" })
+      .regex(/^\d{6}$/, { message: "code_invalid" }),
+    newPassword: strongPasswordSchema,
+    newPasswordConfirm: z
+      .string()
+      .min(1, { message: "password_confirm_required" }),
   })
-  .refine((data) => data.password === data.passwordConfirm, {
+  .refine((data) => data.newPassword === data.newPasswordConfirm, {
     message: "passwords_do_not_match",
-    path: ["passwordConfirm"],
+    path: ["newPasswordConfirm"],
   });
 
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
