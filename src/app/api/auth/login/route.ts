@@ -4,6 +4,7 @@ import { apiClient, ApiError } from "@/api/client";
 import { ENDPOINTS } from "@/api/endpoints";
 import { setSessionCookie } from "@/lib/auth/cookies";
 import { safeUserFromProfile, type SessionPayload } from "@/lib/auth/server";
+import { getCsrfToken } from "@/lib/security/csrf";
 import { validateOrigin } from "@/lib/security/origin";
 import { verifyTurnstile } from "@/lib/security/turnstile";
 
@@ -73,6 +74,9 @@ export async function POST(req: Request) {
     accessExp: Math.floor(Date.now() / 1000) + ACCESS_TTL_SEC,
   };
   await setSessionCookie(session);
+  // Issue/refresh the double-submit CSRF token so the client can attach it on
+  // subsequent state-changing calls (logout, refresh).
+  await getCsrfToken();
 
   return NextResponse.json({ user });
 }
