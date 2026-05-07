@@ -150,11 +150,14 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
     setServerError((data?.error ?? "unknown_error") as ServerErrorCode);
   });
 
-  const consentLink = (href: string, label: string) => (
+  // stopPropagation: link is inside a <label>, so without it a click on the
+  // link would also toggle the checkbox.
+  const consentLink = (href: string, label: React.ReactNode) => (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
       className="font-medium text-primary underline-offset-4 hover:underline"
     >
       {label}
@@ -315,21 +318,21 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
         </legend>
         <ConsentCheckbox
           label={t.rich("register.consent_kvkk", {
-            a: (chunks) => consentLink(legalUrls.kvkk, String(chunks)),
+            a: (chunks) => consentLink(legalUrls.kvkk, chunks),
           })}
           error={errors.consentKvkk?.message ? translateError(errors.consentKvkk.message) : undefined}
           {...register("consentKvkk")}
         />
         <ConsentCheckbox
           label={t.rich("register.consent_privacy", {
-            a: (chunks) => consentLink(legalUrls.privacy, String(chunks)),
+            a: (chunks) => consentLink(legalUrls.privacy, chunks),
           })}
           error={errors.consentPrivacy?.message ? translateError(errors.consentPrivacy.message) : undefined}
           {...register("consentPrivacy")}
         />
         <ConsentCheckbox
           label={t.rich("register.consent_terms", {
-            a: (chunks) => consentLink(legalUrls.terms, String(chunks)),
+            a: (chunks) => consentLink(legalUrls.terms, chunks),
           })}
           error={errors.consentTerms?.message ? translateError(errors.consentTerms.message) : undefined}
           {...register("consentTerms")}
