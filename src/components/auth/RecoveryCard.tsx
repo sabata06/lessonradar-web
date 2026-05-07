@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -41,6 +42,19 @@ export function RecoveryCard({
   onUseDifferentEmail,
 }: RecoveryCardProps) {
   const t = useTranslations("auth.recovery");
+  const cardRef = useRef<HTMLElement>(null);
+
+  // On mount, smooth-scroll the card into view AND move keyboard focus to it.
+  // The form is long enough that without this, a user who submits from the
+  // bottom never sees the error and assumes the click was silently ignored.
+  // Respects prefers-reduced-motion via CSS scroll-behavior.
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Focus after the scroll begins so screen readers announce on the new viewport.
+    requestAnimationFrame(() => card.focus());
+  }, [variant]); // re-run if user changes which recovery state they're in
 
   const titleKey =
     variant === "already_registered"
@@ -57,9 +71,11 @@ export function RecoveryCard({
 
   return (
     <section
+      ref={cardRef}
       role="alert"
       aria-live="polite"
-      className="rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-card"
+      tabIndex={-1}
+      className="rounded-2xl border border-primary/20 bg-primary/5 p-5 shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
     >
       <div className="flex items-start gap-3">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -79,51 +95,58 @@ export function RecoveryCard({
         </div>
       </div>
 
-      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-        {variant === "already_registered" ? (
-          <>
+      {/* CTA hierarchy: two primary actions on the same row (recovery path),
+          'use different email' is a tertiary text link on its own row so it
+          never overflows the card on narrow desktops. */}
+      <div className="mt-5 space-y-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          {variant === "already_registered" ? (
+            <>
+              <Button
+                asChild
+                size="lg"
+                className="bg-action text-action-foreground shadow-action hover:bg-action/90 sm:flex-1"
+              >
+                <Link href={loginHref}>
+                  <span className="inline-flex items-center gap-2">
+                    {t("cta_login")}
+                    <HugeiconsIcon
+                      icon={ArrowRight01Icon}
+                      size={16}
+                      strokeWidth={2.5}
+                    />
+                  </span>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="lg"
+                className="text-primary hover:bg-primary/10 sm:flex-none"
+              >
+                <Link href="/sifremi-unuttum">{t("cta_forgot")}</Link>
+              </Button>
+            </>
+          ) : (
             <Button
               asChild
               size="lg"
               className="bg-action text-action-foreground shadow-action hover:bg-action/90 sm:flex-1"
             >
-              <Link href={loginHref}>
-                <span className="inline-flex items-center gap-2">
-                  {t("cta_login")}
-                  <HugeiconsIcon
-                    icon={ArrowRight01Icon}
-                    size={16}
-                    strokeWidth={2.5}
-                  />
-                </span>
-              </Link>
+              <Link href="/giris">{t("cta_login")}</Link>
             </Button>
-            <Button
-              asChild
-              variant="ghost"
-              size="lg"
-              className="text-primary hover:bg-primary/10 sm:flex-none"
-            >
-              <Link href="/sifremi-unuttum">{t("cta_forgot")}</Link>
-            </Button>
-          </>
-        ) : (
-          <Button
-            asChild
-            size="lg"
-            className="bg-action text-action-foreground shadow-action hover:bg-action/90 sm:flex-1"
-          >
-            <Link href="/giris">{t("cta_login")}</Link>
-          </Button>
-        )}
+          )}
+        </div>
         {onUseDifferentEmail && (
-          <button
-            type="button"
-            onClick={onUseDifferentEmail}
-            className="h-11 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:flex-none"
-          >
-            {t("cta_use_different")}
-          </button>
+          <div className="flex justify-center sm:justify-start">
+            <button
+              type="button"
+              onClick={onUseDifferentEmail}
+              className="text-sm font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-none focus-visible:underline"
+            >
+              {t("cta_use_different")}
+            </button>
+          </div>
         )}
       </div>
     </section>
