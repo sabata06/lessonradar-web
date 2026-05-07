@@ -598,6 +598,15 @@
       "cta": "Go to verification page",
       "spam_hint": "If the code doesn't arrive within 1-2 minutes, check your spam folder."
     },
+    "recovery": {
+      "already_registered_title": "This email is already registered",
+      "already_registered_body": "You can sign in to your account, or reset your password if you forgot it.",
+      "pending_invitation_title": "There's a pending invitation for this email",
+      "pending_invitation_body": "Use the invitation link sent to you to activate your account. If you didn't get it, ask the person who invited you.",
+      "cta_login": "Sign in",
+      "cta_forgot": "Forgot password",
+      "cta_use_different": "Use a different email"
+    },
     "header": {
       "login": "Sign in",
       "register": "Sign up",

@@ -598,6 +598,15 @@
       "cta": "Doğrulama sayfasına git",
       "spam_hint": "Kod 1-2 dakika içinde gelmezse spam klasörünü kontrol et."
     },
+    "recovery": {
+      "already_registered_title": "Bu e-posta zaten kayıtlı",
+      "already_registered_body": "Hesabına erişmek için giriş yapabilir veya şifreni sıfırlayabilirsin.",
+      "pending_invitation_title": "Bu e-posta için bekleyen bir davet var",
+      "pending_invitation_body": "Sana gönderilen davet bağlantısını kullanarak hesabını aktifleştirebilirsin. Davet ulaşmadıysa daveti gönderen kişiye sor.",
+      "cta_login": "Giriş yap",
+      "cta_forgot": "Şifremi unuttum",
+      "cta_use_different": "Farklı bir e-posta kullan"
+    },
     "header": {
       "login": "Giriş",
       "register": "Kayıt",

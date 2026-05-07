@@ -25,6 +25,7 @@ import {
   isTurnstileEnabled,
   type TurnstileWidgetHandle,
 } from "./TurnstileWidget";
+import { RecoveryCard } from "./RecoveryCard";
 
 interface RegisterFormProps {
   /** Server-validated next path (already passed through `safeRedirect`). */
@@ -63,6 +64,8 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
     register,
     handleSubmit,
     watch,
+    setValue,
+    setFocus,
     formState: { errors, isSubmitting },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -83,7 +86,27 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
   });
 
   const passwordValue = watch("password");
+  const emailValue = watch("email");
   const strength = useMemo(() => computePasswordStrength(passwordValue), [passwordValue]);
+
+  // Detect recovery scenarios — user can't register with this email but has
+  // a clear recovery path. Promotes the inline error to a richer card.
+  const recoveryVariant = useMemo<
+    "already_registered" | "pending_invitation" | null
+  >(() => {
+    const code = fieldErrors.email;
+    if (code === "EMAIL_ALREADY_REGISTERED") return "already_registered";
+    if (code === "ACCOUNT_HAS_PENDING_INVITATION") return "pending_invitation";
+    return null;
+  }, [fieldErrors.email]);
+
+  const handleUseDifferentEmail = () => {
+    setFieldErrors({});
+    setServerError(null);
+    setValue("email", "", { shouldValidate: false, shouldDirty: false });
+    // Slight delay so the focus lands after re-render replaces the recovery card.
+    setTimeout(() => setFocus("email"), 0);
+  };
 
   const submitting = isSubmitting;
   const submitBlocked = submitting || (turnstileEnabled && !turnstileToken);
@@ -187,9 +210,20 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
         </label>
       </div>
 
+      {/* Recovery scenario takes precedence — shows a richer card with CTAs
+          and suppresses both the top banner and the inline email error. */}
+      {recoveryVariant && (
+        <RecoveryCard
+          variant={recoveryVariant}
+          email={emailValue || ""}
+          next={next !== "/" ? next : undefined}
+          onUseDifferentEmail={handleUseDifferentEmail}
+        />
+      )}
+
       {/* Field-level errors are shown inline next to each input — only render
           the top banner when there's no field detail (server-wide failure). */}
-      {serverError && Object.keys(fieldErrors).length === 0 && (
+      {!recoveryVariant && serverError && Object.keys(fieldErrors).length === 0 && (
         <div
           role="alert"
           className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2.5 text-sm text-destructive"
@@ -203,7 +237,7 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
           <span>{translateError(serverError)}</span>
         </div>
       )}
-      {serverError && Object.keys(fieldErrors).length > 0 && (
+      {!recoveryVariant && serverError && Object.keys(fieldErrors).length > 0 && (
         <div
           role="alert"
           className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-xs text-destructive"
@@ -257,7 +291,7 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
         error={
           errors.email?.message
             ? translateError(errors.email.message)
-            : fieldErrors.email
+            : !recoveryVariant && fieldErrors.email
               ? translateError(fieldErrors.email)
               : undefined
         }
