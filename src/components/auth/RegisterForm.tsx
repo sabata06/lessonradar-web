@@ -97,11 +97,17 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
     }
   };
 
-  const onSubmit = handleSubmit(async (values) => {
-    setServerError(null);
-    setFieldErrors({});
+  const onSubmit = handleSubmit(
+    async (values) => {
+      console.log("[register] submit OK — sending to BFF", {
+        hasTurnstile: !!turnstileToken,
+        turnstileEnabled,
+        email: values.email,
+      });
+      setServerError(null);
+      setFieldErrors({});
 
-    const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
@@ -140,15 +146,21 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
     setTurnstileToken(null);
     turnstileRef.current?.reset();
 
-    if (data?.field_errors) {
-      const flat: Record<string, string> = {};
-      for (const [k, v] of Object.entries(data.field_errors)) {
-        flat[k] = Array.isArray(v) ? String(v[0]) : String(v);
+      if (data?.field_errors) {
+        const flat: Record<string, string> = {};
+        for (const [k, v] of Object.entries(data.field_errors)) {
+          flat[k] = Array.isArray(v) ? String(v[0]) : String(v);
+        }
+        setFieldErrors(flat);
       }
-      setFieldErrors(flat);
-    }
-    setServerError((data?.error ?? "unknown_error") as ServerErrorCode);
-  });
+      setServerError((data?.error ?? "unknown_error") as ServerErrorCode);
+    },
+    (errors) => {
+      // Validation failed — RHF zod resolver caught it. This is THE missing
+      // signal when "submit does nothing": zod blocked the call before fetch.
+      console.warn("[register] zod validation failed — submit blocked", errors);
+    },
+  );
 
   // stopPropagation: link is inside a <label>, so without it a click on the
   // link would also toggle the checkbox.
@@ -165,7 +177,19 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
   );
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5">
+    <form
+      onSubmit={(e) => {
+        console.log("[register] <form> onSubmit event fired", {
+          submitBlocked,
+          submitting,
+          turnstileEnabled,
+          hasTurnstileToken: !!turnstileToken,
+        });
+        return onSubmit(e);
+      }}
+      noValidate
+      className="space-y-5"
+    >
       {/* Honeypot */}
       <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px]">
         <label>
