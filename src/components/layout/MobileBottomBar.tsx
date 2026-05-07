@@ -14,8 +14,19 @@ import { Link, usePathname } from "@/i18n/navigation";
  *   - /ders-talebi          → already on the lead form, no CTA-on-CTA
  *   - /ogretmen/*           → profile page renders its own teacher-scoped CTA
  *   - /ogretmen-ol          → tutor-facing, the student lead CTA is contextually wrong
+ *   - auth flows            → user is mid-task; "request a lesson" distracts
  */
-const HIDDEN_PATHS = ["/ders-talebi", "/ogretmen", "/ogretmen-ol"];
+const HIDDEN_PATHS = [
+  "/ders-talebi",
+  "/ogretmen",
+  "/ogretmen-ol",
+  "/giris",
+  "/kayit",
+  "/sifremi-unuttum",
+  "/sifre-sifirla",
+  "/eposta-dogrula",
+  "/rol-sec",
+];
 
 export function MobileBottomBar() {
   const t = useTranslations("cta");
