@@ -89,6 +89,9 @@ export function ResponseTimePill({
   locale: SupportedLocale;
   className?: string;
 }) {
+  // Backend's median_response_minutes aggregate is null/0 until the
+  // analytics job runs. Don't render "0 dk içinde" — drop the pill.
+  if (!minutes || minutes <= 0) return null;
   const fast = minutes <= 30;
   return (
     <span
@@ -110,11 +113,15 @@ export function LastActiveDot({
   locale,
   className,
 }: {
-  lastActiveAt: string;
+  lastActiveAt: string | null;
   nowIso: string;
   locale: SupportedLocale;
   className?: string;
 }) {
+  const label = formatLastActive(lastActiveAt, nowIso, locale);
+  // Backend hasn't recorded a `last_active_at` for this profile yet.
+  // Drop the pill rather than render a misleading "0 dk" / "NaN ay önce".
+  if (label === null) return null;
   const recent = isRecentlyActive(lastActiveAt, nowIso);
   return (
     <span className={cn("inline-flex items-center gap-1 text-xs text-muted-foreground", className)}>
@@ -125,7 +132,7 @@ export function LastActiveDot({
         className={cn(recent ? "text-success" : "text-muted-foreground/60")}
         style={{ fill: "currentColor" }}
       />
-      {formatLastActive(lastActiveAt, nowIso, locale)}
+      {label}
     </span>
   );
 }

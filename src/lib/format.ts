@@ -50,13 +50,20 @@ export function formatResponseTime(
 /**
  * Relative active marker. Server-safe because we accept "now" as input
  * (from the page's getServerSideRender request time, never Date.now() inline).
+ *
+ * Returns `null` when the input is null/empty/invalid. The null branch
+ * is explicit so callers can drop the pill rather than render "NaN ay
+ * önce" — that exact bug bit us on profiles whose backend
+ * `last_active_at` was never set.
  */
 export function formatLastActive(
-  lastActiveAtIso: string,
+  lastActiveAtIso: string | null | undefined,
   nowIso: string,
   locale: SupportedLocale = "tr",
-): string {
+): string | null {
+  if (!lastActiveAtIso) return null;
   const last = new Date(lastActiveAtIso).getTime();
+  if (!Number.isFinite(last)) return null;
   const now = new Date(nowIso).getTime();
   const diffMin = Math.max(0, Math.round((now - last) / 60000));
 
@@ -74,8 +81,13 @@ export function formatLastActive(
   return locale === "tr" ? `${diffMo} ay önce` : `${diffMo}mo ago`;
 }
 
-export function isRecentlyActive(lastActiveAtIso: string, nowIso: string): boolean {
+export function isRecentlyActive(
+  lastActiveAtIso: string | null | undefined,
+  nowIso: string,
+): boolean {
+  if (!lastActiveAtIso) return false;
   const last = new Date(lastActiveAtIso).getTime();
+  if (!Number.isFinite(last)) return false;
   const now = new Date(nowIso).getTime();
   return now - last < 1000 * 60 * 60 * 24; // last 24h
 }

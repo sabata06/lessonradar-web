@@ -108,25 +108,54 @@ function Avatar({ src, name }: { src: string; name: string }) {
   // Two avatar sizes: 96px on mobile, 128px on sm+ — Image needs a fixed
   // intrinsic size so we ship the larger one and let CSS scale down. The
   // ring + cream backplate gives the photo a frame on dark photos.
+  //
+  // Initials fallback when the backend hasn't supplied a real avatar.
+  // `/og/default.png` is the adapter's placeholder marker — see
+  // `lib/data/adapters/teacher.ts`.
+  const hasRealAvatar =
+    src && src !== "/og/default.png" && !src.endsWith("/og/default.png");
+
   return (
     <div className="relative shrink-0">
       <div
         className={cn(
-          "relative grid place-items-center rounded-full bg-muted",
+          "relative grid place-items-center rounded-full",
           "size-24 sm:size-32",
           "ring-2 ring-border ring-offset-4 ring-offset-card",
+          hasRealAvatar ? "bg-muted" : "bg-brand-soft",
         )}
       >
-        <Image
-          src={src}
-          alt={name}
-          width={128}
-          height={128}
-          className="size-full rounded-full object-cover"
-          sizes="(min-width: 640px) 128px, 96px"
-          priority
-        />
+        {hasRealAvatar ? (
+          <Image
+            src={src}
+            alt={name}
+            width={128}
+            height={128}
+            className="size-full rounded-full object-cover"
+            sizes="(min-width: 640px) 128px, 96px"
+            priority
+          />
+        ) : (
+          <span
+            aria-label={name}
+            role="img"
+            className="select-none text-2xl font-semibold uppercase tracking-tight text-brand-soft-foreground sm:text-3xl"
+          >
+            {getInitials(name)}
+          </span>
+        )}
       </div>
     </div>
   );
+}
+
+function getInitials(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toLocaleUpperCase("tr");
+  }
+  return (
+    parts[0][0] + parts[parts.length - 1][0]
+  ).toLocaleUpperCase("tr");
 }

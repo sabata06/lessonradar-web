@@ -17,7 +17,7 @@ export const MOCK_TEACHERS: TeacherProfile[] = [
     primaryDisciplineSlug: "yks-matematik",
     disciplines: [
       { disciplineSlug: "yks-matematik", hourlyMin: 450, hourlyMax: 650 },
-      { disciplineSlug: "matematik-ozel-ders", hourlyMin: 350, hourlyMax: 500 },
+      { disciplineSlug: "matematik", hourlyMin: 350, hourlyMax: 500 },
     ],
     trust: {
       isVerified: true,
@@ -45,9 +45,9 @@ export const MOCK_TEACHERS: TeacherProfile[] = [
     districtSlug: "sahinbey",
     modality: "online",
     yearsOfExperience: 6,
-    primaryDisciplineSlug: "fizik-ozel-ders",
+    primaryDisciplineSlug: "fizik",
     disciplines: [
-      { disciplineSlug: "fizik-ozel-ders", hourlyMin: 400, hourlyMax: 550 },
+      { disciplineSlug: "fizik", hourlyMin: 400, hourlyMax: 550 },
     ],
     trust: {
       isVerified: true,
@@ -75,9 +75,9 @@ export const MOCK_TEACHERS: TeacherProfile[] = [
     districtSlug: "sehitkamil",
     modality: "in_person",
     yearsOfExperience: 8,
-    primaryDisciplineSlug: "ingilizce-ozel-ders",
+    primaryDisciplineSlug: "ingilizce",
     disciplines: [
-      { disciplineSlug: "ingilizce-ozel-ders", hourlyMin: 350, hourlyMax: 500 },
+      { disciplineSlug: "ingilizce", hourlyMin: 350, hourlyMax: 500 },
     ],
     trust: {
       isVerified: true,
@@ -105,9 +105,9 @@ export const MOCK_TEACHERS: TeacherProfile[] = [
     districtSlug: "sahinbey",
     modality: "in_person",
     yearsOfExperience: 4,
-    primaryDisciplineSlug: "matematik-ozel-ders",
+    primaryDisciplineSlug: "matematik",
     disciplines: [
-      { disciplineSlug: "matematik-ozel-ders", hourlyMin: 300, hourlyMax: 400 },
+      { disciplineSlug: "matematik", hourlyMin: 300, hourlyMax: 400 },
     ],
     trust: {
       isVerified: false,
@@ -135,9 +135,9 @@ export const MOCK_TEACHERS: TeacherProfile[] = [
     districtSlug: "sehitkamil",
     modality: "in_person",
     yearsOfExperience: 7,
-    primaryDisciplineSlug: "piyano-dersi",
+    primaryDisciplineSlug: "piyano",
     disciplines: [
-      { disciplineSlug: "piyano-dersi", hourlyMin: 400, hourlyMax: 600 },
+      { disciplineSlug: "piyano", hourlyMin: 400, hourlyMax: 600 },
     ],
     trust: {
       isVerified: true,

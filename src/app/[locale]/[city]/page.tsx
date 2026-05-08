@@ -2,26 +2,31 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, MapsIcon } from "@hugeicons/core-free-icons";
 
 import { Container } from "@/components/layout/Container";
 import { Breadcrumb } from "@/components/discovery/Breadcrumb";
 import { LeadCTA } from "@/components/discovery/LeadCTA";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { TeacherCard } from "@/components/teacher/TeacherCard";
 
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { getCityBySlug, TR_CITIES } from "@/lib/data/mock/cities";
+import { getCityBySlug, getDistrictsByCity, TR_CITIES } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
-import { getTeachersByCityAndDiscipline } from "@/lib/data/mock/teachers";
+import { fetchTeacherList } from "@/lib/data/api/marketplace";
+import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
-import { pickLocalized, type SupportedLocale } from "@/lib/types";
+import { buildLocaleUrl } from "@/lib/seo/site";
+import { pickLocalized, type SupportedLocale, type TeacherProfile } from "@/lib/types";
 
 interface RouteParams {
   locale: string;
   city: string;
 }
+
+const TOP_TEACHERS_LIMIT = 6;
 
 export function generateStaticParams() {
   const params: { locale: string; city: string }[] = [];
@@ -50,8 +55,8 @@ export async function generateMetadata({
       : `Private tutors in ${cityName}`;
   const description =
     locale === "tr"
-      ? `${cityName}'de doğrulanmış özel ders öğretmenlerini branşa göre keşfet.`
-      : `Discover verified private tutors in ${cityName} by subject.`;
+      ? `${cityName}'de doğrulanmış özel ders öğretmenlerini branşa ve ilçeye göre keşfet, ihtiyacına uygun olanı seç.`
+      : `Discover verified private tutors in ${cityName} by subject and district.`;
 
   return buildPageMetadata({
     locale: locale as Locale,
@@ -73,18 +78,62 @@ export default async function CityLandingPage({
   if (!cityData) notFound();
 
   const typedLocale = locale as Locale;
+  const supportedLocale = locale as SupportedLocale;
+  const nowIso = new Date().toISOString();
   const cityName = typedLocale === "tr" ? cityData.nameTr : cityData.nameEn;
 
-  // Discipline cards with live counts for this city
+  // Single city-scoped fetch — drives the top-teacher list, the
+  // discipline-card counts, and the trust copy under the hero. Backend
+  // already filters to publishable rows; we sort + group locally.
+  const cityList = await fetchTeacherList({ city });
+  const cityTeachers = cityList.results.map(adaptTeacher);
+
+  const topTeachers = rankTopTeachers(cityTeachers).slice(0, TOP_TEACHERS_LIMIT);
+
   const disciplineCards = MOCK_DISCIPLINES.map((d) => ({
     discipline: d,
-    count: getTeachersByCityAndDiscipline(city, d.slug).length,
-  }));
+    count: cityTeachers.filter((t) =>
+      t.disciplines.some((dp) => dp.disciplineSlug === d.slug),
+    ).length,
+  })).sort((a, b) => b.count - a.count);
+
+  const districts = getDistrictsByCity(city);
+
+  // Stats line under hero — kept boring and quantitative on purpose
+  // (Calm Editorial). We explicitly avoid superlatives like "best" or
+  // "elite" because the data here is just a head-count + median.
+  const verifiedCount = cityTeachers.filter((t) => t.trust.isVerified).length;
+  const totalCount = cityTeachers.length;
+  const medianResponseMinutes = computeMedianResponse(cityTeachers);
 
   const breadcrumbs = [
     { label: typedLocale === "tr" ? "Anasayfa" : "Home", path: "/" },
     { label: cityName, path: `/${city}` },
   ];
+
+  const itemListJsonLd =
+    topTeachers.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          url: buildLocaleUrl(typedLocale, `/${city}`),
+          numberOfItems: topTeachers.length,
+          itemListElement: topTeachers.map((t, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: buildLocaleUrl(typedLocale, `/ogretmen/${t.slug}`),
+            name: t.fullName,
+          })),
+        }
+      : null;
+
+  const introCopy = buildIntroCopy({
+    locale: typedLocale,
+    cityName,
+    totalCount,
+    verifiedCount,
+    medianResponseMinutes,
+  });
 
   return (
     <>
@@ -108,14 +157,46 @@ export default async function CityLandingPage({
               : `Private tutors in ${cityName}`}
           </h1>
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {typedLocale === "tr"
-              ? `${cityName}'de doğrulanmış öğretmenleri branşa göre keşfet, ihtiyacına uygun olanı seç ve doğrudan iletişime geç.`
-              : `Browse verified ${cityName} tutors by subject, pick the one that fits, and get in touch directly.`}
+            {introCopy}
           </p>
         </header>
       </Container>
 
-      <Container className="space-y-10 pb-16 sm:pb-20">
+      {topTeachers.length > 0 && (
+        <Container className="space-y-5 pb-12 sm:pb-16">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+              {typedLocale === "tr"
+                ? `${cityName}'in öne çıkan öğretmenleri`
+                : `Featured tutors in ${cityName}`}
+            </h2>
+            <Link
+              href={`/ara?city=${city}`}
+              className="inline-flex items-center gap-1 text-sm font-medium text-brand underline-offset-4 hover:underline"
+            >
+              {typedLocale === "tr" ? "Tümünü gör" : "See all"}
+              <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={2} />
+            </Link>
+          </div>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {topTeachers.map((t) => (
+              <li key={t.id}>
+                <TeacherCard
+                  teacher={t}
+                  locale={supportedLocale}
+                  nowIso={nowIso}
+                  variant="compact"
+                />
+              </li>
+            ))}
+          </ul>
+        </Container>
+      )}
+
+      <Container className="space-y-5 pb-12 sm:pb-16">
+        <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          {typedLocale === "tr" ? "Popüler branşlar" : "Popular subjects"}
+        </h2>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {disciplineCards.map(({ discipline, count }) => (
             <li key={discipline.slug}>
@@ -130,8 +211,8 @@ export default async function CityLandingPage({
                   <p className="text-xs text-muted-foreground">
                     {count > 0
                       ? typedLocale === "tr"
-                        ? `${count} doğrulanmış öğretmen`
-                        : `${count} verified tutors`
+                        ? `${count} öğretmen`
+                        : `${count} tutors`
                       : typedLocale === "tr"
                         ? "Talep bırak, öğretmenler ulaşsın"
                         : "Post a request — tutors will reach out"}
@@ -147,16 +228,111 @@ export default async function CityLandingPage({
             </li>
           ))}
         </ul>
+      </Container>
 
+      {districts.length > 0 && (
+        <Container className="space-y-4 pb-12 sm:pb-16">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+            {typedLocale === "tr"
+              ? `${cityName} ilçeleri`
+              : `${cityName} districts`}
+          </h2>
+          <ul className="flex flex-wrap gap-2">
+            {districts.map((d) => (
+              <li key={d.slug}>
+                <Link
+                  href={`/ara?city=${city}&district=${d.slug}`}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-foreground/80 transition-colors hover:border-brand-soft hover:bg-brand-soft hover:text-brand-soft-foreground"
+                >
+                  <HugeiconsIcon icon={MapsIcon} size={14} strokeWidth={2} />
+                  {typedLocale === "tr" ? d.nameTr : d.nameEn}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      )}
+
+      <Container className="pb-16 sm:pb-20">
         <LeadCTA />
       </Container>
 
       <JsonLd
-        data={breadcrumbJsonLd(
-          typedLocale,
-          breadcrumbs.map((b) => ({ name: b.label, path: b.path })),
-        )}
+        data={[
+          breadcrumbJsonLd(
+            typedLocale,
+            breadcrumbs.map((b) => ({ name: b.label, path: b.path })),
+          ),
+          ...(itemListJsonLd ? [itemListJsonLd] : []),
+        ]}
       />
     </>
   );
+}
+
+// ─── helpers ────────────────────────────────────────────────────────────────
+
+function rankTopTeachers(teachers: TeacherProfile[]): TeacherProfile[] {
+  return teachers.slice().sort((a, b) => {
+    if (a.trust.isVerified !== b.trust.isVerified) {
+      return a.trust.isVerified ? -1 : 1;
+    }
+    if (a.isPremium !== b.isPremium) return a.isPremium ? -1 : 1;
+    if (a.trust.reviewCount !== b.trust.reviewCount) {
+      return b.trust.reviewCount - a.trust.reviewCount;
+    }
+    return b.trust.ratingAverage - a.trust.ratingAverage;
+  });
+}
+
+function computeMedianResponse(teachers: TeacherProfile[]): number | null {
+  const xs = teachers
+    .map((t) => t.trust.responseTimeMinutes)
+    .filter((n) => Number.isFinite(n) && n > 0)
+    .sort((a, b) => a - b);
+  if (xs.length === 0) return null;
+  return xs[Math.floor(xs.length / 2)];
+}
+
+function buildIntroCopy(args: {
+  locale: Locale;
+  cityName: string;
+  totalCount: number;
+  verifiedCount: number;
+  medianResponseMinutes: number | null;
+}): string {
+  const { locale, cityName, totalCount, verifiedCount, medianResponseMinutes } =
+    args;
+  if (totalCount === 0) {
+    return locale === "tr"
+      ? `${cityName}'de şu an aktif doğrulanmış öğretmenimiz yok. Talebini bırak, eşleşen öğretmenler sana ulaşsın.`
+      : `No active verified tutors in ${cityName} just yet. Post a request — matching tutors will reach out to you.`;
+  }
+  const parts: string[] = [];
+  if (locale === "tr") {
+    parts.push(
+      `${cityName}'de ${totalCount} öğretmen var; ${verifiedCount} tanesi kimlik ve diploma doğrulamasından geçti.`,
+    );
+    if (medianResponseMinutes !== null) {
+      const label =
+        medianResponseMinutes < 60
+          ? `${medianResponseMinutes} dk`
+          : `${Math.round(medianResponseMinutes / 60)} sa`;
+      parts.push(`Ortalama yanıt süresi ${label}.`);
+    }
+    parts.push("Branşa veya ilçeye göre filtrele, doğrudan iletişime geç.");
+  } else {
+    parts.push(
+      `${cityName} has ${totalCount} tutors; ${verifiedCount} have passed our identity and diploma checks.`,
+    );
+    if (medianResponseMinutes !== null) {
+      const label =
+        medianResponseMinutes < 60
+          ? `${medianResponseMinutes} min`
+          : `${Math.round(medianResponseMinutes / 60)}h`;
+      parts.push(`Median response time is ${label}.`);
+    }
+    parts.push("Filter by subject or district and reach out directly.");
+  }
+  return parts.join(" ");
 }

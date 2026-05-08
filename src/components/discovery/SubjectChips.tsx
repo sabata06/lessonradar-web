@@ -22,11 +22,11 @@ interface SubjectChipsProps {
 }
 
 const ICON_MAP: Record<string, IconSvgElement> = {
-  "matematik-ozel-ders": Calculator01Icon,
-  "fizik-ozel-ders": Atom02Icon,
+  matematik: Calculator01Icon,
+  fizik: Atom02Icon,
   "yks-matematik": Mortarboard02Icon,
-  "ingilizce-ozel-ders": TranslateIcon,
-  "piyano-dersi": MusicNote01Icon,
+  ingilizce: TranslateIcon,
+  piyano: MusicNote01Icon,
 };
 
 export function SubjectChips({

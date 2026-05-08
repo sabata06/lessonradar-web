@@ -369,19 +369,56 @@ function Avatar({
   size: number;
   className?: string;
 }) {
+  // The adapter substitutes `/og/default.png` for missing backend
+  // avatars. That file is intentionally not in `/public` — we'd rather
+  // surface initials than ship a generic stock face that looks broken.
+  const hasRealAvatar =
+    teacher.avatarUrl &&
+    teacher.avatarUrl !== "/og/default.png" &&
+    !teacher.avatarUrl.endsWith("/og/default.png");
+
+  if (hasRealAvatar) {
+    return (
+      <Image
+        src={teacher.avatarUrl}
+        alt={teacher.fullName}
+        width={size}
+        height={size}
+        className={cn(
+          "h-auto rounded-2xl bg-muted object-cover ring-1 ring-border",
+          className,
+        )}
+        sizes={`${size}px`}
+      />
+    );
+  }
+
   return (
-    <Image
-      src={teacher.avatarUrl}
-      alt={teacher.fullName}
-      width={size}
-      height={size}
+    <span
+      aria-label={teacher.fullName}
+      role="img"
+      style={{ width: size, height: size }}
       className={cn(
-        "h-auto rounded-2xl bg-muted object-cover ring-1 ring-border",
+        "inline-flex shrink-0 select-none items-center justify-center rounded-2xl bg-brand-soft font-semibold uppercase tracking-tight text-brand-soft-foreground ring-1 ring-border",
         className,
       )}
-      sizes={`${size}px`}
-    />
+    >
+      <span style={{ fontSize: Math.max(12, Math.round(size * 0.36)) }}>
+        {getInitials(teacher.fullName)}
+      </span>
+    </span>
   );
+}
+
+function getInitials(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toLocaleUpperCase("tr");
+  }
+  return (
+    parts[0][0] + parts[parts.length - 1][0]
+  ).toLocaleUpperCase("tr");
 }
 
 /* ------------------------------------------------------------------ */

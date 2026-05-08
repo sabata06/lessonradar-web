@@ -17,7 +17,7 @@ export interface TeacherTrustSignals {
   ratingAverage: number;        // 0..5
   reviewCount: number;
   responseTimeMinutes: number;  // median minutes to first reply
-  lastActiveAt: string;         // ISO
+  lastActiveAt: string | null;  // ISO; null when the backend has no signal yet
   acceptanceRate?: number;      // 0..1
 }
 

@@ -9,9 +9,15 @@ export const MOCK_DOMAINS: MarketplaceDomain[] = [
   { slug: "teknoloji", name: { tr: "Teknoloji", en: "Technology" }, sortOrder: 5 },
 ];
 
+// IMPORTANT: slugs MUST match backend `MarketplaceDiscipline.slug` values
+// served at `/api/marketplace/taxonomy/`. The web's pSEO routes use these
+// slugs as the URL path component (`/<city>/<slug>`), and the discovery
+// endpoint validates the `discipline=<slug>` filter against this exact
+// set — a slug that exists here but not on the backend yields a 400 →
+// empty listing. Keep this list a strict subset of the backend taxonomy.
 export const MOCK_DISCIPLINES: MarketplaceDiscipline[] = [
   {
-    slug: "matematik-ozel-ders",
+    slug: "matematik",
     domainSlug: "akademik",
     name: { tr: "Matematik Özel Ders", en: "Math Tutoring" },
     description: {
@@ -23,7 +29,7 @@ export const MOCK_DISCIPLINES: MarketplaceDiscipline[] = [
     sortOrder: 0,
   },
   {
-    slug: "fizik-ozel-ders",
+    slug: "fizik",
     domainSlug: "akademik",
     name: { tr: "Fizik Özel Ders", en: "Physics Tutoring" },
     description: {
@@ -45,7 +51,7 @@ export const MOCK_DISCIPLINES: MarketplaceDiscipline[] = [
     sortOrder: 0,
   },
   {
-    slug: "ingilizce-ozel-ders",
+    slug: "ingilizce",
     domainSlug: "diller",
     name: { tr: "İngilizce Özel Ders", en: "English Tutoring" },
     description: {
@@ -56,7 +62,7 @@ export const MOCK_DISCIPLINES: MarketplaceDiscipline[] = [
     sortOrder: 0,
   },
   {
-    slug: "piyano-dersi",
+    slug: "piyano",
     domainSlug: "muzik-sanat",
     name: { tr: "Piyano Dersi", en: "Piano Lessons" },
     description: {

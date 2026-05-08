@@ -72,7 +72,9 @@ export function adaptTeacher(
       ratingAverage: api.rating.average ?? 0,
       reviewCount: api.rating.count,
       responseTimeMinutes: api.trust.median_response_minutes ?? 0,
-      lastActiveAt: api.trust.last_active_at ?? "",
+      // Pass null through so consumers can branch instead of feeding
+      // `new Date("")` and rendering "NaN ay önce".
+      lastActiveAt: api.trust.last_active_at,
     },
     isPremium: api.trust.premium,
     profileCompleteness: computeCompleteness(api),
