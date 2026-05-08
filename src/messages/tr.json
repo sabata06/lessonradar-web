@@ -762,5 +762,58 @@
     "for_students": "Öğrenciler için",
     "popular_cities": "Popüler şehirler",
     "popular_subjects": "Popüler branşlar"
+  },
+  "legal": {
+    "breadcrumb_aria_label": "Sayfa yolu",
+    "breadcrumb_home": "Anasayfa",
+    "breadcrumb_legal": "Yasal",
+    "metadata": {
+      "description_fallback": "LessonRadar yasal metin — verilerinizi nasıl koruduğumuz, hizmeti hangi kapsamda sunduğumuz ve haklarınız hakkında şeffaf bilgi."
+    },
+    "meta": {
+      "version": "Sürüm {version}",
+      "contact_label": "İletişim: {email}"
+    },
+    "toc": {
+      "heading": "İçindekiler"
+    },
+    "summary": {
+      "kicker": "Kısaca",
+      "aria_label": "Sayfa özeti",
+      "gizlilik": {
+        "title": "Bu sayfa nasıl bir taahhüt veriyor?",
+        "bullets": [
+          "Yalnızca hizmeti sunmak için gereken verileri (ad, e-posta, telefon, ders tercihi) topluyoruz; gereksiz veri toplamıyoruz.",
+          "KVKK ve GDPR ilkelerini gözetiyoruz: amaca uygun, sınırlı süreli işleme, şeffaflık, erişim ve silme hakkınız.",
+          "Üçüncü taraflarla yalnızca hizmetin işleyişi için zorunlu olan ölçüde paylaşım: Google girişi, bildirim altyapısı, ileride ödeme aracılığı.",
+          "Verilerinizi reklam amaçlı kullanmıyoruz, satmıyoruz; kötüye kullanıma karşı şifreleme ve erişim kontrolleriyle koruyoruz."
+        ]
+      },
+      "kosullar": {
+        "title": "Bu sayfa nasıl bir taahhüt veriyor?",
+        "bullets": [
+          "LessonRadar bir aracı platformdur; ders sözleşmesi yalnızca öğretmen ile öğrenci/veli arasında kurulur.",
+          "Doğru bilgi paylaşmanızı, saygılı iletişim kurmanızı ve yürürlükteki yasalara uymanızı bekliyoruz.",
+          "Hesabınızı istediğiniz zaman silebilirsiniz; 30 günlük güvenli bekleme süresi sonunda veriler anonimleştirilir.",
+          "Sözleşmeden doğan uyuşmazlıklarda Türkiye hukuku ve Gaziantep mahkemeleri yetkilidir."
+        ]
+      },
+      "ogretmen-sozlesmesi": {
+        "title": "Bu sayfa nasıl bir taahhüt veriyor?",
+        "bullets": [
+          "LessonRadar bir aracı platformdur; eğitmen bağımsız hizmet sağlayıcı olarak ders verir.",
+          "Vergi, sigorta ve gelirden doğan mali yükümlülükler doğrudan eğitmene aittir.",
+          "Beta süresince komisyon alınmaz; ileride komisyon devreye girerse en az 30 gün önceden bildirim yapılır.",
+          "Her iki taraf 30 gün önceden yazılı bildirimle sözleşmeyi feshedebilir."
+        ]
+      }
+    },
+    "draft_banner": {
+      "aria_label": "Taslak doküman uyarısı",
+      "pill": "Taslak",
+      "title": "Bu metin taslak halindedir.",
+      "body": "Aşağıdaki sözleşme, sektör standartları çerçevesinde hazırlanmış bir ön taslaktır. Yayına alınmadan önce avukat incelemesinden geçirilecek ve final versiyonu yüklenecektir. Bu sebeple sayfa şu an arama motorlarına dizinlenmemektedir.",
+      "contact": "Sözleşme metniyle ilgili görüş ve önerileriniz için <link>{email}</link> adresine yazabilirsiniz."
+    }
   }
 }

@@ -30,10 +30,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: SitemapEntry[] = [];
 
   // Static public routes
+  // Legal pages: /yasal/gizlilik + /yasal/kosullar are included as
+  // E-E-A-T trust signals (Quality Rater Guidelines value Trust pages).
+  // /yasal/kvkk redirects to /yasal/gizlilik so it stays out.
+  // /yasal/ogretmen-sozlesmesi is excluded while it's a draft (noindex).
   const staticPaths: { path: string; priority: number; changeFrequency: SitemapEntry["changeFrequency"] }[] = [
     { path: "/", priority: 1.0, changeFrequency: "daily" },
     { path: "/ders-talebi", priority: 0.8, changeFrequency: "monthly" },
     { path: "/ogretmen-ol", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/yasal/gizlilik", priority: 0.3, changeFrequency: "monthly" },
+    { path: "/yasal/kosullar", priority: 0.3, changeFrequency: "monthly" },
   ];
 
   for (const { path, priority, changeFrequency } of staticPaths) {

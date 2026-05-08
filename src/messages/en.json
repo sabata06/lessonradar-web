@@ -761,5 +761,58 @@
     "for_students": "For students",
     "popular_cities": "Popular cities",
     "popular_subjects": "Popular subjects"
+  },
+  "legal": {
+    "breadcrumb_aria_label": "Breadcrumb",
+    "breadcrumb_home": "Home",
+    "breadcrumb_legal": "Legal",
+    "metadata": {
+      "description_fallback": "LessonRadar legal document — transparent information about how we protect your data, the scope of the service, and your rights."
+    },
+    "meta": {
+      "version": "Version {version}",
+      "contact_label": "Contact: {email}"
+    },
+    "toc": {
+      "heading": "Contents"
+    },
+    "summary": {
+      "kicker": "In short",
+      "aria_label": "Page summary",
+      "gizlilik": {
+        "title": "What does this page commit to?",
+        "bullets": [
+          "We collect only the data needed to deliver the service (name, email, phone, lesson preference); we don't collect anything we don't need.",
+          "We follow the KVKK and GDPR principles: purpose-limited, time-bounded processing, transparency, and your right to access and erasure.",
+          "We share data with third parties only to the extent strictly required for service operation: Google sign-in, notification infrastructure, future payment intermediation.",
+          "We do not use your data for advertising and we do not sell it; we protect it with encryption and strict access controls."
+        ]
+      },
+      "kosullar": {
+        "title": "What does this page commit to?",
+        "bullets": [
+          "LessonRadar is an intermediary platform; the lesson contract is formed only between the teacher and the student/guardian.",
+          "We expect you to share accurate information, communicate respectfully, and obey the law.",
+          "You can delete your account at any time; data is anonymised after a 30-day safe-hold period.",
+          "Disputes are governed by Turkish law and the courts of Gaziantep."
+        ]
+      },
+      "ogretmen-sozlesmesi": {
+        "title": "What does this page commit to?",
+        "bullets": [
+          "LessonRadar is an intermediary platform; the teacher provides the lesson as an independent service provider.",
+          "Tax, social security, and other obligations arising from lesson income are the teacher's responsibility.",
+          "No commission is charged during beta; if a commission is later introduced it will be announced at least 30 days in advance.",
+          "Either party may terminate this agreement on 30 days' written notice."
+        ]
+      }
+    },
+    "draft_banner": {
+      "aria_label": "Draft document notice",
+      "pill": "Draft",
+      "title": "This document is a draft.",
+      "body": "The agreement below is a preliminary draft prepared in line with industry standards. It will be reviewed by counsel before publication, and the final version will replace this draft. For that reason this page is currently not indexed by search engines.",
+      "contact": "For comments or questions about this draft, please write to <link>{email}</link>."
+    }
   }
 }
