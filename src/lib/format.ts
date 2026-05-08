@@ -91,3 +91,45 @@ export function isRecentlyActive(
   const now = new Date(nowIso).getTime();
   return now - last < 1000 * 60 * 60 * 24; // last 24h
 }
+
+/**
+ * Returns the correct Turkish locative suffix ("'te" / "'de") for a
+ * proper noun based on consonant-harmony rules. Sert ünsüzler (p, ç, t,
+ * k, f, h, s, ş) take "-te"; everything else takes "-de".
+ *
+ * Why this matters: hard-coded "'de" produced "Gaziantep'de" all over
+ * the marketplace pages — gramatically wrong (Gaziantep ends in "p", a
+ * sert ünsüz, so "'te" is correct). The mistake is invisible in
+ * dev-tooling but jumps out in SERP snippets and meta descriptions,
+ * undermining the "doğrulanmış / şeffaf" trust framing.
+ *
+ * Usage: `${cityName}'${locativeSuffix(cityName)}` →
+ *   Gaziantep + 'te
+ *   İstanbul  + 'da   (last vowel is u, last consonant is l → soft)
+ *   Konya     + 'da
+ *   Bursa     + 'da
+ *   Sivas     + 'ta   (s = sert)
+ *   Erzurum   + 'da
+ */
+export function locativeSuffix(name: string): "te" | "ta" | "de" | "da" {
+  const trimmed = name.trim();
+  if (!trimmed) return "de";
+  const last = trimmed[trimmed.length - 1].toLocaleLowerCase("tr");
+  const hardConsonants = ["p", "ç", "t", "k", "f", "h", "s", "ş"];
+  const isHard = hardConsonants.includes(last);
+
+  // Vowel-harmony for back/front choice — last *vowel* picks a/e.
+  const lower = trimmed.toLocaleLowerCase("tr");
+  const backVowels = ["a", "ı", "o", "u"];
+  let isBack = false;
+  for (let i = lower.length - 1; i >= 0; i--) {
+    const ch = lower[i];
+    if ("aeıioöuü".includes(ch)) {
+      isBack = backVowels.includes(ch);
+      break;
+    }
+  }
+
+  if (isHard) return isBack ? "ta" : "te";
+  return isBack ? "da" : "de";
+}

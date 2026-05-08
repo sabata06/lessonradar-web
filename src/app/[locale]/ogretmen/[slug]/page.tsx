@@ -30,7 +30,7 @@ import {
   pickLocalized,
   type SupportedLocale,
 } from "@/lib/types";
-import { formatHourlyRange } from "@/lib/format";
+import { formatHourlyRange, locativeSuffix } from "@/lib/format";
 
 interface RouteParams {
   locale: string;
@@ -94,10 +94,17 @@ export async function generateMetadata({
     discipline: disciplineName,
     city: cityName,
   });
+  // Pre-compute the locative form ("Gaziantep'te" not "Gaziantep'de")
+  // so the i18n template doesn't have to hard-code a suffix that won't
+  // match every city's consonant-harmony rule.
+  const cityLoc = cityName
+    ? `${cityName}'${locativeSuffix(cityName)}`
+    : "";
   const description = t("description", {
     name: data.teacher.fullName,
     discipline: disciplineName.toLowerCase(),
     city: cityName,
+    cityLoc,
     ratingLine,
     priceLine,
   }).replace(/\s{2,}/g, " ").trim();

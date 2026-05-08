@@ -447,8 +447,8 @@
   },
   "profile": {
     "meta": {
-      "title": "{name} · {discipline} tutor · {city}",
-      "description": "{name} — {discipline} private tutor in {city}. {ratingLine} {priceLine} Verified, transparent pricing, fast response."
+      "title": "{name} · {discipline} · {city} | Private Tutor",
+      "description": "{name} · {discipline} tutor in {cityLoc}. {ratingLine} {priceLine} Verified, transparent pricing, fast response."
     },
     "breadcrumb": {
       "teachers": "Tutors"

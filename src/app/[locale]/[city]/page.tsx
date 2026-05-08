@@ -16,6 +16,7 @@ import { getCityBySlug, getDistrictsByCity, TR_CITIES } from "@/lib/data/mock/ci
 import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
 import { fetchTeacherList } from "@/lib/data/api/marketplace";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
+import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { buildLocaleUrl } from "@/lib/seo/site";
@@ -55,7 +56,7 @@ export async function generateMetadata({
       : `Private tutors in ${cityName}`;
   const description =
     locale === "tr"
-      ? `${cityName}'de doğrulanmış özel ders öğretmenlerini branşa ve ilçeye göre keşfet, ihtiyacına uygun olanı seç.`
+      ? `${cityName}'${locativeSuffix(cityName)} doğrulanmış özel ders öğretmenlerini branşa ve ilçeye göre keşfet, ihtiyacına uygun olanı seç.`
       : `Discover verified private tutors in ${cityName} by subject and district.`;
 
   return buildPageMetadata({
@@ -153,8 +154,8 @@ export default async function CityLandingPage({
           </p>
           <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             {typedLocale === "tr"
-              ? `${cityName}'de özel ders öğretmenleri`
-              : `Private tutors in ${cityName}`}
+              ? `${cityName}'${locativeSuffix(cityName)} Özel Ders Öğretmenleri`
+              : `Private Tutors in ${cityName}`}
           </h1>
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {introCopy}
@@ -303,15 +304,16 @@ function buildIntroCopy(args: {
 }): string {
   const { locale, cityName, totalCount, verifiedCount, medianResponseMinutes } =
     args;
+  const cityLoc = `${cityName}'${locativeSuffix(cityName)}`;
   if (totalCount === 0) {
     return locale === "tr"
-      ? `${cityName}'de şu an aktif doğrulanmış öğretmenimiz yok. Talebini bırak, eşleşen öğretmenler sana ulaşsın.`
+      ? `${cityLoc} şu an aktif doğrulanmış öğretmenimiz yok. Talebini bırak, eşleşen öğretmenler sana ulaşsın.`
       : `No active verified tutors in ${cityName} just yet. Post a request — matching tutors will reach out to you.`;
   }
   const parts: string[] = [];
   if (locale === "tr") {
     parts.push(
-      `${cityName}'de ${totalCount} öğretmen var; ${verifiedCount} tanesi kimlik ve diploma doğrulamasından geçti.`,
+      `${cityLoc} ${totalCount} öğretmen var; ${verifiedCount} tanesi kimlik ve diploma doğrulamasından geçti.`,
     );
     if (medianResponseMinutes !== null) {
       const label =

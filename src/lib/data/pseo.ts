@@ -20,6 +20,7 @@ import type {
 
 import { fetchTeacherList } from "@/lib/data/api/marketplace";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
+import { locativeSuffix } from "@/lib/format";
 import { getCityBySlug, getDistrictsByCity } from "./mock/cities";
 import { getDisciplineBySlug } from "./mock/disciplines";
 import {
@@ -129,15 +130,16 @@ export function buildIntroParagraph(
   const { totalCount, verifiedCount, minHourly, maxHourly, medianResponseMinutes } =
     data.stats;
 
+  const cityLoc = `${cityName}'${locativeSuffix(cityName)}`;
   if (totalCount === 0) {
     return locale === "tr"
-      ? `${cityName}'de ${disciplineName.toLowerCase()} kategorisinde henüz doğrulanmış öğretmenimiz yok. İlk ders talebini sen bırak, eşleşen öğretmenler sana ulaşsın.`
+      ? `${cityLoc} ${disciplineName.toLowerCase()} kategorisinde henüz doğrulanmış öğretmenimiz yok. İlk ders talebini sen bırak, eşleşen öğretmenler sana ulaşsın.`
       : `We don't yet have verified ${disciplineName.toLowerCase()} tutors in ${cityName}. Be the first to post a request — matching tutors will reach out to you.`;
   }
 
   if (locale === "tr") {
     const parts = [
-      `${cityName}'de ${disciplineName.toLowerCase()} arıyorsan, ${totalCount} öğretmen arasından ${verifiedCount} tanesi kimlik ve diploma doğrulamasından geçmiş durumda.`,
+      `${cityLoc} ${disciplineName.toLowerCase()} arıyorsan, ${totalCount} öğretmen arasından ${verifiedCount} tanesi kimlik ve diploma doğrulamasından geçmiş durumda.`,
     ];
     if (minHourly !== null && maxHourly !== null) {
       parts.push(`Saat ücretleri ${minHourly}–${maxHourly} ₺ arasında değişiyor.`);

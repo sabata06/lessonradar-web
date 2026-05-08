@@ -448,8 +448,8 @@
   },
   "profile": {
     "meta": {
-      "title": "{name} · {discipline} öğretmeni · {city}",
-      "description": "{name} — {city}'de {discipline} özel dersi. {ratingLine} {priceLine} Doğrulanmış öğretmen, şeffaf fiyat, hızlı yanıt."
+      "title": "{name} · {discipline} · {city} | Özel Ders Öğretmeni",
+      "description": "{name} · {cityLoc} {discipline} veren öğretmen. {ratingLine} {priceLine} Doğrulanmış öğretmen, şeffaf fiyat, hızlı yanıt."
     },
     "breadcrumb": {
       "teachers": "Öğretmenler"

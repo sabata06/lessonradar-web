@@ -16,6 +16,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import { TR_CITIES } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
 import { buildIntroParagraph, getPSEOLandingData } from "@/lib/data/pseo";
+import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import {
   breadcrumbJsonLd,
@@ -67,7 +68,7 @@ export async function generateMetadata({
 
   const description =
     locale === "tr"
-      ? `${cityName}'de ${disciplineName.toLowerCase()} arıyor musun? ${data.stats.verifiedCount} doğrulanmış öğretmen, şeffaf fiyat, hızlı yanıt.`
+      ? `${cityName}'${locativeSuffix(cityName)} ${disciplineName.toLowerCase()} arıyor musun? ${data.stats.verifiedCount} doğrulanmış öğretmen, şeffaf fiyat, hızlı yanıt.`
       : `Looking for ${disciplineName.toLowerCase()} in ${cityName}? ${data.stats.verifiedCount} verified tutors, transparent pricing, fast response.`;
 
   return buildPageMetadata({
@@ -123,8 +124,8 @@ export default async function PSEOLandingPage({
           </p>
           <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             {typedLocale === "tr"
-              ? `${cityName} ${disciplineName}`
-              : `${disciplineName} in ${cityName}`}
+              ? `${cityName}'${locativeSuffix(cityName)} ${disciplineName} Öğretmenleri`
+              : `${disciplineName} Tutors in ${cityName}`}
           </h1>
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {intro}
