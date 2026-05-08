@@ -33,12 +33,15 @@ export const ENDPOINTS = {
   AUTH_REGISTER_DEVICE: "/api/auth/register-device/",
   AUTH_LOGOUT: "/api/auth/logout/",
 
-  // ── Marketplace public (B3 — backend pending) ───────────────────────────
+  // ── Marketplace public (LIVE as of B3.1.A–D) ────────────────────────────
   MARKETPLACE_TAXONOMY: "/api/marketplace/taxonomy/",
   MARKETPLACE_TEACHERS: "/api/marketplace/teachers/",
-  /** Append `<slug>/` */
-  MARKETPLACE_TEACHER_DETAIL: (slug: string) =>
-    `/api/marketplace/teachers/${encodeURIComponent(slug)}/`,
+  /** Legacy id-based detail; the mobile app uses this. */
+  MARKETPLACE_TEACHER_DETAIL_BY_ID: (id: number | string) =>
+    `/api/marketplace/teachers/${encodeURIComponent(String(id))}/`,
+  /** Slug-based detail used by the web's `/ogretmen/<slug>` SEO route. */
+  MARKETPLACE_TEACHER_DETAIL_BY_SLUG: (slug: string) =>
+    `/api/marketplace/teachers/by-slug/${encodeURIComponent(slug)}/`,
   MARKETPLACE_CITIES: "/api/marketplace/cities/",
 
   // ── Anonymous lead capture (B4 — backend pending) ───────────────────────
