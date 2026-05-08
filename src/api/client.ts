@@ -4,15 +4,24 @@ import { getLocale } from "next-intl/server";
 
 const BASE = process.env.DJANGO_API_BASE;
 
-if (!BASE) {
+// `LR_USE_MOCK=1` lets local builds + CI render the marketplace pages
+// from `src/lib/data/mock/*` without a Django backend reachable. Auth
+// flows still need the real API, but they're never invoked on the SSG
+// paths that opt into the mock fallback.
+const MOCK_MODE = process.env.LR_USE_MOCK === "1";
+
+if (!BASE && !MOCK_MODE) {
   // Fail fast at module load only when running on the server.
   // Client bundles can't reach this file thanks to "server-only".
   throw new Error(
-    "DJANGO_API_BASE is not set. Add it to .env.local (see .env.example).",
+    "DJANGO_API_BASE is not set. Add it to .env.local (see .env.example), or set LR_USE_MOCK=1 to render from mock data.",
   );
 }
 
-const TRUSTED_BASE = BASE;
+// Provide a placeholder base URL when mock mode is on so `new URL(...)`
+// in `buildUrl` doesn't crash; calls go through the mock fallback layer
+// before they ever hit the network.
+const TRUSTED_BASE = BASE ?? "http://mock.invalid";
 
 export type ApiQuery = Record<
   string,

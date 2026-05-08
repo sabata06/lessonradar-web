@@ -2,9 +2,13 @@
  * pSEO landing data aggregation. Single entry point for the
  * /[city]/[discipline] route — keeps render-time concerns out of the page.
  *
- * Backend swap path: replace getPSEOLandingData with an API call that
- * returns the same shape. Quality score is computed here for now; a
- * production rollout should compute it server-side and persist it.
+ * Backend reads: `GET /api/marketplace/teachers/?city=<slug>&discipline=<slug>`
+ * pulls the visible teachers for that combination; the city + discipline
+ * master data still lives in the local mock since both are static seeds.
+ *
+ * Quality score is computed here so the same view-model that the page
+ * uses can decide its own indexability — a pure function of the data we
+ * just fetched.
  */
 import type {
   City,
@@ -14,9 +18,10 @@ import type {
   TeacherProfile,
 } from "@/lib/types";
 
+import { fetchTeacherList } from "@/lib/data/api/marketplace";
+import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { getCityBySlug, getDistrictsByCity } from "./mock/cities";
 import { getDisciplineBySlug } from "./mock/disciplines";
-import { getTeachersByCityAndDiscipline } from "./mock/teachers";
 import {
   computeQualityScore,
   type IndexPolicy,
@@ -39,37 +44,54 @@ export interface PSEOLandingData {
   };
 }
 
-export function getPSEOLandingData(
+export async function getPSEOLandingData(
   citySlug: string,
   disciplineSlug: string,
-): PSEOLandingData | null {
+): Promise<PSEOLandingData | null> {
   const city = getCityBySlug(citySlug);
   const discipline = getDisciplineBySlug(disciplineSlug);
   if (!city || !discipline) return null;
 
-  const teachers = getTeachersByCityAndDiscipline(citySlug, disciplineSlug);
+  const list = await fetchTeacherList({
+    city: citySlug,
+    discipline: disciplineSlug,
+  });
+  const teachers = list.results.map((api) => adaptTeacher(api));
   const districts = getDistrictsByCity(citySlug);
 
   const verifiedCount = teachers.filter((t) => t.trust.isVerified).length;
   const reviewedCount = teachers.filter((t) => t.trust.reviewCount > 0).length;
 
-  // Hourly bounds for the SPECIFIC discipline (not the teacher's primary)
+  // Hourly bounds for the SPECIFIC discipline (not the teacher's primary).
+  // Adapter falls back to the profile-level hourly_rate when a specialty
+  // has no per-discipline pricing, so this is always well-defined.
   let minHourly: number | null = null;
   let maxHourly: number | null = null;
   for (const t of teachers) {
-    const pricing = t.disciplines.find((d) => d.disciplineSlug === disciplineSlug);
+    const pricing = t.disciplines.find(
+      (d) => d.disciplineSlug === disciplineSlug,
+    );
     if (!pricing) continue;
-    minHourly = minHourly === null ? pricing.hourlyMin : Math.min(minHourly, pricing.hourlyMin);
-    maxHourly = maxHourly === null ? pricing.hourlyMax : Math.max(maxHourly, pricing.hourlyMax);
+    if (pricing.hourlyMin > 0) {
+      minHourly =
+        minHourly === null ? pricing.hourlyMin : Math.min(minHourly, pricing.hourlyMin);
+    }
+    if (pricing.hourlyMax > 0) {
+      maxHourly =
+        maxHourly === null ? pricing.hourlyMax : Math.max(maxHourly, pricing.hourlyMax);
+    }
   }
 
-  const responses = teachers.map((t) => t.trust.responseTimeMinutes).sort((a, b) => a - b);
+  const responses = teachers
+    .map((t) => t.trust.responseTimeMinutes)
+    .filter((n) => n > 0)
+    .sort((a, b) => a - b);
   const medianResponseMinutes =
     responses.length === 0 ? null : responses[Math.floor(responses.length / 2)];
 
   const quality = computeQualityScore({
     teachers,
-    hasUniqueIntro: true, // hand-edited intro is required before publishing
+    hasUniqueIntro: true,
     hasPriceDataPoint: minHourly !== null,
     hasReviewSignal: reviewedCount > 0,
   });

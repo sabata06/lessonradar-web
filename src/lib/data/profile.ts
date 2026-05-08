@@ -1,11 +1,13 @@
 /**
- * Teacher profile view-model aggregator. Mirrors the pSEO landing pattern:
- * the page renders from this single shape, and the backend swap path is
- * "replace getTeacherProfileData with an API call returning the same data".
+ * Teacher profile view-model aggregator.
  *
- * Computes related teachers (same city, different teacher) and similar
- * disciplines (other featured disciplines this teacher does not yet teach,
- * useful for "related links" SEO crawl-paths).
+ * Reads from the live backend (`/api/marketplace/teachers/by-slug/<slug>/`
+ * + `/api/marketplace/teachers/?city=<city_slug>` for similar teachers)
+ * and normalizes the payload through `adaptTeacher` so consumers keep the
+ * same shape they were built against during the mock era.
+ *
+ * Mock fallback (`LR_USE_MOCK=1`) routes the same fetchers through
+ * `lib/data/api/use-mock` so SSG keeps working in offline/CI builds.
  */
 import type {
   City,
@@ -15,9 +17,13 @@ import type {
   TeacherProfile,
 } from "@/lib/types";
 
+import {
+  fetchTeacherDetailBySlug,
+  fetchTeacherList,
+} from "@/lib/data/api/marketplace";
+import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { getCityBySlug, getDistrictBySlug } from "./mock/cities";
 import { getDisciplineBySlug, MOCK_DISCIPLINES } from "./mock/disciplines";
-import { getTeacherBySlug, MOCK_TEACHERS } from "./mock/teachers";
 import {
   computeProfileIndexPolicy,
   type ProfileIndexBreakdown,
@@ -43,9 +49,13 @@ export interface TeacherProfileData {
 
 const SIMILAR_TEACHER_LIMIT = 4;
 
-export function getTeacherProfileData(slug: string): TeacherProfileData | null {
-  const teacher = getTeacherBySlug(slug);
-  if (!teacher) return null;
+export async function getTeacherProfileData(
+  slug: string,
+): Promise<TeacherProfileData | null> {
+  const apiTeacher = await fetchTeacherDetailBySlug(slug);
+  if (!apiTeacher) return null;
+
+  const teacher = adaptTeacher(apiTeacher);
 
   const city = getCityBySlug(teacher.citySlug);
   const district = teacher.districtSlug
@@ -79,22 +89,12 @@ export function getTeacherProfileData(slug: string): TeacherProfileData | null {
     ? { min: Math.min(...allHourly), max: Math.max(...allHourly) }
     : null;
 
-  // Similar teachers: same city, overlapping primary domain or any shared discipline,
-  // not this teacher. Verified first, then higher rating.
-  const teacherDisciplineSet = new Set(teacher.disciplines.map((d) => d.disciplineSlug));
-  const similarTeachers = MOCK_TEACHERS.filter((t) => {
-    if (t.id === teacher.id) return false;
-    if (t.citySlug !== teacher.citySlug) return false;
-    return t.disciplines.some((d) => teacherDisciplineSet.has(d.disciplineSlug)) ||
-      t.primaryDisciplineSlug === teacher.primaryDisciplineSlug;
-  })
-    .sort((a, b) => {
-      if (a.trust.isVerified !== b.trust.isVerified) {
-        return a.trust.isVerified ? -1 : 1;
-      }
-      return b.trust.ratingAverage - a.trust.ratingAverage;
-    })
-    .slice(0, SIMILAR_TEACHER_LIMIT);
+  // Similar teachers: same city, overlapping discipline, not this teacher.
+  // Sourced from a list-call filtered server-side; we then refine with
+  // the discipline overlap rule and rank verified-first locally.
+  const similarTeachers = teacher.citySlug
+    ? await getSimilarTeachers(teacher)
+    : [];
 
   const index = computeProfileIndexPolicy(teacher);
 
@@ -110,16 +110,58 @@ export function getTeacherProfileData(slug: string): TeacherProfileData | null {
   };
 }
 
-/** Returns slugs for `generateStaticParams` — every teacher in the dataset. */
-export function getAllTeacherSlugs(): string[] {
-  return MOCK_TEACHERS.map((t) => t.slug);
+async function getSimilarTeachers(
+  teacher: TeacherProfile,
+): Promise<TeacherProfile[]> {
+  const list = await fetchTeacherList({ city: teacher.citySlug });
+  const teacherDisciplineSet = new Set(
+    teacher.disciplines.map((d) => d.disciplineSlug),
+  );
+
+  return list.results
+    .map((api) => adaptTeacher(api))
+    .filter((candidate) => {
+      if (candidate.id === teacher.id) return false;
+      // Server already filtered by city; we apply the cross-discipline
+      // overlap rule here to keep the API surface generic.
+      return (
+        candidate.disciplines.some((d) =>
+          teacherDisciplineSet.has(d.disciplineSlug),
+        ) ||
+        candidate.primaryDisciplineSlug === teacher.primaryDisciplineSlug
+      );
+    })
+    .sort((a, b) => {
+      if (a.trust.isVerified !== b.trust.isVerified) {
+        return a.trust.isVerified ? -1 : 1;
+      }
+      return b.trust.ratingAverage - a.trust.ratingAverage;
+    })
+    .slice(0, SIMILAR_TEACHER_LIMIT);
 }
 
-/** Subset of teachers eligible for inclusion in sitemap / hreflang feeds. */
-export function getIndexableTeacherSlugs(): string[] {
-  return MOCK_TEACHERS
-    .filter((t) => computeProfileIndexPolicy(t).policy === "index")
-    .map((t) => t.slug);
+/**
+ * Returns slugs for `generateStaticParams`. Pulls a single list page from
+ * the API and uses every visible teacher's slug. The list endpoint is
+ * already filtered to "publishable" rows server-side, so no extra
+ * client-side filter is needed here.
+ */
+export async function getAllTeacherSlugs(): Promise<string[]> {
+  const list = await fetchTeacherList();
+  return list.results.map((row) => row.slug).filter(Boolean);
+}
+
+/**
+ * Subset eligible for sitemap inclusion (and Google index hint). Adapts
+ * each row to compute the same `computeProfileIndexPolicy` verdict the
+ * runtime uses, so sitemap and on-page robots meta agree.
+ */
+export async function getIndexableTeacherSlugs(): Promise<string[]> {
+  const list = await fetchTeacherList();
+  return list.results
+    .map((api) => adaptTeacher(api))
+    .filter((teacher) => computeProfileIndexPolicy(teacher).policy === "index")
+    .map((teacher) => teacher.slug);
 }
 
 /**
@@ -137,4 +179,5 @@ export function deriveModalities(teacher: TeacherProfile): {
 
 // Re-export the discipline list for components that build cross-links
 // (e.g. "this teacher does not yet teach X — related discipline pages").
+// Disciplines stay client-side until the taxonomy API consumer lands.
 export { MOCK_DISCIPLINES };

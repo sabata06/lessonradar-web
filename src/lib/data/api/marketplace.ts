@@ -10,6 +10,13 @@ import type {
   ApiTeacherListItem,
 } from "@/lib/types/api/marketplace";
 
+import {
+  mockFetchCities,
+  mockFetchTeacherDetailBySlug,
+  mockFetchTeacherList,
+  shouldUseMock,
+} from "./use-mock";
+
 /**
  * Cache windows. The trade-off is freshness vs. crawl/SSR cost:
  *   - Cities are seeded by migration, virtually static — long ISR window.
@@ -35,6 +42,32 @@ const REVALIDATE_CITIES_SECONDS = 86_400;
  */
 export async function fetchTeacherList(
   filters: ApiTeacherListFilters = {},
+  options?: { revalidate?: number; signal?: AbortSignal },
+): Promise<ApiListEnvelope<ApiTeacherListItem>> {
+  if (shouldUseMock()) {
+    return mockFetchTeacherList(filters);
+  }
+
+  try {
+    return await fetchTeacherListLive(filters, options);
+  } catch (error) {
+    // Treat 400 (e.g. unknown discipline / invalid filter combination)
+    // as an empty result. The web's pSEO catalog can address slugs the
+    // backend taxonomy hasn't onboarded yet — those pages should fall
+    // through to lead-collection mode (noindex, quality_score < 50)
+    // instead of crashing the build.
+    if (isApiClientError(error)) return EMPTY_LIST_ENVELOPE;
+    throw error;
+  }
+}
+
+const EMPTY_LIST_ENVELOPE: ApiListEnvelope<ApiTeacherListItem> = {
+  count: 0,
+  results: [],
+};
+
+async function fetchTeacherListLive(
+  filters: ApiTeacherListFilters,
   options?: { revalidate?: number; signal?: AbortSignal },
 ): Promise<ApiListEnvelope<ApiTeacherListItem>> {
   const { facet_option, ...rest } = filters;
@@ -88,6 +121,10 @@ export async function fetchTeacherDetailBySlug(
   slug: string,
   options?: { revalidate?: number; signal?: AbortSignal },
 ): Promise<ApiTeacherDetail | null> {
+  if (shouldUseMock()) {
+    return mockFetchTeacherDetailBySlug(slug);
+  }
+
   try {
     return await apiClient.get<ApiTeacherDetail>(
       ENDPOINTS.MARKETPLACE_TEACHER_DETAIL_BY_SLUG(slug),
@@ -114,6 +151,10 @@ export async function fetchCities(options?: {
   revalidate?: number;
   signal?: AbortSignal;
 }): Promise<ApiListEnvelope<ApiCity>> {
+  if (shouldUseMock()) {
+    return mockFetchCities();
+  }
+
   return apiClient.get<ApiListEnvelope<ApiCity>>(ENDPOINTS.MARKETPLACE_CITIES, {
     cache: "force-cache",
     next: {
@@ -147,4 +188,10 @@ function isApiNotFound(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
   const status = (error as { status?: unknown }).status;
   return typeof status === "number" && status === 404;
+}
+
+function isApiClientError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const status = (error as { status?: unknown }).status;
+  return typeof status === "number" && status >= 400 && status < 500;
 }

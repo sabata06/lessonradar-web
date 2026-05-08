@@ -53,7 +53,7 @@ export async function generateMetadata({
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { locale, city, discipline } = await params;
-  const data = getPSEOLandingData(city, discipline);
+  const data = await getPSEOLandingData(city, discipline);
   if (!data) return {};
 
   const cityName = locale === "tr" ? data.city.nameTr : data.city.nameEn;
@@ -87,7 +87,7 @@ export default async function PSEOLandingPage({
   const { locale, city, discipline } = await params;
   setRequestLocale(locale);
 
-  const data = getPSEOLandingData(city, discipline);
+  const data = await getPSEOLandingData(city, discipline);
   if (!data) notFound();
 
   const typedLocale = locale as Locale;

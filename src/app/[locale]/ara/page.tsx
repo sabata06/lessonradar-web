@@ -73,7 +73,7 @@ export default async function SearchPage({
   const knownDistrictSlugs = new Set(TR_DISTRICTS.map((d) => d.slug));
 
   const filters = parseSearchParams(sp, knownCitySlugs, knownDistrictSlugs);
-  const result = searchTeachers(filters, supportedLocale);
+  const result = await searchTeachers(filters, supportedLocale);
 
   return (
     <>

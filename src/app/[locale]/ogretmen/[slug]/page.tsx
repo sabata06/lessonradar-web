@@ -42,8 +42,8 @@ interface RouteParams {
  * five teachers, so this is fine; once the backend is live we'll swap to a
  * paginated list and rely on ISR for cold profiles.
  */
-export function generateStaticParams() {
-  const slugs = getAllTeacherSlugs();
+export async function generateStaticParams() {
+  const slugs = await getAllTeacherSlugs();
   const params: RouteParams[] = [];
   for (const locale of routing.locales) {
     for (const slug of slugs) {
@@ -59,7 +59,7 @@ export async function generateMetadata({
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const data = getTeacherProfileData(slug);
+  const data = await getTeacherProfileData(slug);
   if (!data) return {};
 
   const t = await getTranslations({ locale, namespace: "profile.meta" });
@@ -121,7 +121,7 @@ export default async function TeacherProfilePage({
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const data = getTeacherProfileData(slug);
+  const data = await getTeacherProfileData(slug);
   if (!data) notFound();
 
   const typedLocale = locale as Locale;

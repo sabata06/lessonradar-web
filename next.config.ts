@@ -19,7 +19,12 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
+      // Backend-served avatars (uploaded teacher / customer photos).
+      { protocol: "https", hostname: "api.lessonradar.com" },
+      // Stock imagery used by editorial banners (homepage hero, etc.).
       { protocol: "https", hostname: "images.unsplash.com" },
+      // Mock-only avatar source. Prod data never references it; whitelist
+      // is kept so `LR_USE_MOCK=1` builds don't trip the optimizer.
       { protocol: "https", hostname: "i.pravatar.cc" },
     ],
   },

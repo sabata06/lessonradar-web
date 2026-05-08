@@ -10,7 +10,7 @@ import {
   SORT_OPTIONS,
   type SortOption,
   type TeacherSearchFilters,
-} from "@/lib/search/teacher-search";
+} from "@/lib/search/teacher-search-types";
 
 interface SearchSortSelectProps {
   filters: TeacherSearchFilters;

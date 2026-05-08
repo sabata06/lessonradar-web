@@ -3,8 +3,11 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { TR_CITIES } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
-import { getPSEOLandingData } from "@/lib/data/pseo";
-import { getIndexableTeacherSlugs } from "@/lib/data/profile";
+import { fetchTeacherList } from "@/lib/data/api/marketplace";
+import { adaptTeacher } from "@/lib/data/adapters/teacher";
+import { computeProfileIndexPolicy } from "@/lib/seo/profile-quality";
+import { computeQualityScore } from "@/lib/seo/quality-score";
+import type { TeacherProfile } from "@/lib/types";
 import { buildHreflangAlternates, buildLocaleUrl } from "@/lib/seo/site";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
@@ -13,7 +16,8 @@ type SitemapEntry = MetadataRoute.Sitemap[number];
  * Sitemap generator.
  *
  * Inclusion policy:
- *   - Public static routes (homepage, lead form) are always included.
+ *   - Public static routes (homepage, lead form, legal trust pages) are
+ *     always included.
  *   - City landing pages are included for priority cities only.
  *   - pSEO city × discipline pages are included **only when** the
  *     quality-score policy resolves to "index" (score >= 80, real teacher
@@ -21,18 +25,22 @@ type SitemapEntry = MetadataRoute.Sitemap[number];
  *     with `noindex` but are intentionally absent from the sitemap so we
  *     don't ask Google to spend crawl budget on weak pages.
  *
+ * Implementation note: a single `/api/marketplace/teachers/` fetch
+ * supplies the entire sitemap. Per-combination calls would balloon to
+ * 80×N requests at build time; instead we group the response locally and
+ * compute quality scores per `(city, discipline)` bucket here.
+ *
  * Multilingual handling: each entry carries `alternates.languages` with
  * both `tr`/`en` URLs so Google understands the locale cluster without
- * us shipping a separate per-locale sitemap file.
+ * shipping a separate per-locale sitemap file.
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const entries: SitemapEntry[] = [];
 
   // Static public routes
-  // Legal pages: /yasal/gizlilik + /yasal/kosullar are included as
-  // E-E-A-T trust signals (Quality Rater Guidelines value Trust pages).
-  // /yasal/kvkk redirects to /yasal/gizlilik so it stays out.
+  // Legal pages: /yasal/gizlilik + /yasal/kosullar are E-E-A-T trust
+  // signals (Quality Rater Guidelines). /yasal/kvkk redirects to gizlilik.
   // /yasal/ogretmen-sozlesmesi is excluded while it's a draft (noindex).
   const staticPaths: { path: string; priority: number; changeFrequency: SitemapEntry["changeFrequency"] }[] = [
     { path: "/", priority: 1.0, changeFrequency: "daily" },
@@ -64,11 +72,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  // pSEO city × discipline — gated by quality score
+  // ── Single API fetch for all marketplace pages ───────────────────────────
+  const teacherList = await fetchTeacherList();
+  const teachers = teacherList.results.map((api) => adaptTeacher(api));
+
+  // pSEO city × discipline — gated by quality score, computed once per bucket.
+  const cityDisciplineBuckets = groupByCityDiscipline(teachers);
   for (const city of TR_CITIES) {
     for (const discipline of MOCK_DISCIPLINES) {
-      const data = getPSEOLandingData(city.slug, discipline.slug);
-      if (!data || data.indexPolicy !== "index") continue;
+      const bucket = cityDisciplineBuckets.get(
+        `${city.slug}|${discipline.slug}`,
+      ) ?? [];
+      const minHourly = minPerDiscipline(bucket, discipline.slug);
+      const reviewedCount = bucket.filter((t) => t.trust.reviewCount > 0).length;
+      const quality = computeQualityScore({
+        teachers: bucket,
+        hasUniqueIntro: true,
+        hasPriceDataPoint: minHourly !== null,
+        hasReviewSignal: reviewedCount > 0,
+      });
+      if (quality.policy !== "index") continue;
 
       const path = `/${city.slug}/${discipline.slug}`;
       entries.push({
@@ -85,8 +108,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // computeProfileIndexPolicy. Other profile URLs render with `noindex`
   // so they remain accessible to anyone with a direct link without
   // burning crawl budget.
-  for (const slug of getIndexableTeacherSlugs()) {
-    const path = `/ogretmen/${slug}`;
+  for (const teacher of teachers) {
+    if (computeProfileIndexPolicy(teacher).policy !== "index") continue;
+    const path = `/ogretmen/${teacher.slug}`;
     entries.push({
       url: buildLocaleUrl(routing.defaultLocale, path),
       lastModified: now,
@@ -99,5 +123,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return entries;
 }
 
-// Hint Next that this route is fully static — depends only on mock data.
+function groupByCityDiscipline(
+  teachers: TeacherProfile[],
+): Map<string, TeacherProfile[]> {
+  const buckets = new Map<string, TeacherProfile[]>();
+  for (const teacher of teachers) {
+    if (!teacher.citySlug) continue;
+    for (const pricing of teacher.disciplines) {
+      const key = `${teacher.citySlug}|${pricing.disciplineSlug}`;
+      const list = buckets.get(key);
+      if (list) {
+        if (!list.includes(teacher)) list.push(teacher);
+      } else {
+        buckets.set(key, [teacher]);
+      }
+    }
+  }
+  return buckets;
+}
+
+function minPerDiscipline(
+  bucket: TeacherProfile[],
+  disciplineSlug: string,
+): number | null {
+  let min: number | null = null;
+  for (const t of bucket) {
+    const pricing = t.disciplines.find(
+      (d) => d.disciplineSlug === disciplineSlug,
+    );
+    if (!pricing || pricing.hourlyMin <= 0) continue;
+    min = min === null ? pricing.hourlyMin : Math.min(min, pricing.hourlyMin);
+  }
+  return min;
+}
+
+// `force-static` with the API call inside is fine: Next will execute
+// this once per build (or on revalidation tick), cache the result, and
+// the underlying `fetchTeacherList` already opts into `force-cache` +
+// `revalidate=600` for its own ISR window.
 export const dynamic = "force-static";

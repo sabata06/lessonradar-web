@@ -6,14 +6,19 @@ import type { Locale } from "@/i18n/routing";
 import { getTeacherAgreementDraft } from "@/lib/legal/teacher-agreement-content";
 
 const BACKEND_BASE = process.env.DJANGO_API_BASE;
+const MOCK_MODE = process.env.LR_USE_MOCK === "1";
 
-if (!BACKEND_BASE) {
+if (!BACKEND_BASE && !MOCK_MODE) {
   throw new Error(
-    "DJANGO_API_BASE is not set. Required for /yasal/* pages to fetch backend legal documents.",
+    "DJANGO_API_BASE is not set. Required for /yasal/* pages to fetch backend legal documents (or set LR_USE_MOCK=1 to skip the backend fetch at build time; the page will still need a reachable backend at request time).",
   );
 }
 
-const TRUSTED_BASE = BACKEND_BASE;
+// `mock.invalid` is a placeholder under `LR_USE_MOCK=1` so module load
+// doesn't crash. Legal pages aren't part of the mock catalog — the
+// runtime fetch will still need a real backend, but build-time page
+// collection no longer fails.
+const TRUSTED_BASE = BACKEND_BASE ?? "http://mock.invalid";
 
 export const LEGAL_SLUGS = [
   "gizlilik",
