@@ -45,21 +45,23 @@ interface BrandComboboxProps {
 /**
  * Searchable, grouped, brand-aware single-select.
  *
- * Why this exists alongside shadcn `<Select>`:
- *   - `<Select>` is best for short, fixed lists where users won't search.
- *   - This combobox (Popover + cmdk Command) is correct for long lists
- *     (50+ items) where typing-to-filter is faster than scrolling, like
- *     the 78-discipline taxonomy or the 81-province city list.
+ * Renders one of two layouts depending on context:
  *
- * Implementation notes:
- *   - Filtering is delegated to cmdk via a Turkish-aware `filter` prop
- *     so "gazi" matches "Gaziantep" and "ozel ders" matches "Özel Ders"
- *     without diacritic gymnastics on the user side.
- *   - Popover uses Radix collision detection — on a packed screen the
- *     panel still flips to whichever side has space, but `<CommandList>`
- *     is bounded by `max-h` so it never overflows the viewport.
- *   - cmdk handles ARIA combobox roles, keyboard navigation, mouse hover
- *     sync, and scroll-into-view automatically.
+ *   - **Popover mode (default)** — desktop sidebars + homepage hero
+ *     search bar. The dropdown floats over the page, keyboard nav and
+ *     scroll-into-view come from cmdk + Radix collision detection.
+ *   - **Inline expand mode** — when the combobox is rendered inside a
+ *     `<PopoverPortalProvider>` (i.e. a Radix Sheet/Dialog), we drop
+ *     the popover entirely and inline-expand the search + list right
+ *     under the trigger card. Mobile keyboards open over the bottom
+ *     half of the viewport, and a popover would either stay anchored
+ *     above the keyboard (cutting off the list) or jump around as
+ *     Radix re-collision-tests. Inlining the list makes the surrounding
+ *     Sheet body responsible for scrolling — the browser's native
+ *     "scroll focused input into view" behaviour does the right thing.
+ *
+ * Both modes share filter logic (Turkish-aware diacritic fold), the
+ * cmdk `<Command>` tree, and the trigger button styling.
  */
 export function BrandCombobox({
   value,
@@ -74,12 +76,12 @@ export function BrandCombobox({
   triggerClassName,
 }: BrandComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  // When this combobox is rendered inside a modal Sheet/Dialog, the
-  // wrapping `<PopoverPortalProvider>` advertises the dialog's content
-  // node as our portal target so touch scroll stays inside the modal
-  // scope. Outside such a wrapper the value is null and we fall back
-  // to the default body portal.
+  // The presence of a portal container means this combobox sits inside
+  // a modal Sheet/Dialog — see `<PopoverPortalProvider>` in
+  // `SearchFilterSheet`. Use it both as the popover portal target AND
+  // as the signal to switch into inline-expand mode for mobile UX.
   const portalContainer = usePopoverPortalContainer();
+  const inlineMode = portalContainer !== null;
 
   const selected = React.useMemo(
     () => options.find((opt) => opt.value === value) ?? null,
@@ -104,77 +106,99 @@ export function BrandCombobox({
 
   const hasValue = value !== "";
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          role="combobox"
-          aria-label={ariaLabel}
-          aria-expanded={open}
-          disabled={disabled}
-          className={cn(
-            "flex h-11 w-full items-center justify-between gap-2 rounded-xl border px-3.5 text-left text-sm font-medium transition-colors",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-            hasValue
-              ? "border-brand/50 bg-brand-soft/40 text-foreground"
-              : "border-border bg-card text-foreground hover:border-brand/40",
-            disabled && "cursor-not-allowed opacity-50 hover:border-border",
-            triggerClassName,
-          )}
-        >
-          <span className={cn("truncate", !selected && "text-muted-foreground")}>
-            {selected ? selected.label : placeholder}
-          </span>
-          <HugeiconsIcon
-            icon={UnfoldMoreIcon}
-            size={16}
-            strokeWidth={2}
-            aria-hidden
-            className="shrink-0 text-muted-foreground"
-          />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        // `max-h: --radix-popover-content-available-height` is the CSS
-        // variable Radix exposes; combined with `flex flex-col` and the
-        // child Command's `min-h-0`, the inner list scrolls while the
-        // search row stays pinned at the top — even when the popover
-        // flips up against the viewport.
-        // `collisionPadding` keeps a small gap from the browser chrome.
-        // `container` retargets the Portal when this combobox sits
-        // inside a Radix modal (Sheet/Dialog) — without it the popover
-        // lands outside the modal scope and mobile touch scroll fails.
-        className="flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 max-h-[var(--radix-popover-content-available-height)] min-w-[var(--radix-popover-trigger-width)]"
-        align="start"
-        sideOffset={6}
-        collisionPadding={12}
-        container={portalContainer}
-      >
-        <Command
-          // cmdk's default fuzzy filter stumbles on Turkish diacritics
-          // ("gazi" should match "Gaziantep"). Apply a fold before
-          // comparing to make ASCII queries hit Turkish labels.
-          filter={(itemValue: string, search: string) =>
-            foldTr(itemValue).includes(foldTr(search)) ? 1 : 0
-          }
-        >
-          <CommandInput placeholder={searchPlaceholder ?? "Ara…"} />
-          <CommandList>
-            <CommandEmpty>{emptyText ?? "Sonuç yok"}</CommandEmpty>
+  const triggerButton = (
+    <button
+      type="button"
+      role="combobox"
+      aria-label={ariaLabel}
+      aria-expanded={open}
+      disabled={disabled}
+      onClick={inlineMode ? () => setOpen((v) => !v) : undefined}
+      className={cn(
+        "flex h-11 w-full items-center justify-between gap-2 rounded-xl border px-3.5 text-left text-sm font-medium transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        hasValue
+          ? "border-brand/50 bg-brand-soft/40 text-foreground"
+          : "border-border bg-card text-foreground hover:border-brand/40",
+        disabled && "cursor-not-allowed opacity-50 hover:border-border",
+        triggerClassName,
+      )}
+    >
+      <span className={cn("truncate", !selected && "text-muted-foreground")}>
+        {selected ? selected.label : placeholder}
+      </span>
+      <HugeiconsIcon
+        icon={UnfoldMoreIcon}
+        size={16}
+        strokeWidth={2}
+        aria-hidden
+        className="shrink-0 text-muted-foreground"
+      />
+    </button>
+  );
 
-            {allLabel ? (
-              <CommandGroup>
+  // Shared inner list — same JSX for popover + inline modes.
+  const commandBody = (
+    <Command
+      // cmdk's default fuzzy filter stumbles on Turkish diacritics
+      // ("gazi" should match "Gaziantep"). Apply a fold before
+      // comparing to make ASCII queries hit Turkish labels.
+      filter={(itemValue: string, search: string) =>
+        foldTr(itemValue).includes(foldTr(search)) ? 1 : 0
+      }
+    >
+      <CommandInput placeholder={searchPlaceholder ?? "Ara…"} />
+      <CommandList>
+        <CommandEmpty>{emptyText ?? "Sonuç yok"}</CommandEmpty>
+
+        {allLabel ? (
+          <CommandGroup>
+            <CommandItem
+              value={allLabel}
+              onSelect={() => {
+                onChange("");
+                setOpen(false);
+              }}
+              className={cn(!hasValue && "bg-brand-soft/50 font-medium")}
+            >
+              <span className="flex-1">{allLabel}</span>
+              {!hasValue && (
+                <HugeiconsIcon
+                  icon={Tick02Icon}
+                  size={16}
+                  strokeWidth={2.4}
+                  aria-hidden
+                  className="text-brand"
+                />
+              )}
+            </CommandItem>
+          </CommandGroup>
+        ) : null}
+
+        {sections.map((section) => (
+          <CommandGroup
+            key={section.heading || "ungrouped"}
+            heading={section.heading || undefined}
+          >
+            {section.items.map((opt) => {
+              const isSelected = opt.value === value;
+              return (
                 <CommandItem
-                  value={allLabel}
+                  key={opt.value}
+                  // cmdk filters on `value`; include the label so search
+                  // matches the human-readable text, not just the slug.
+                  value={`${opt.label} ${opt.value}`}
                   onSelect={() => {
-                    onChange("");
+                    onChange(opt.value);
                     setOpen(false);
                   }}
-                  className={cn(!hasValue && "bg-brand-soft/50 font-medium")}
+                  className={cn(
+                    isSelected &&
+                      "bg-brand-soft/60 font-medium text-brand-soft-foreground",
+                  )}
                 >
-                  <span className="flex-1">{allLabel}</span>
-                  {!hasValue && (
+                  <span className="flex-1 truncate">{opt.label}</span>
+                  {isSelected && (
                     <HugeiconsIcon
                       icon={Tick02Icon}
                       size={16}
@@ -184,48 +208,58 @@ export function BrandCombobox({
                     />
                   )}
                 </CommandItem>
-              </CommandGroup>
-            ) : null}
+              );
+            })}
+          </CommandGroup>
+        ))}
+      </CommandList>
+    </Command>
+  );
 
-            {sections.map((section) => (
-              <CommandGroup
-                key={section.heading || "ungrouped"}
-                heading={section.heading || undefined}
-              >
-                {section.items.map((opt) => {
-                  const isSelected = opt.value === value;
-                  return (
-                    <CommandItem
-                      key={opt.value}
-                      // cmdk filters on `value`; include the label so search
-                      // matches the human-readable text, not just the slug.
-                      value={`${opt.label} ${opt.value}`}
-                      onSelect={() => {
-                        onChange(opt.value);
-                        setOpen(false);
-                      }}
-                      className={cn(
-                        isSelected &&
-                          "bg-brand-soft/60 font-medium text-brand-soft-foreground",
-                      )}
-                    >
-                      <span className="flex-1 truncate">{opt.label}</span>
-                      {isSelected && (
-                        <HugeiconsIcon
-                          icon={Tick02Icon}
-                          size={16}
-                          strokeWidth={2.4}
-                          aria-hidden
-                          className="text-brand"
-                        />
-                      )}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            ))}
-          </CommandList>
-        </Command>
+  if (inlineMode) {
+    // Inline expand mode — used inside mobile filter Sheet so the
+    // mobile keyboard doesn't fight a floating popover.
+    return (
+      <div>
+        {triggerButton}
+        {open && (
+          <div
+            // `mt-2` puts a clear gap below the trigger; the surrounding
+            // Sheet body owns the scroll, so we don't need an inner
+            // overflow shell here. `min-h-0` is harmless on a sized
+            // container but keeps the cmdk content tree happy.
+            className="mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-card"
+          >
+            {/* The inner list is bounded by 50dvh so it never claims
+                more than half the *visible* viewport — `dvh` recalcs
+                automatically when the mobile keyboard opens, leaving
+                the search input visible above the keyboard. */}
+            <div className="[&_[cmdk-list]]:max-h-[50dvh] [&_[cmdk-list]]:!h-auto">
+              {commandBody}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Popover mode — default for desktop + homepage hero.
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+      <PopoverContent
+        // `max-h: --radix-popover-content-available-height` is the CSS
+        // variable Radix exposes; combined with `flex flex-col` and the
+        // child Command's `min-h-0`, the inner list scrolls while the
+        // search row stays pinned at the top — even when the popover
+        // flips up against the viewport.
+        // `collisionPadding` keeps a small gap from the browser chrome.
+        className="flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 max-h-[var(--radix-popover-content-available-height)] min-w-[var(--radix-popover-trigger-width)]"
+        align="start"
+        sideOffset={6}
+        collisionPadding={12}
+      >
+        {commandBody}
       </PopoverContent>
     </Popover>
   );
