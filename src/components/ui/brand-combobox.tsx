@@ -81,6 +81,22 @@ export function BrandCombobox({
   // to the default body portal.
   const portalContainer = usePopoverPortalContainer();
 
+  // Desktop locks the popover direction "always below" (Superprof
+  // pattern — predictable, page scrolls if it overflows). Mobile keeps
+  // Radix's collision-aware flip because cramped viewports + mobile
+  // keyboards make a fixed-direction popover flop off the screen.
+  // Default to mobile until we hydrate so SSR markup matches the most
+  // restrictive layout.
+  const [isDesktop, setIsDesktop] = React.useState(false);
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(min-width: 640px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   const selected = React.useMemo(
     () => options.find((opt) => opt.value === value) ?? null,
     [options, value],
@@ -136,27 +152,34 @@ export function BrandCombobox({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        // The popover always opens *below* the trigger. We deliberately
-        // disable Radix's collision flip (`avoidCollisions={false}`)
-        // because the previous flip-up behaviour confused users — the
-        // panel could obscure their selection context and mobile
-        // keyboards then dragged it half off-screen. Superprof and
-        // similar marketplaces lock the direction; users scroll the
-        // page to see overflow instead.
+        // Direction strategy:
+        //   - Desktop: lock to `side="bottom"` + `avoidCollisions={false}`.
+        //     Predictable Superprof-style downward open; if the panel
+        //     overflows the viewport, the user scrolls the page.
+        //   - Mobile: keep Radix's default collision-aware flip so a
+        //     trigger near the bottom of a cramped viewport doesn't
+        //     drag the popover off-screen.
         //
-        // To keep the panel from running unbounded down the viewport,
-        // we cap height at `min(420px, 70dvh)` and let cmdk's list
-        // scroll inside. `dvh` is dynamic so the cap shrinks when the
-        // mobile keyboard opens.
+        // Height cap:
+        //   - Desktop: hard ceiling `min(420px, 70dvh)` so the panel
+        //     stays a reasonable size even when the page is tall.
+        //   - Mobile: bound by `--radix-popover-content-available-height`
+        //     so the keyboard-aware visible area drives it.
         //
         // `container` retargets the Portal when this combobox sits
         // inside a Radix modal (Sheet/Dialog) — without it the popover
         // lands outside the modal scope and mobile touch scroll fails.
-        className="flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 max-h-[min(420px,70dvh)] min-w-[var(--radix-popover-trigger-width)]"
+        className={cn(
+          "flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 min-w-[var(--radix-popover-trigger-width)]",
+          isDesktop
+            ? "max-h-[min(420px,70dvh)]"
+            : "max-h-[var(--radix-popover-content-available-height)]",
+        )}
         side="bottom"
         align="start"
         sideOffset={6}
-        avoidCollisions={false}
+        avoidCollisions={!isDesktop}
+        collisionPadding={isDesktop ? undefined : 12}
         container={portalContainer}
       >
         <Command
