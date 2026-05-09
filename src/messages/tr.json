@@ -392,6 +392,7 @@
     "kicker": "Öğretmen ara",
     "title": "Doğrulanmış öğretmenleri filtrele",
     "subtitle": "Branş, şehir, ilçe ve modaliteyi seç — sadece kimliği doğrulanmış öğretmenleri göster.",
+    "quick_chips_label": "Hızlı seç",
     "input": {
       "placeholder": "Branş, isim, anahtar kelime…",
       "label": "Anahtar kelime",
@@ -402,7 +403,19 @@
       "summary_filters": "{count} öğretmen",
       "summary_zero": "Eşleşen öğretmen yok",
       "summary_one": "1 öğretmen",
-      "verified_count": "{count} kimliği doğrulanmış"
+      "verified_count": "{count} kimliği doğrulanmış",
+      "local_filter_verified": "doğrulanmış",
+      "local_filter_district": "ilçe",
+      "local_filter_note": "{count} öğretmen {filter} filtresi nedeniyle gizlendi."
+    },
+    "relaxed": {
+      "notice_title": "Filtreni biraz gevşettik",
+      "drop": {
+        "verifiedOnly": "Tam eşleşme yoktu — “Sadece doğrulanmış” filtresini kaldırarak yakın sonuçları gösterdik.",
+        "districtSlug": "Tam eşleşme yoktu — ilçe seçimini kaldırarak şehir genelindeki öğretmenleri gösterdik.",
+        "modality": "Tam eşleşme yoktu — ders türü filtresini kaldırarak hem online hem yüz yüze öğretmenleri gösterdik.",
+        "citySlug": "Tam eşleşme yoktu — şehir seçimini kaldırarak diğer şehirlerdeki öğretmenleri gösterdik."
+      }
     },
     "sort": {
       "label": "Sırala",
@@ -416,6 +429,7 @@
       "open_button": "Filtreler",
       "open_button_with_count": "Filtreler ({count})",
       "apply": "Sonuçları göster",
+      "apply_pending": "Yükleniyor…",
       "clear_all": "Filtreleri temizle",
       "discipline": "Branş",
       "discipline_placeholder": "Tüm branşlar",
@@ -425,6 +439,7 @@
       "district_placeholder": "Tüm ilçeler",
       "district_disabled": "Önce şehir seç",
       "modality": "Ders türü",
+      "modality_help": "Hiçbiri seçili değilse online + yüz yüze öğretmenlerin tamamı gösterilir.",
       "modality_any": "Fark etmez",
       "modality_online": "Çevrimiçi",
       "modality_in_person": "Yüz yüze",

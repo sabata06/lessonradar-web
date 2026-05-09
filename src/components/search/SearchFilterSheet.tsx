@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { cloneElement, isValidElement, useState, type ReactElement } from "react";
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { FilterIcon } from "@hugeicons/core-free-icons";
@@ -16,17 +16,19 @@ import { Button } from "@/components/ui/button";
 
 interface SearchFilterSheetProps {
   appliedFilterCount: number;
-  children: React.ReactNode;
+  /**
+   * Expected to be a single `<SearchFilters compact ... />` element.
+   * The sheet injects an `onApplied` callback so that pressing Apply
+   * also closes the sheet (URL navigation already happens inside the
+   * filters component itself).
+   */
+  children: ReactElement<{ onApplied?: () => void }>;
 }
 
 /**
- * Mobile-only filter trigger + sheet wrapper. Receives the rendered
- * `<SearchFilters compact />` form as children so this client island
- * stays tiny — the form's submit closes the sheet by navigating, and
- * we never need to keep filter selections in client state.
- *
- * The trigger button surfaces the active filter count so users can see
- * at a glance whether a filter is still narrowing their results.
+ * Mobile-only filter trigger + sheet wrapper. Layout: fixed header,
+ * scrollable filter body, and a sticky-bottom Apply button rendered
+ * inside the form (handled by SearchFilters in compact mode).
  */
 export function SearchFilterSheet({
   appliedFilterCount,
@@ -34,6 +36,10 @@ export function SearchFilterSheet({
 }: SearchFilterSheetProps) {
   const t = useTranslations("search.filters");
   const [open, setOpen] = useState(false);
+
+  const enhancedChildren = isValidElement(children)
+    ? cloneElement(children, { onApplied: () => setOpen(false) })
+    : children;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -52,16 +58,16 @@ export function SearchFilterSheet({
       </SheetTrigger>
       <SheetContent
         side="bottom"
-        className="max-h-[88dvh] w-full max-w-none rounded-t-3xl bg-card text-card-foreground"
+        className="flex max-h-[88dvh] w-full max-w-none flex-col rounded-t-3xl bg-card p-0 text-card-foreground"
       >
-        <SheetHeader>
+        <SheetHeader className="border-b border-border/60 px-6 pb-4 pt-6">
           <SheetTitle>{t("title")}</SheetTitle>
         </SheetHeader>
         <div
-          className="flex-1 overflow-y-auto px-6 pb-6"
-          style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+          className="flex-1 overflow-y-auto px-6 py-5"
+          style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
         >
-          {children}
+          {enhancedChildren}
         </div>
       </SheetContent>
     </Sheet>

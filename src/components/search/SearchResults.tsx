@@ -1,6 +1,9 @@
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Search01Icon } from "@hugeicons/core-free-icons";
+import {
+  InformationCircleIcon,
+  Search01Icon,
+} from "@hugeicons/core-free-icons";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -10,27 +13,37 @@ import {
   buildSearchQuery,
   type TeacherSearchFilters,
 } from "@/lib/search/teacher-search";
+import type { RelaxableFilterKey } from "@/lib/search/teacher-search";
 
 interface SearchResultsProps {
   teachers: TeacherProfile[];
   filters: TeacherSearchFilters;
   locale: SupportedLocale;
   nowIso: string;
+  /**
+   * When non-null, the original filter combination returned zero
+   * results and we relaxed one filter to find these teachers. We show
+   * a helpful banner instead of a dead-end empty state.
+   */
+  relaxedDrop?: RelaxableFilterKey | null;
 }
 
 /**
- * Result grid. Empty state intentionally redirects to the lead form,
- * pre-filled with whichever filters the user already chose — that way
- * a "no match" outcome still funnels to the conversion goal (web lead
- * submission) rather than a dead end.
+ * Result grid. When the search has been relaxed (e.g. we dropped the
+ * "verified only" filter to surface results), we render an informative
+ * notice above the grid so the user knows the list isn't a perfect
+ * match. The empty state (true zero results, even after relaxation)
+ * funnels to the lead form per hard-rule "no dead ends".
  */
 export function SearchResults({
   teachers,
   filters,
   locale,
   nowIso,
+  relaxedDrop = null,
 }: SearchResultsProps) {
   const t = useTranslations("search.empty");
+  const tRelax = useTranslations("search.relaxed");
 
   if (teachers.length === 0) {
     const leadParams = new URLSearchParams();
@@ -79,20 +92,46 @@ export function SearchResults({
   }
 
   return (
-    <ul
-      className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
-      aria-label={`${teachers.length} ${locale === "tr" ? "öğretmen" : "tutors"}`}
-    >
-      {teachers.map((teacher) => (
-        <li key={teacher.id}>
-          <TeacherCard
-            teacher={teacher}
-            locale={locale}
-            nowIso={nowIso}
-            disciplineSlug={filters.disciplineSlug}
+    <div className="space-y-4">
+      {relaxedDrop && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="flex items-start gap-3 rounded-2xl border border-brand/20 bg-brand-soft/40 px-4 py-3"
+        >
+          <HugeiconsIcon
+            icon={InformationCircleIcon}
+            size={18}
+            strokeWidth={2}
+            aria-hidden
+            className="mt-0.5 shrink-0 text-brand"
           />
-        </li>
-      ))}
-    </ul>
+          <div className="min-w-0 flex-1 space-y-1">
+            <p className="text-sm font-medium text-foreground">
+              {tRelax("notice_title")}
+            </p>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              {tRelax(`drop.${relaxedDrop}`)}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <ul
+        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        aria-label={`${teachers.length} ${locale === "tr" ? "öğretmen" : "tutors"}`}
+      >
+        {teachers.map((teacher) => (
+          <li key={teacher.id}>
+            <TeacherCard
+              teacher={teacher}
+              locale={locale}
+              nowIso={nowIso}
+              disciplineSlug={filters.disciplineSlug}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

@@ -8,27 +8,17 @@ import type { TeacherSearchFilters } from "@/lib/search/teacher-search";
 
 interface SearchHeaderProps {
   filters: TeacherSearchFilters;
-  resultCount: number;
 }
 
 /**
- * Top of the /ara route. A plain GET form so the URL becomes the source
- * of truth — bookmarkable, shareable, no client-side state to recover.
- *
- * Hidden inputs replay every other active filter so submitting the
- * search keyword preserves the filter sidebar selections.
+ * Title + kicker + free-text search input. Renders synchronously so the
+ * page paints the form immediately while the result list streams in
+ * via a Suspense boundary below. Result count + filter notes live in
+ * `<SearchSummary>` so they can wait on the search await without
+ * blocking the input.
  */
-export function SearchHeader({ filters, resultCount }: SearchHeaderProps) {
+export function SearchHeader({ filters }: SearchHeaderProps) {
   const t = useTranslations("search");
-
-  const summary =
-    resultCount === 0
-      ? t("result.summary_zero")
-      : resultCount === 1
-        ? t("result.summary_one")
-        : filters.q
-          ? t("result.summary_query", { count: resultCount, q: filters.q })
-          : t("result.summary_filters", { count: resultCount });
 
   return (
     <header className="space-y-4">
@@ -96,10 +86,6 @@ export function SearchHeader({ filters, resultCount }: SearchHeaderProps) {
           <span className="font-semibold">{t("input.submit")}</span>
         </Button>
       </form>
-
-      <p className="text-sm text-muted-foreground" aria-live="polite">
-        {summary}
-      </p>
     </header>
   );
 }

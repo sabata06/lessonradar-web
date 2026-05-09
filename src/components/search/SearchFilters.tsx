@@ -1,11 +1,27 @@
-import { useTranslations } from "next-intl";
+"use client";
 
+import { useMemo, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
+
+import { useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
-import type { City, District, MarketplaceDiscipline, MarketplaceDomain, SupportedLocale } from "@/lib/types";
+import type {
+  City,
+  District,
+  MarketplaceDiscipline,
+  MarketplaceDomain,
+  SupportedLocale,
+} from "@/lib/types";
 import { pickLocalized } from "@/lib/types";
-import type { ModalityFilter, TeacherSearchFilters } from "@/lib/search/teacher-search";
+import {
+  buildSearchQuery,
+  type ModalityFilter,
+  type TeacherSearchFilters,
+} from "@/lib/search/teacher-search-types";
 
 interface SearchFiltersProps {
   filters: TeacherSearchFilters;
@@ -16,19 +32,26 @@ interface SearchFiltersProps {
   locale: SupportedLocale;
   /**
    * When true, render with a tighter mobile layout for use inside the
-   * filter sheet. Form submit and "clear" links remain identical.
+   * filter sheet. Apply button stretches full width either way; the
+   * sheet wrapper is responsible for sticky-bottom placement.
    */
   compact?: boolean;
+  /**
+   * Optional callback fired after a successful Apply (e.g. close the
+   * mobile sheet). Skipping this on desktop keeps the form silent.
+   */
+  onApplied?: () => void;
 }
 
 /**
- * Filter form. A plain GET form posting to `/ara` — every selection is
- * a query string round-trip so the URL becomes the canonical state.
+ * Interactive filter form. State lives locally until the user hits
+ * "Uygula" so we don't burn a server round-trip on every keystroke;
+ * Apply pushes a fresh `/ara?...` URL. Sort lives in its own client
+ * island and stays auto-applied (single-action mental model).
  *
- * Native `<select>` elements rather than the radix Select to keep the
- * form fully server-renderable (no client JS, no controlled-component
- * gymnastics inside the sheet portal). The mobile keyboard / system
- * picker is also better at scanning long city/discipline lists.
+ * District list reactively populates when the user picks a city —
+ * before this refactor the form needed two submits to surface the
+ * district select.
  */
 export function SearchFilters({
   filters,
@@ -38,46 +61,100 @@ export function SearchFilters({
   districts,
   locale,
   compact = false,
+  onApplied,
 }: SearchFiltersProps) {
   const t = useTranslations("search.filters");
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  const grouped = domains
-    .map((domain) => ({
-      domain,
-      items: disciplines.filter((d) => d.domainSlug === domain.slug),
-    }))
-    .filter((g) => g.items.length > 0);
+  // Local-only state — only flushed to URL on Apply.
+  const [disciplineSlug, setDisciplineSlug] = useState<string | "">(
+    filters.disciplineSlug ?? "",
+  );
+  const [citySlug, setCitySlug] = useState<string | "">(filters.citySlug ?? "");
+  const [districtSlug, setDistrictSlug] = useState<string | "">(
+    filters.districtSlug ?? "",
+  );
+  const [modality, setModality] = useState<ModalityFilter>(
+    filters.modality ?? "any",
+  );
+  const [verifiedOnly, setVerifiedOnly] = useState<boolean>(
+    filters.verifiedOnly === true,
+  );
 
-  const priorityCities = cities.filter((c) => c.isPriority);
-  const otherCities = cities.filter((c) => !c.isPriority);
+  const groupedDisciplines = useMemo(
+    () =>
+      domains
+        .map((domain) => ({
+          domain,
+          items: disciplines.filter((d) => d.domainSlug === domain.slug),
+        }))
+        .filter((g) => g.items.length > 0),
+    [domains, disciplines],
+  );
 
-  // Districts only when a city is selected — otherwise an irrelevant list.
-  const districtsForCity = filters.citySlug
-    ? districts.filter((d) => d.citySlug === filters.citySlug)
-    : [];
+  const priorityCities = useMemo(
+    () => cities.filter((c) => c.isPriority),
+    [cities],
+  );
+  const otherCities = useMemo(
+    () => cities.filter((c) => !c.isPriority),
+    [cities],
+  );
 
-  const clearAllHref = `/ara`;
+  const districtsForCity = useMemo(
+    () => (citySlug ? districts.filter((d) => d.citySlug === citySlug) : []),
+    [districts, citySlug],
+  );
+
+  function handleCityChange(next: string) {
+    setCitySlug(next);
+    // Reset district whenever the city changes — yesterday's district is
+    // always invalid for a different city.
+    setDistrictSlug("");
+  }
+
+  function toggleModality(target: "online" | "in_person") {
+    setModality((current) => (current === target ? "any" : target));
+  }
+
+  function applyFilters() {
+    const next: TeacherSearchFilters = {
+      ...filters,
+      disciplineSlug: disciplineSlug || undefined,
+      citySlug: citySlug || undefined,
+      districtSlug: districtSlug || undefined,
+      modality,
+      verifiedOnly,
+    };
+    const qs = buildSearchQuery(next);
+    startTransition(() => {
+      router.push(`/ara${qs}`);
+      onApplied?.();
+    });
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    applyFilters();
+  }
+
+  const isOnline = modality === "online";
+  const isInPerson = modality === "in_person";
 
   return (
     <form
-      method="get"
-      action=""
+      onSubmit={handleSubmit}
       aria-label={t("title")}
       className={cn(
         "flex flex-col gap-5",
         !compact && "rounded-2xl border border-border bg-card p-5 shadow-card",
       )}
     >
-      {/* Pass query through so submitting filters keeps the user's keyword */}
-      {filters.q && <input type="hidden" name="q" value={filters.q} />}
-      {filters.sort && filters.sort !== "relevance" && (
-        <input type="hidden" name="sort" value={filters.sort} />
-      )}
-
       <div className="flex items-baseline justify-between">
         <h2 className="text-base font-semibold text-foreground">{t("title")}</h2>
         <Link
-          href={clearAllHref}
+          href="/ara"
           className="text-xs font-medium text-muted-foreground underline-offset-2 hover:text-brand hover:underline"
         >
           {t("clear_all")}
@@ -86,12 +163,12 @@ export function SearchFilters({
 
       <FieldBlock label={t("discipline")}>
         <Select
-          name="discipline"
-          defaultValue={filters.disciplineSlug ?? ""}
+          value={disciplineSlug}
+          onChange={(e) => setDisciplineSlug(e.target.value)}
           ariaLabel={t("discipline")}
         >
           <option value="">{t("discipline_placeholder")}</option>
-          {grouped.map(({ domain, items }) => (
+          {groupedDisciplines.map(({ domain, items }) => (
             <optgroup
               key={domain.slug}
               label={pickLocalized(domain.name, locale)}
@@ -108,8 +185,8 @@ export function SearchFilters({
 
       <FieldBlock label={t("city")}>
         <Select
-          name="city"
-          defaultValue={filters.citySlug ?? ""}
+          value={citySlug}
+          onChange={(e) => handleCityChange(e.target.value)}
           ariaLabel={t("city")}
         >
           <option value="">{t("city_placeholder")}</option>
@@ -124,9 +201,7 @@ export function SearchFilters({
               ))}
             </optgroup>
           )}
-          <optgroup
-            label={locale === "tr" ? "Tüm şehirler" : "All cities"}
-          >
+          <optgroup label={locale === "tr" ? "Tüm şehirler" : "All cities"}>
             {otherCities.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {locale === "tr" ? c.nameTr : c.nameEn}
@@ -138,8 +213,8 @@ export function SearchFilters({
 
       <FieldBlock label={t("district")}>
         <Select
-          name="district"
-          defaultValue={filters.districtSlug ?? ""}
+          value={districtSlug}
+          onChange={(e) => setDistrictSlug(e.target.value)}
           ariaLabel={t("district")}
           disabled={districtsForCity.length === 0}
         >
@@ -160,58 +235,41 @@ export function SearchFilters({
         <legend className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {t("modality")}
         </legend>
-        <div className="grid grid-cols-3 gap-2">
-          {(["any", "online", "in_person"] as ModalityFilter[]).map((m) => {
-            const isActive = (filters.modality ?? "any") === m;
-            const labelKey =
-              m === "any"
-                ? "modality_any"
-                : m === "online"
-                  ? "modality_online"
-                  : "modality_in_person";
-            return (
-              <label
-                key={m}
-                className={cn(
-                  "flex min-h-11 cursor-pointer items-center justify-center rounded-xl border px-3 py-2 text-sm font-medium transition-all",
-                  isActive
-                    ? "border-brand bg-brand-soft text-brand-soft-foreground shadow-card"
-                    : "border-border bg-card text-muted-foreground hover:border-brand/40 hover:text-foreground",
-                )}
-              >
-                <input
-                  type="radio"
-                  name="modality"
-                  value={m}
-                  defaultChecked={isActive}
-                  className="sr-only"
-                />
-                {t(labelKey)}
-              </label>
-            );
-          })}
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
+          {t("modality_help")}
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          <ModalityToggle
+            label={t("modality_online")}
+            active={isOnline}
+            onClick={() => toggleModality("online")}
+          />
+          <ModalityToggle
+            label={t("modality_in_person")}
+            active={isInPerson}
+            onClick={() => toggleModality("in_person")}
+          />
         </div>
       </fieldset>
 
-      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-card p-3 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring/40">
-        <input
-          type="checkbox"
-          name="verified"
-          value="1"
-          defaultChecked={filters.verifiedOnly === true}
-          className="mt-0.5 size-4 shrink-0 accent-brand"
-        />
-        <span className="text-sm leading-relaxed text-foreground">
-          {t("verified")}
-        </span>
-      </label>
+      <VerifiedSwitch
+        checked={verifiedOnly}
+        onChange={setVerifiedOnly}
+        label={t("verified")}
+      />
 
       <Button
         type="submit"
         size="lg"
-        className="h-12 w-full gap-2 bg-brand text-primary-foreground hover:bg-brand/90"
+        disabled={isPending}
+        aria-busy={isPending}
+        className={cn(
+          "h-12 w-full gap-2 bg-brand text-primary-foreground hover:bg-brand/90",
+          compact &&
+            "sticky bottom-0 z-10 mt-2 shadow-[0_-12px_24px_-12px_rgba(0,0,0,0.18)]",
+        )}
       >
-        {t("apply")}
+        {isPending ? t("apply_pending") : t("apply")}
       </Button>
     </form>
   );
@@ -235,22 +293,22 @@ function FieldBlock({
 }
 
 function Select({
-  name,
-  defaultValue,
+  value,
+  onChange,
   ariaLabel,
   disabled,
   children,
 }: {
-  name: string;
-  defaultValue: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   ariaLabel: string;
   disabled?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <select
-      name={name}
-      defaultValue={defaultValue}
+      value={value}
+      onChange={onChange}
       aria-label={ariaLabel}
       disabled={disabled}
       className={cn(
@@ -264,3 +322,82 @@ function Select({
   );
 }
 
+function ModalityToggle({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={active}
+      onClick={onClick}
+      className={cn(
+        "flex min-h-11 items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-medium transition-all",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        active
+          ? "border-brand bg-brand-soft text-brand-soft-foreground shadow-card"
+          : "border-border bg-card text-muted-foreground hover:border-brand/40 hover:text-foreground",
+      )}
+    >
+      {active && (
+        <HugeiconsIcon
+          icon={CheckmarkCircle02Icon}
+          size={14}
+          strokeWidth={2.5}
+          aria-hidden
+        />
+      )}
+      {label}
+    </button>
+  );
+}
+
+function VerifiedSwitch({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        "group flex w-full items-center justify-between gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        checked
+          ? "border-brand/60 bg-brand-soft/60"
+          : "border-border bg-card hover:border-brand/30",
+      )}
+    >
+      <span className="text-sm font-medium leading-snug text-foreground">
+        {label}
+      </span>
+      <span
+        aria-hidden
+        className={cn(
+          "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors",
+          checked ? "bg-brand" : "bg-border",
+        )}
+      >
+        <span
+          className={cn(
+            "inline-block size-5 transform rounded-full bg-card shadow-sm transition-transform",
+            checked ? "translate-x-[1.375rem]" : "translate-x-0.5",
+          )}
+        />
+      </span>
+    </button>
+  );
+}

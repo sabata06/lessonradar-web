@@ -204,3 +204,71 @@ export async function searchTeachers(
     totalBeforeFilter: list.count,
   };
 }
+
+/**
+ * Filter keys we will drop, in priority order, when the original
+ * search returns zero results. The order is "least painful first":
+ * remove the verified gate before broadening the city, broaden modality
+ * before wiping the discipline.
+ */
+export type RelaxableFilterKey =
+  | "verifiedOnly"
+  | "districtSlug"
+  | "modality"
+  | "citySlug";
+
+const RELAX_ORDER: RelaxableFilterKey[] = [
+  "verifiedOnly",
+  "districtSlug",
+  "modality",
+  "citySlug",
+];
+
+export interface SearchWithRelaxResult {
+  /** The original (or relaxed) search result we're showing the user. */
+  result: TeacherSearchResult;
+  /** Which filter, if any, we dropped to find these results. */
+  relaxedDrop: RelaxableFilterKey | null;
+}
+
+/**
+ * Runs the search and, on zero results, tries dropping one filter at a
+ * time (in `RELAX_ORDER`) until something matches. Lets `/ara` show a
+ * "we relaxed X to find these" suggestion instead of a dead end.
+ */
+export async function searchTeachersWithRelaxation(
+  filters: TeacherSearchFilters,
+  locale: SupportedLocale,
+): Promise<SearchWithRelaxResult> {
+  const direct = await searchTeachers(filters, locale);
+  if (direct.teachers.length > 0) {
+    return { result: direct, relaxedDrop: null };
+  }
+
+  for (const key of RELAX_ORDER) {
+    const present =
+      key === "modality"
+        ? filters.modality && filters.modality !== "any"
+        : Boolean(filters[key]);
+    if (!present) continue;
+
+    const relaxed: TeacherSearchFilters = { ...filters };
+    if (key === "modality") {
+      relaxed.modality = "any";
+    } else if (key === "citySlug") {
+      relaxed.citySlug = undefined;
+      relaxed.districtSlug = undefined;
+    } else if (key === "districtSlug") {
+      relaxed.districtSlug = undefined;
+    } else if (key === "verifiedOnly") {
+      relaxed.verifiedOnly = false;
+    }
+
+    const candidate = await searchTeachers(relaxed, locale);
+    if (candidate.teachers.length > 0) {
+      return { result: candidate, relaxedDrop: key };
+    }
+  }
+
+  return { result: direct, relaxedDrop: null };
+}

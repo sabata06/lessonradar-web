@@ -391,6 +391,7 @@
     "kicker": "Search tutors",
     "title": "Filter verified tutors",
     "subtitle": "Pick subject, city, district and modality — show only tutors with verified identity.",
+    "quick_chips_label": "Quick pick",
     "input": {
       "placeholder": "Subject, name, keyword…",
       "label": "Keyword",
@@ -401,7 +402,19 @@
       "summary_filters": "{count} tutors",
       "summary_zero": "No matching tutors",
       "summary_one": "1 tutor",
-      "verified_count": "{count} identity-verified"
+      "verified_count": "{count} identity-verified",
+      "local_filter_verified": "verified",
+      "local_filter_district": "district",
+      "local_filter_note": "{count} tutors hidden by the {filter} filter."
+    },
+    "relaxed": {
+      "notice_title": "We loosened your filter a little",
+      "drop": {
+        "verifiedOnly": "No exact matches — we removed the “verified only” filter to show close matches.",
+        "districtSlug": "No exact matches — we removed the district filter to show tutors across the city.",
+        "modality": "No exact matches — we removed the lesson type filter to show both online and in-person tutors.",
+        "citySlug": "No exact matches — we removed the city filter to show tutors in nearby cities."
+      }
     },
     "sort": {
       "label": "Sort",
@@ -415,6 +428,7 @@
       "open_button": "Filters",
       "open_button_with_count": "Filters ({count})",
       "apply": "Show results",
+      "apply_pending": "Loading…",
       "clear_all": "Clear all filters",
       "discipline": "Subject",
       "discipline_placeholder": "All subjects",
@@ -424,6 +438,7 @@
       "district_placeholder": "All districts",
       "district_disabled": "Pick a city first",
       "modality": "Lesson type",
+      "modality_help": "If neither is selected, both online and in-person tutors are shown.",
       "modality_any": "Either",
       "modality_online": "Online",
       "modality_in_person": "In person",

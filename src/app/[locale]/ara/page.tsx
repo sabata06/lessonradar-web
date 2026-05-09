@@ -1,21 +1,23 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
 import { Container } from "@/components/layout/Container";
 import { Breadcrumb } from "@/components/discovery/Breadcrumb";
-import { ActiveFilterChips } from "@/components/search/ActiveFilterChips";
+import { DisciplineQuickChips } from "@/components/search/DisciplineQuickChips";
+import { ResultsSection } from "@/components/search/ResultsSection";
 import { SearchFilters } from "@/components/search/SearchFilters";
 import { SearchFilterSheet } from "@/components/search/SearchFilterSheet";
 import { SearchHeader } from "@/components/search/SearchHeader";
-import { SearchResults } from "@/components/search/SearchResults";
+import { SearchSkeletonGrid } from "@/components/search/SearchSkeletonGrid";
 import { SearchSortSelect } from "@/components/search/SearchSortSelect";
 
 import { routing, type Locale } from "@/i18n/routing";
 import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
 import {
+  countAppliedFilters,
   parseSearchParams,
-  searchTeachers,
 } from "@/lib/search/teacher-search";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import type { SupportedLocale } from "@/lib/types";
@@ -73,7 +75,12 @@ export default async function SearchPage({
   const knownDistrictSlugs = new Set(TR_DISTRICTS.map((d) => d.slug));
 
   const filters = parseSearchParams(sp, knownCitySlugs, knownDistrictSlugs);
-  const result = await searchTeachers(filters, supportedLocale);
+  const appliedFilterCount = countAppliedFilters(filters);
+
+  // `key` ties the Suspense boundary to the active query — when filters
+  // change, React unmounts the resolved children and shows the skeleton
+  // again instead of holding the old result frozen behind a transition.
+  const suspenseKey = JSON.stringify(filters);
 
   return (
     <>
@@ -100,10 +107,16 @@ export default async function SearchPage({
         </aside>
 
         <div className="space-y-5">
-          <SearchHeader filters={filters} resultCount={result.teachers.length} />
+          <SearchHeader filters={filters} />
+
+          <DisciplineQuickChips
+            filters={filters}
+            disciplines={MOCK_DISCIPLINES}
+            locale={supportedLocale}
+          />
 
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <SearchFilterSheet appliedFilterCount={result.appliedFilterCount}>
+            <SearchFilterSheet appliedFilterCount={appliedFilterCount}>
               <SearchFilters
                 filters={filters}
                 domains={MOCK_DOMAINS}
@@ -117,22 +130,13 @@ export default async function SearchPage({
             <SearchSortSelect filters={filters} />
           </div>
 
-          {result.appliedFilterCount > 0 && (
-            <ActiveFilterChips
+          <Suspense key={suspenseKey} fallback={<SearchSkeletonGrid />}>
+            <ResultsSection
               filters={filters}
-              cities={TR_CITIES}
-              districts={TR_DISTRICTS}
-              disciplines={MOCK_DISCIPLINES}
               locale={supportedLocale}
+              nowIso={nowIso}
             />
-          )}
-
-          <SearchResults
-            teachers={result.teachers}
-            filters={filters}
-            locale={supportedLocale}
-            nowIso={nowIso}
-          />
+          </Suspense>
 
           <p className="rounded-2xl border border-dashed border-border bg-muted/30 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
             {t("noindex_notice")}
