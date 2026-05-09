@@ -88,8 +88,15 @@ export function MobileMenu() {
           <div className="border-t border-border p-4">
             <div className="mb-3 flex items-center gap-3 rounded-xl bg-muted/40 px-3 py-3">
               <Avatar className="size-10">
-                {user.avatarUrl && (
-                  <AvatarImage src={user.avatarUrl} alt={`${user.firstName} ${user.lastName}`} />
+                {/* Header avatar: OAuth photo first, then the
+                    teacher-uploaded profile image (so educators
+                    without Google login still see their face), then
+                    initials. */}
+                {(user.avatarUrl || user.profileImageUrl) && (
+                  <AvatarImage
+                    src={(user.avatarUrl ?? user.profileImageUrl) as string}
+                    alt={`${user.firstName} ${user.lastName}`}
+                  />
                 )}
                 <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
                   {`${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() ||

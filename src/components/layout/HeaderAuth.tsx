@@ -79,8 +79,15 @@ export function HeaderAuth() {
           aria-label={displayName}
         >
           <Avatar className="size-7">
-            {user.avatarUrl && (
-              <AvatarImage src={user.avatarUrl} alt={displayName} />
+            {/* Prefer OAuth photo (Google / Apple) — falls back to the
+                teacher-uploaded profile image so educators who set a
+                photo on their public profile get it in the header too.
+                Final fallback is the initials chip below. */}
+            {(user.avatarUrl || user.profileImageUrl) && (
+              <AvatarImage
+                src={(user.avatarUrl ?? user.profileImageUrl) as string}
+                alt={displayName}
+              />
             )}
             <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
               {initials}
