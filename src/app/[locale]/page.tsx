@@ -10,9 +10,15 @@ import { PopularSearches } from "@/components/discovery/PopularSearches";
 import { LeadCTA } from "@/components/discovery/LeadCTA";
 
 import type { Locale } from "@/i18n/routing";
-import { TR_CITIES } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
-import { MOCK_TEACHERS } from "@/lib/data/mock/teachers";
+import {
+  fetchAllDisciplines,
+  fetchCities,
+  fetchTaxonomyRoot,
+  fetchTeacherList,
+} from "@/lib/data/api/marketplace";
+import { adaptDiscipline, adaptDomain } from "@/lib/data/adapters/taxonomy";
+import { adaptTeacher } from "@/lib/data/adapters/teacher";
+import type { City, MarketplaceDiscipline, MarketplaceDomain } from "@/lib/types";
 
 export default async function HomePage({
   params,
@@ -25,11 +31,33 @@ export default async function HomePage({
   const typedLocale = locale as Locale;
   const nowIso = new Date().toISOString();
 
-  const featured = MOCK_TEACHERS
-    .filter((t) => t.citySlug === "gaziantep")
+  // Four parallel reads — all ISR-cached for 24h, so the homepage keeps
+  // a fast TTFB and the live taxonomy stays in sync without rebuild.
+  const [taxonomyRoot, allDisciplinesEnvelope, citiesEnvelope, gaziantepList] =
+    await Promise.all([
+      fetchTaxonomyRoot(),
+      fetchAllDisciplines(),
+      fetchCities(),
+      fetchTeacherList({ city: "gaziantep" }),
+    ]);
+
+  const domains: MarketplaceDomain[] = taxonomyRoot.domains.map(adaptDomain);
+  const disciplines: MarketplaceDiscipline[] =
+    allDisciplinesEnvelope.results.map(adaptDiscipline);
+  const cities: City[] = citiesEnvelope.results.map((c) => ({
+    slug: c.slug,
+    nameTr: c.name_tr,
+    nameEn: c.name_en,
+    isPriority: c.is_priority,
+  }));
+
+  const featured = gaziantepList.results
+    .map(adaptTeacher)
     .sort((a, b) => {
       const score = (x: typeof a) =>
-        (x.isPremium ? 2 : 0) + (x.trust.isVerified ? 1 : 0) + x.trust.ratingAverage / 5;
+        (x.isPremium ? 2 : 0) +
+        (x.trust.isVerified ? 1 : 0) +
+        x.trust.ratingAverage / 5;
       return score(b) - score(a);
     })
     .slice(0, 3);
@@ -69,14 +97,14 @@ export default async function HomePage({
           <div className="mt-10 w-full max-w-3xl">
             <SearchHero
               locale={typedLocale}
-              domains={MOCK_DOMAINS}
-              disciplines={MOCK_DISCIPLINES}
-              cities={TR_CITIES}
+              domains={domains}
+              disciplines={disciplines}
+              cities={cities}
             />
 
             <div className="mt-6">
               <SubjectChips
-                disciplines={MOCK_DISCIPLINES}
+                disciplines={disciplines}
                 citySlug="gaziantep"
                 locale={typedLocale}
               />
@@ -111,8 +139,8 @@ export default async function HomePage({
       <Container className="py-14 sm:py-20">
         <PopularSearches
           locale={typedLocale}
-          cities={TR_CITIES}
-          disciplines={MOCK_DISCIPLINES}
+          cities={cities}
+          disciplines={disciplines}
         />
       </Container>
 

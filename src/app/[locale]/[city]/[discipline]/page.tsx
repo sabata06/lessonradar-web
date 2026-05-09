@@ -13,9 +13,13 @@ import { TeacherCard } from "@/components/teacher/TeacherCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 import { routing, type Locale } from "@/i18n/routing";
-import { TR_CITIES } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
+import {
+  fetchAllDisciplines,
+  fetchCities,
+} from "@/lib/data/api/marketplace";
+import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import { buildIntroParagraph, getPSEOLandingData } from "@/lib/data/pseo";
+import type { City, MarketplaceDiscipline } from "@/lib/types";
 import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import {
@@ -33,11 +37,21 @@ interface RouteParams {
 /**
  * Pre-render priority cities × featured disciplines.
  * Other combos build on demand (ISR-on-first-request).
+ *
+ * Async because cities + featured disciplines come from the live
+ * backend taxonomy now. Both fetches are ISR-cached so the build
+ * picks up taxonomy changes without redeploy lag.
  */
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const params: { locale: string; city: string; discipline: string }[] = [];
-  const priorityCities = TR_CITIES.filter((c) => c.isPriority);
-  const featuredDisciplines = MOCK_DISCIPLINES.filter((d) => d.isFeatured);
+  const [citiesEnvelope, taxonomyDisciplines] = await Promise.all([
+    fetchCities(),
+    fetchAllDisciplines(),
+  ]);
+  const priorityCities = citiesEnvelope.results.filter((c) => c.is_priority);
+  const featuredDisciplines = taxonomyDisciplines.results.filter(
+    (d) => d.is_featured,
+  );
   for (const locale of routing.locales) {
     for (const city of priorityCities) {
       for (const discipline of featuredDisciplines) {
@@ -88,8 +102,21 @@ export default async function PSEOLandingPage({
   const { locale, city, discipline } = await params;
   setRequestLocale(locale);
 
-  const data = await getPSEOLandingData(city, discipline);
+  const [data, citiesEnvelope, allDisciplinesEnvelope] = await Promise.all([
+    getPSEOLandingData(city, discipline),
+    fetchCities(),
+    fetchAllDisciplines(),
+  ]);
   if (!data) notFound();
+
+  const allCities: City[] = citiesEnvelope.results.map((c) => ({
+    slug: c.slug,
+    nameTr: c.name_tr,
+    nameEn: c.name_en,
+    isPriority: c.is_priority,
+  }));
+  const allDisciplines: MarketplaceDiscipline[] =
+    allDisciplinesEnvelope.results.map(adaptDiscipline);
 
   const typedLocale = locale as Locale;
   const nowIso = new Date().toISOString();
@@ -178,8 +205,8 @@ export default async function PSEOLandingPage({
           locale={typedLocale}
           city={data.city}
           discipline={data.discipline}
-          allCities={TR_CITIES}
-          allDisciplines={MOCK_DISCIPLINES}
+          allCities={allCities}
+          allDisciplines={allDisciplines}
         />
 
         <LeadCTA />

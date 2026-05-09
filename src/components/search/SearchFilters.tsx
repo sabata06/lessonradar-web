@@ -3,7 +3,10 @@
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
+import {
+  ArrowDown01Icon,
+  CheckmarkCircle02Icon,
+} from "@hugeicons/core-free-icons";
 
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
@@ -305,20 +308,40 @@ function Select({
   disabled?: boolean;
   children: React.ReactNode;
 }) {
+  // Native <select> with appearance:none + custom chevron. Keeps the
+  // mobile system picker (best a11y on iOS/Android) while bringing the
+  // visual treatment in line with the rest of the form (brand-aware
+  // hover, value-set tint, focus ring).
+  const hasValue = value !== "";
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      aria-label={ariaLabel}
-      disabled={disabled}
-      className={cn(
-        "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        disabled && "cursor-not-allowed opacity-60",
-      )}
-    >
-      {children}
-    </select>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={onChange}
+        aria-label={ariaLabel}
+        disabled={disabled}
+        className={cn(
+          "peer h-11 w-full appearance-none rounded-xl border bg-card pl-3.5 pr-10 text-sm font-medium text-foreground transition-all",
+          "cursor-pointer truncate",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+          hasValue
+            ? "border-brand/50 bg-brand-soft/40"
+            : "border-border hover:border-brand/40",
+          disabled && "cursor-not-allowed opacity-50 hover:border-border",
+        )}
+      >
+        {children}
+      </select>
+      <span
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transition-colors",
+          disabled ? "text-muted-foreground/50" : "text-muted-foreground peer-hover:text-brand peer-focus-visible:text-brand",
+        )}
+      >
+        <HugeiconsIcon icon={ArrowDown01Icon} size={16} strokeWidth={2.2} />
+      </span>
+    </div>
   );
 }
 

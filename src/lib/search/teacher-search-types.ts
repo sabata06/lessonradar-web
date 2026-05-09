@@ -6,7 +6,6 @@
  * URL-building helpers without dragging the server-only `fetchTeacherList`
  * module into the client bundle.
  */
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
 
 export const SORT_OPTIONS = [
   "relevance",
@@ -43,11 +42,18 @@ export function countAppliedFilters(filters: TeacherSearchFilters): number {
 /**
  * Normalizes raw `searchParams` from a Route Handler into the typed
  * filter shape, dropping any value that doesn't match a known slug.
+ *
+ * `knownDisciplineSlugs` is optional — when omitted, discipline values
+ * are passed through without validation (the backend will return an
+ * empty list for unknown slugs, which the page handles gracefully).
+ * Pass the live taxonomy slug set when you have it for stricter
+ * client-side validation.
  */
 export function parseSearchParams(
   raw: Record<string, string | string[] | undefined>,
   knownCitySlugs: Set<string>,
   knownDistrictSlugs: Set<string>,
+  knownDisciplineSlugs?: Set<string>,
 ): TeacherSearchFilters {
   const get = (key: string): string | undefined => {
     const v = raw[key];
@@ -68,7 +74,11 @@ export function parseSearchParams(
       ? districtSlug
       : undefined;
   const validDiscipline = disciplineSlug
-    ? MOCK_DISCIPLINES.find((d) => d.slug === disciplineSlug)?.slug
+    ? knownDisciplineSlugs
+      ? knownDisciplineSlugs.has(disciplineSlug)
+        ? disciplineSlug
+        : undefined
+      : disciplineSlug
     : undefined;
 
   const modality: ModalityFilter | undefined =

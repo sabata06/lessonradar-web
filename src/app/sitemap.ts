@@ -1,9 +1,12 @@
 import type { MetadataRoute } from "next";
 
 import { routing } from "@/i18n/routing";
-import { TR_CITIES } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
-import { fetchTeacherList } from "@/lib/data/api/marketplace";
+import {
+  fetchAllDisciplines,
+  fetchCities,
+  fetchTeacherList,
+} from "@/lib/data/api/marketplace";
+import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { computeProfileIndexPolicy } from "@/lib/seo/profile-quality";
 import { computeQualityScore } from "@/lib/seo/quality-score";
@@ -60,8 +63,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  // ── Single API fetch round-trip for all marketplace + taxonomy data ──────
+  const [teacherList, citiesEnvelope, disciplinesEnvelope] = await Promise.all([
+    fetchTeacherList(),
+    fetchCities(),
+    fetchAllDisciplines(),
+  ]);
+  const teachers = teacherList.results.map((api) => adaptTeacher(api));
+  const cities = citiesEnvelope.results;
+  const disciplines = disciplinesEnvelope.results.map(adaptDiscipline);
+
   // City landing pages — priority cities only
-  for (const city of TR_CITIES.filter((c) => c.isPriority)) {
+  for (const city of cities.filter((c) => c.is_priority)) {
     const path = `/${city.slug}`;
     entries.push({
       url: buildLocaleUrl(routing.defaultLocale, path),
@@ -72,14 +85,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  // ── Single API fetch for all marketplace pages ───────────────────────────
-  const teacherList = await fetchTeacherList();
-  const teachers = teacherList.results.map((api) => adaptTeacher(api));
-
   // pSEO city × discipline — gated by quality score, computed once per bucket.
   const cityDisciplineBuckets = groupByCityDiscipline(teachers);
-  for (const city of TR_CITIES) {
-    for (const discipline of MOCK_DISCIPLINES) {
+  for (const city of cities) {
+    for (const discipline of disciplines) {
       const bucket = cityDisciplineBuckets.get(
         `${city.slug}|${discipline.slug}`,
       ) ?? [];

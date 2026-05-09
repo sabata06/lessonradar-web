@@ -122,6 +122,55 @@ export interface ApiListEnvelope<T> {
   results: T[];
 }
 
+/** `/api/marketplace/taxonomy/` domain row. */
+export interface ApiDomain {
+  slug: ApiSlug;
+  name: string;
+  name_tr: string;
+  name_en: string;
+  description: string;
+  description_tr: string;
+  description_en: string;
+  sort_order: number;
+  /** Discipline count, only present on root taxonomy response. */
+  discipline_count?: number | null;
+}
+
+/** `/api/marketplace/taxonomy/` discipline row (with nested domain). */
+export interface ApiDiscipline {
+  slug: ApiSlug;
+  name: string;
+  name_tr: string;
+  name_en: string;
+  description: string;
+  description_tr: string;
+  description_en: string;
+  is_featured: boolean;
+  sort_order: number;
+  domain: ApiDomain;
+  /** Search match origin label, only set on the search endpoint. */
+  match_source?: string | null;
+}
+
+/**
+ * `/api/marketplace/taxonomy/` root response.
+ * `featured_disciplines` is the curated quick-pick subset; `domains`
+ * carries the full domain catalog sorted by `sort_order`.
+ *
+ * NOTE: the root endpoint does NOT return the full discipline list — to
+ * load all disciplines, the search endpoint with a 2+ char query is
+ * needed (or a future `/disciplines/` index endpoint). For the current
+ * web use-cases (sidebar dropdown + quick chips + pSEO routes), the
+ * featured set is enough; extend this shape if/when that changes.
+ */
+export interface ApiTaxonomyRoot {
+  domains: ApiDomain[];
+  featured_disciplines: ApiDiscipline[];
+  meta: {
+    max_discipline_count: number;
+  };
+}
+
 /** `/api/marketplace/cities/` district row. */
 export interface ApiDistrict {
   slug: ApiSlug;

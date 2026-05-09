@@ -18,11 +18,14 @@ import type {
   TeacherProfile,
 } from "@/lib/types";
 
-import { fetchTeacherList } from "@/lib/data/api/marketplace";
+import {
+  fetchAllDisciplines,
+  fetchCities,
+  fetchTeacherList,
+} from "@/lib/data/api/marketplace";
+import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { locativeSuffix } from "@/lib/format";
-import { getCityBySlug, getDistrictsByCity } from "./mock/cities";
-import { getDisciplineBySlug } from "./mock/disciplines";
 import {
   computeQualityScore,
   type IndexPolicy,
@@ -49,16 +52,37 @@ export async function getPSEOLandingData(
   citySlug: string,
   disciplineSlug: string,
 ): Promise<PSEOLandingData | null> {
-  const city = getCityBySlug(citySlug);
-  const discipline = getDisciplineBySlug(disciplineSlug);
-  if (!city || !discipline) return null;
+  // Three independent backend reads, all ISR-cached for 24h. The cities
+  // + disciplines payloads are shared across all pSEO routes for the
+  // same build, so the second + third fetches typically resolve from
+  // Next's data cache without a network hop.
+  const [list, citiesEnvelope, disciplinesEnvelope] = await Promise.all([
+    fetchTeacherList({ city: citySlug, discipline: disciplineSlug }),
+    fetchCities(),
+    fetchAllDisciplines(),
+  ]);
 
-  const list = await fetchTeacherList({
-    city: citySlug,
-    discipline: disciplineSlug,
-  });
+  const cityRow = citiesEnvelope.results.find((c) => c.slug === citySlug);
+  const disciplineRow = disciplinesEnvelope.results.find(
+    (d) => d.slug === disciplineSlug,
+  );
+  if (!cityRow || !disciplineRow) return null;
+
+  const city: City = {
+    slug: cityRow.slug,
+    nameTr: cityRow.name_tr,
+    nameEn: cityRow.name_en,
+    isPriority: cityRow.is_priority,
+  };
+  const discipline: MarketplaceDiscipline = adaptDiscipline(disciplineRow);
+  const districts: District[] = cityRow.districts.map((d) => ({
+    slug: d.slug,
+    citySlug: cityRow.slug,
+    nameTr: d.name_tr,
+    nameEn: d.name_en,
+  }));
+
   const teachers = list.results.map((api) => adaptTeacher(api));
-  const districts = getDistrictsByCity(citySlug);
 
   const verifiedCount = teachers.filter((t) => t.trust.isVerified).length;
   const reviewedCount = teachers.filter((t) => t.trust.reviewCount > 0).length;

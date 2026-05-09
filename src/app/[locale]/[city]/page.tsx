@@ -12,10 +12,14 @@ import { TeacherCard } from "@/components/teacher/TeacherCard";
 
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { getCityBySlug, getDistrictsByCity, TR_CITIES } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
-import { fetchTeacherList } from "@/lib/data/api/marketplace";
+import {
+  fetchAllDisciplines,
+  fetchCities,
+  fetchTeacherList,
+} from "@/lib/data/api/marketplace";
+import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
+import type { ApiCity } from "@/lib/types/api/marketplace";
 import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
@@ -29,9 +33,10 @@ interface RouteParams {
 
 const TOP_TEACHERS_LIMIT = 6;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const params: { locale: string; city: string }[] = [];
-  const priorityCities = TR_CITIES.filter((c) => c.isPriority);
+  const cities = await fetchCities();
+  const priorityCities = cities.results.filter((c) => c.is_priority);
   for (const locale of routing.locales) {
     for (const city of priorityCities) {
       params.push({ locale, city: city.slug });
@@ -40,16 +45,21 @@ export function generateStaticParams() {
   return params;
 }
 
+async function findCity(citySlug: string): Promise<ApiCity | null> {
+  const cities = await fetchCities();
+  return cities.results.find((c) => c.slug === citySlug) ?? null;
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
   const { locale, city } = await params;
-  const cityData = getCityBySlug(city);
-  if (!cityData) return {};
+  const cityRow = await findCity(city);
+  if (!cityRow) return {};
 
-  const cityName = locale === "tr" ? cityData.nameTr : cityData.nameEn;
+  const cityName = locale === "tr" ? cityRow.name_tr : cityRow.name_en;
   const title =
     locale === "tr"
       ? `${cityName} özel ders öğretmenleri`
@@ -75,30 +85,54 @@ export default async function CityLandingPage({
   const { locale, city } = await params;
   setRequestLocale(locale);
 
-  const cityData = getCityBySlug(city);
-  if (!cityData) notFound();
+  // Three parallel reads — all ISR-cached, so this is cheap on a warm
+  // build. Cities + disciplines feed the discipline cards + breadcrumbs;
+  // the teacher list drives the top-teacher row and stats line.
+  const [cityList, citiesEnvelope, disciplinesEnvelope] = await Promise.all([
+    fetchTeacherList({ city }),
+    fetchCities(),
+    fetchAllDisciplines(),
+  ]);
+
+  const cityRow = citiesEnvelope.results.find((c) => c.slug === city);
+  if (!cityRow) notFound();
 
   const typedLocale = locale as Locale;
   const supportedLocale = locale as SupportedLocale;
   const nowIso = new Date().toISOString();
-  const cityName = typedLocale === "tr" ? cityData.nameTr : cityData.nameEn;
+  const cityName = typedLocale === "tr" ? cityRow.name_tr : cityRow.name_en;
 
-  // Single city-scoped fetch — drives the top-teacher list, the
-  // discipline-card counts, and the trust copy under the hero. Backend
-  // already filters to publishable rows; we sort + group locally.
-  const cityList = await fetchTeacherList({ city });
   const cityTeachers = cityList.results.map(adaptTeacher);
-
   const topTeachers = rankTopTeachers(cityTeachers).slice(0, TOP_TEACHERS_LIMIT);
 
-  const disciplineCards = MOCK_DISCIPLINES.map((d) => ({
-    discipline: d,
-    count: cityTeachers.filter((t) =>
-      t.disciplines.some((dp) => dp.disciplineSlug === d.slug),
-    ).length,
-  })).sort((a, b) => b.count - a.count);
+  const disciplines = disciplinesEnvelope.results.map(adaptDiscipline);
+  // Backend taxonomy carries 50+ disciplines; the city page surfaces the
+  // top 12 by teacher count plus any featured discipline that lacks
+  // teachers (so the city always shows the curated quick picks even when
+  // supply is still thin). Sort by (count desc, featured first, name).
+  const disciplineCards = disciplines
+    .map((d) => ({
+      discipline: d,
+      count: cityTeachers.filter((t) =>
+        t.disciplines.some((dp) => dp.disciplineSlug === d.slug),
+      ).length,
+    }))
+    .filter((entry) => entry.count > 0 || entry.discipline.isFeatured)
+    .sort((a, b) => {
+      if (b.count !== a.count) return b.count - a.count;
+      if (a.discipline.isFeatured !== b.discipline.isFeatured) {
+        return a.discipline.isFeatured ? -1 : 1;
+      }
+      return 0;
+    })
+    .slice(0, 12);
 
-  const districts = getDistrictsByCity(city);
+  const districts = cityRow.districts.map((d) => ({
+    slug: d.slug,
+    citySlug: cityRow.slug,
+    nameTr: d.name_tr,
+    nameEn: d.name_en,
+  }));
 
   // Stats line under hero — kept boring and quantitative on purpose
   // (Calm Editorial). We explicitly avoid superlatives like "best" or

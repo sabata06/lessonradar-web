@@ -2,8 +2,11 @@ import "server-only";
 
 import type {
   ApiCity,
+  ApiDiscipline,
+  ApiDomain,
   ApiListEnvelope,
   ApiSpecialty,
+  ApiTaxonomyRoot,
   ApiTeacherDetail,
   ApiTeacherListFilters,
   ApiTeacherListItem,
@@ -11,8 +14,9 @@ import type {
 import type { TeacherProfile } from "@/lib/types/teacher";
 
 import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
+import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
 import { MOCK_TEACHERS } from "@/lib/data/mock/teachers";
+import type { MarketplaceDomain, MarketplaceDiscipline } from "@/lib/types/discipline";
 
 /**
  * Mock fallback layer for the marketplace API.
@@ -208,6 +212,65 @@ export function mockFetchTeacherDetailBySlug(
   const teacher = MOCK_TEACHERS.find((t) => t.slug === slug);
   if (!teacher) return null;
   return teacherToApiDetail(teacher);
+}
+
+function domainToApi(domain: MarketplaceDomain): ApiDomain {
+  return {
+    slug: domain.slug,
+    name: domain.name.tr,
+    name_tr: domain.name.tr,
+    name_en: domain.name.en,
+    description: "",
+    description_tr: "",
+    description_en: "",
+    sort_order: domain.sortOrder,
+    discipline_count: MOCK_DISCIPLINES.filter(
+      (d) => d.domainSlug === domain.slug,
+    ).length,
+  };
+}
+
+function disciplineToApi(d: MarketplaceDiscipline): ApiDiscipline {
+  const domain = MOCK_DOMAINS.find((dom) => dom.slug === d.domainSlug);
+  return {
+    slug: d.slug,
+    name: d.name.tr,
+    name_tr: d.name.tr,
+    name_en: d.name.en,
+    description: d.description?.tr ?? "",
+    description_tr: d.description?.tr ?? "",
+    description_en: d.description?.en ?? "",
+    is_featured: Boolean(d.isFeatured),
+    sort_order: d.sortOrder,
+    domain: domain
+      ? domainToApi(domain)
+      : {
+          slug: d.domainSlug,
+          name: d.domainSlug,
+          name_tr: d.domainSlug,
+          name_en: d.domainSlug,
+          description: "",
+          description_tr: "",
+          description_en: "",
+          sort_order: 0,
+          discipline_count: null,
+        },
+  };
+}
+
+export function mockFetchTaxonomyRoot(): ApiTaxonomyRoot {
+  return {
+    domains: MOCK_DOMAINS.map(domainToApi),
+    featured_disciplines: MOCK_DISCIPLINES.filter((d) => d.isFeatured).map(
+      disciplineToApi,
+    ),
+    meta: { max_discipline_count: 5 },
+  };
+}
+
+export function mockFetchAllDisciplines(): ApiListEnvelope<ApiDiscipline> {
+  const items = MOCK_DISCIPLINES.map(disciplineToApi);
+  return { count: items.length, results: items };
 }
 
 export function mockFetchCities(): ApiListEnvelope<ApiCity> {

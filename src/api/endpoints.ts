@@ -33,8 +33,10 @@ export const ENDPOINTS = {
   AUTH_REGISTER_DEVICE: "/api/auth/register-device/",
   AUTH_LOGOUT: "/api/auth/logout/",
 
-  // ── Marketplace public (LIVE as of B3.1.A–D) ────────────────────────────
+  // ── Marketplace public (LIVE as of B3.1.A–D, B3.4) ──────────────────────
   MARKETPLACE_TAXONOMY: "/api/marketplace/taxonomy/",
+  /** Full active discipline catalog (added B3.4 — feeds /ara dropdown). */
+  MARKETPLACE_TAXONOMY_DISCIPLINES: "/api/marketplace/taxonomy/disciplines/",
   MARKETPLACE_TEACHERS: "/api/marketplace/teachers/",
   /** Legacy id-based detail; the mobile app uses this. */
   MARKETPLACE_TEACHER_DETAIL_BY_ID: (id: number | string) =>

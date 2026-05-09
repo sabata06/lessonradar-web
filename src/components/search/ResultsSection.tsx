@@ -2,18 +2,24 @@ import { ActiveFilterChips } from "./ActiveFilterChips";
 import { SearchResults } from "./SearchResults";
 import { SearchSummary } from "./SearchSummary";
 
-import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
 import {
   searchTeachersWithRelaxation,
   type TeacherSearchFilters,
 } from "@/lib/search/teacher-search";
-import type { SupportedLocale } from "@/lib/types";
+import type {
+  City,
+  District,
+  MarketplaceDiscipline,
+  SupportedLocale,
+} from "@/lib/types";
 
 interface ResultsSectionProps {
   filters: TeacherSearchFilters;
   locale: SupportedLocale;
   nowIso: string;
+  cities: City[];
+  districts: District[];
+  disciplines: MarketplaceDiscipline[];
 }
 
 /**
@@ -21,11 +27,19 @@ interface ResultsSectionProps {
  * active filter chips, relaxation notice, and the result grid. Wrapped
  * in <Suspense> at the page level so we can paint the input + filter
  * sidebar synchronously and stream the data here.
+ *
+ * Cities / districts / disciplines are passed in from the parent page
+ * (which fetches them once from the backend taxonomy + cities API)
+ * instead of re-importing the mock list — keeps the search page in sync
+ * with the live taxonomy.
  */
 export async function ResultsSection({
   filters,
   locale,
   nowIso,
+  cities,
+  districts,
+  disciplines,
 }: ResultsSectionProps) {
   const { result, relaxedDrop } = await searchTeachersWithRelaxation(
     filters,
@@ -43,9 +57,9 @@ export async function ResultsSection({
       {result.appliedFilterCount > 0 && (
         <ActiveFilterChips
           filters={filters}
-          cities={TR_CITIES}
-          districts={TR_DISTRICTS}
-          disciplines={MOCK_DISCIPLINES}
+          cities={cities}
+          districts={districts}
+          disciplines={disciplines}
           locale={locale}
         />
       )}

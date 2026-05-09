@@ -4,14 +4,18 @@ import { apiClient } from "@/api/client";
 import { ENDPOINTS } from "@/api/endpoints";
 import type {
   ApiCity,
+  ApiDiscipline,
   ApiListEnvelope,
+  ApiTaxonomyRoot,
   ApiTeacherDetail,
   ApiTeacherListFilters,
   ApiTeacherListItem,
 } from "@/lib/types/api/marketplace";
 
 import {
+  mockFetchAllDisciplines,
   mockFetchCities,
+  mockFetchTaxonomyRoot,
   mockFetchTeacherDetailBySlug,
   mockFetchTeacherList,
   shouldUseMock,
@@ -141,6 +145,55 @@ export async function fetchTeacherDetailBySlug(
     if (isApiNotFound(error)) return null;
     throw error;
   }
+}
+
+/**
+ * Fetch the bootstrap taxonomy payload (domains + featured disciplines).
+ * Used for quick-pick chips and homepage subject highlight rows.
+ */
+export async function fetchTaxonomyRoot(options?: {
+  revalidate?: number;
+  signal?: AbortSignal;
+}): Promise<ApiTaxonomyRoot> {
+  if (shouldUseMock()) {
+    return mockFetchTaxonomyRoot();
+  }
+
+  return apiClient.get<ApiTaxonomyRoot>(ENDPOINTS.MARKETPLACE_TAXONOMY, {
+    cache: "force-cache",
+    next: {
+      revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
+      tags: ["marketplace:taxonomy"],
+    },
+    signal: options?.signal,
+  });
+}
+
+/**
+ * Fetch the full active discipline catalog. The root payload only
+ * carries `featured_disciplines`; this endpoint returns every active
+ * discipline (capped at 300 server-side) so the search sidebar and
+ * pSEO route generation can enumerate the complete catalog.
+ */
+export async function fetchAllDisciplines(options?: {
+  revalidate?: number;
+  signal?: AbortSignal;
+}): Promise<ApiListEnvelope<ApiDiscipline>> {
+  if (shouldUseMock()) {
+    return mockFetchAllDisciplines();
+  }
+
+  return apiClient.get<ApiListEnvelope<ApiDiscipline>>(
+    ENDPOINTS.MARKETPLACE_TAXONOMY_DISCIPLINES,
+    {
+      cache: "force-cache",
+      next: {
+        revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
+        tags: ["marketplace:taxonomy:disciplines"],
+      },
+      signal: options?.signal,
+    },
+  );
 }
 
 /**
