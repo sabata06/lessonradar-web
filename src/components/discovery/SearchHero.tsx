@@ -1,23 +1,27 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Search01Icon, MapsLocation01Icon, BookOpen01Icon } from "@hugeicons/core-free-icons";
+import {
+  BookOpen01Icon,
+  MapsLocation01Icon,
+  Search01Icon,
+} from "@hugeicons/core-free-icons";
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  BrandCombobox,
+  type ComboboxOption,
+} from "@/components/ui/brand-combobox";
 import { cn } from "@/lib/utils";
-import type { City, MarketplaceDiscipline, MarketplaceDomain, SupportedLocale } from "@/lib/types";
+import type {
+  City,
+  MarketplaceDiscipline,
+  MarketplaceDomain,
+  SupportedLocale,
+} from "@/lib/types";
 import { pickLocalized } from "@/lib/types";
 
 interface SearchHeroProps {
@@ -38,6 +42,7 @@ export function SearchHero({
   defaultDisciplineSlug,
 }: SearchHeroProps) {
   const t = useTranslations("home.hero");
+  const tFilters = useTranslations("search.filters");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -53,15 +58,51 @@ export function SearchHero({
     });
   };
 
-  const grouped = domains
-    .map((domain) => ({
-      domain,
-      items: disciplines.filter((d) => d.domainSlug === domain.slug),
-    }))
-    .filter((g) => g.items.length > 0);
+  // Build the option arrays once per render — both pickers are
+  // searchable, so the ordering doesn't matter for the user (cmdk
+  // filters by query) but the original grouping shows up as section
+  // headings in the dropdown.
+  const disciplineOptions: ComboboxOption[] = useMemo(() => {
+    const grouped = domains
+      .map((domain) => ({
+        domain,
+        items: disciplines.filter((d) => d.domainSlug === domain.slug),
+      }))
+      .filter((g) => g.items.length > 0);
+    return grouped.flatMap(({ domain, items }) =>
+      items.map((d) => ({
+        value: d.slug,
+        label: pickLocalized(d.name, locale),
+        group: pickLocalized(domain.name, locale),
+      })),
+    );
+  }, [domains, disciplines, locale]);
 
-  const priorityCities = cities.filter((c) => c.isPriority);
-  const otherCities = cities.filter((c) => !c.isPriority);
+  const cityOptions: ComboboxOption[] = useMemo(() => {
+    const priorityHeader =
+      locale === "tr" ? "Öncelikli şehirler" : "Priority cities";
+    const allHeader = locale === "tr" ? "Tüm şehirler" : "All cities";
+    const priority = cities.filter((c) => c.isPriority);
+    const rest = cities.filter((c) => !c.isPriority);
+    return [
+      ...priority.map((c) => ({
+        value: c.slug,
+        label: locale === "tr" ? c.nameTr : c.nameEn,
+        group: priorityHeader,
+      })),
+      ...rest.map((c) => ({
+        value: c.slug,
+        label: locale === "tr" ? c.nameTr : c.nameEn,
+        group: allHeader,
+      })),
+    ];
+  }, [cities, locale]);
+
+  // Override the BrandCombobox trigger so it blends into the search-bar
+  // pill (no border, no bg, no inner brand-tint — the surrounding card
+  // already provides the visual container).
+  const heroTriggerClass =
+    "h-11 w-full rounded-lg border-0 bg-transparent px-0 text-base font-medium shadow-none hover:border-0 hover:bg-transparent focus-visible:ring-0";
 
   return (
     <form
@@ -80,70 +121,39 @@ export function SearchHero({
         <SearchField
           icon={<HugeiconsIcon icon={BookOpen01Icon} size={18} strokeWidth={1.7} />}
         >
-          <Select value={discipline} onValueChange={setDiscipline}>
-            <SelectTrigger
-              size="default"
-              aria-label={t("search_discipline_label")}
-              className="h-11 w-full rounded-lg border-0 bg-transparent px-0 text-base font-medium shadow-none outline-none focus-visible:ring-0"
-            >
-              <SelectValue placeholder={t("search_discipline_placeholder")} />
-            </SelectTrigger>
-            <SelectContent className="max-h-[60vh]">
-              {grouped.map(({ domain, items }) => (
-                <SelectGroup key={domain.slug}>
-                  <SelectLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    {pickLocalized(domain.name, locale)}
-                  </SelectLabel>
-                  {items.map((d) => (
-                    <SelectItem key={d.slug} value={d.slug}>
-                      {pickLocalized(d.name, locale)}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              ))}
-            </SelectContent>
-          </Select>
+          <BrandCombobox
+            value={discipline}
+            onChange={setDiscipline}
+            options={disciplineOptions}
+            placeholder={t("search_discipline_placeholder")}
+            allLabel={t("search_discipline_placeholder")}
+            searchPlaceholder={tFilters("search_placeholder")}
+            emptyText={tFilters("search_empty")}
+            ariaLabel={t("search_discipline_label")}
+            triggerClassName={heroTriggerClass}
+          />
         </SearchField>
 
         <div className="hidden h-7 w-px shrink-0 self-center bg-border sm:block" aria-hidden />
 
         {/* City */}
         <SearchField
-          icon={<HugeiconsIcon icon={MapsLocation01Icon} size={18} strokeWidth={1.7} />}
+          icon={
+            <HugeiconsIcon icon={MapsLocation01Icon} size={18} strokeWidth={1.7} />
+          }
         >
-          <Select value={city} onValueChange={setCity}>
-            <SelectTrigger
-              size="default"
-              aria-label={t("search_city_label")}
-              className="h-11 w-full rounded-lg border-0 bg-transparent px-0 text-base font-medium shadow-none outline-none focus-visible:ring-0"
-            >
-              <SelectValue placeholder={t("search_city_placeholder")} />
-            </SelectTrigger>
-            <SelectContent className="max-h-[60vh]">
-              {priorityCities.length > 0 && (
-                <SelectGroup>
-                  <SelectLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    {locale === "tr" ? "Öncelikli şehirler" : "Priority cities"}
-                  </SelectLabel>
-                  {priorityCities.map((c) => (
-                    <SelectItem key={c.slug} value={c.slug}>
-                      {locale === "tr" ? c.nameTr : c.nameEn}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              )}
-              <SelectGroup>
-                <SelectLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {locale === "tr" ? "Tüm şehirler" : "All cities"}
-                </SelectLabel>
-                {otherCities.map((c) => (
-                  <SelectItem key={c.slug} value={c.slug}>
-                    {locale === "tr" ? c.nameTr : c.nameEn}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <BrandCombobox
+            value={city}
+            onChange={setCity}
+            options={cityOptions}
+            placeholder={t("search_city_placeholder")}
+            // No allLabel here — picking a city is required for the
+            // search to resolve to a useful URL (`/<city>` minimum).
+            searchPlaceholder={tFilters("search_placeholder")}
+            emptyText={tFilters("search_empty")}
+            ariaLabel={t("search_city_label")}
+            triggerClassName={heroTriggerClass}
+          />
         </SearchField>
 
         {/* Submit */}
@@ -180,11 +190,14 @@ function SearchField({
   children: React.ReactNode;
 }) {
   return (
-    <label className="flex flex-1 items-center gap-2.5 rounded-xl px-3 py-1 transition-colors hover:bg-secondary/40 has-[:focus-visible]:bg-secondary/40">
-      <span className="grid size-6 shrink-0 place-items-center text-muted-foreground" aria-hidden>
+    <div className="flex flex-1 items-center gap-2.5 rounded-xl px-3 py-1 transition-colors hover:bg-secondary/40 has-[:focus-visible]:bg-secondary/40">
+      <span
+        className="grid size-6 shrink-0 place-items-center text-muted-foreground"
+        aria-hidden
+      >
         {icon}
       </span>
       <div className="min-w-0 flex-1">{children}</div>
-    </label>
+    </div>
   );
 }

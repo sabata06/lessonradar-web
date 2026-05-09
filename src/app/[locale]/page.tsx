@@ -44,6 +44,10 @@ export default async function HomePage({
   const domains: MarketplaceDomain[] = taxonomyRoot.domains.map(adaptDomain);
   const disciplines: MarketplaceDiscipline[] =
     allDisciplinesEnvelope.results.map(adaptDiscipline);
+  // Subject chips carousel uses the curated featured set (~10 entries)
+  // instead of the full 78-discipline catalog — the search hero
+  // dropdown still surfaces every discipline via search.
+  const featuredDisciplines = disciplines.filter((d) => d.isFeatured);
   const cities: City[] = citiesEnvelope.results.map((c) => ({
     slug: c.slug,
     nameTr: c.name_tr,
@@ -104,7 +108,7 @@ export default async function HomePage({
 
             <div className="mt-6">
               <SubjectChips
-                disciplines={disciplines}
+                disciplines={featuredDisciplines}
                 citySlug="gaziantep"
                 locale={typedLocale}
               />
