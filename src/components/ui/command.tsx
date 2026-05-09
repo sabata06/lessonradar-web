@@ -45,8 +45,14 @@ function CommandInput({
       />
       <CommandPrimitive.Input
         data-slot="command-input"
+        // 16px font is mandatory on mobile inputs: iOS Safari triggers
+        // an auto-zoom whenever a focused input has font-size < 16px,
+        // which shifts the popover anchor off-screen and reads as a
+        // bug. Tailwind `text-base` (1rem = 16px) avoids that. We keep
+        // the desktop visual rhythm by NOT shrinking it further on
+        // larger viewports — 16px is fine for desktop too.
         className={cn(
-          "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+          "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-base outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
         {...props}
