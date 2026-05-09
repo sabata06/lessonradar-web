@@ -136,19 +136,27 @@ export function BrandCombobox({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        // `max-h: --radix-popover-content-available-height` is the CSS
-        // variable Radix exposes; combined with `flex flex-col` and the
-        // child Command's `min-h-0`, the inner list scrolls while the
-        // search row stays pinned at the top — even when the popover
-        // flips up against the viewport.
-        // `collisionPadding` keeps a small gap from the browser chrome.
+        // The popover always opens *below* the trigger. We deliberately
+        // disable Radix's collision flip (`avoidCollisions={false}`)
+        // because the previous flip-up behaviour confused users — the
+        // panel could obscure their selection context and mobile
+        // keyboards then dragged it half off-screen. Superprof and
+        // similar marketplaces lock the direction; users scroll the
+        // page to see overflow instead.
+        //
+        // To keep the panel from running unbounded down the viewport,
+        // we cap height at `min(420px, 70dvh)` and let cmdk's list
+        // scroll inside. `dvh` is dynamic so the cap shrinks when the
+        // mobile keyboard opens.
+        //
         // `container` retargets the Portal when this combobox sits
         // inside a Radix modal (Sheet/Dialog) — without it the popover
         // lands outside the modal scope and mobile touch scroll fails.
-        className="flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 max-h-[var(--radix-popover-content-available-height)] min-w-[var(--radix-popover-trigger-width)]"
+        className="flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 max-h-[min(420px,70dvh)] min-w-[var(--radix-popover-trigger-width)]"
+        side="bottom"
         align="start"
         sideOffset={6}
-        collisionPadding={12}
+        avoidCollisions={false}
         container={portalContainer}
       >
         <Command
