@@ -3,15 +3,21 @@
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ArrowDown01Icon,
-  CheckmarkCircle02Icon,
-} from "@hugeicons/core-free-icons";
+import { CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
 
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Select as ShadcnSelect,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type {
   City,
   District,
@@ -165,73 +171,78 @@ export function SearchFilters({
       </div>
 
       <FieldBlock label={t("discipline")}>
-        <Select
+        <BrandSelect
           value={disciplineSlug}
-          onChange={(e) => setDisciplineSlug(e.target.value)}
+          onChange={setDisciplineSlug}
+          placeholder={t("discipline_placeholder")}
+          allLabel={t("discipline_placeholder")}
           ariaLabel={t("discipline")}
         >
-          <option value="">{t("discipline_placeholder")}</option>
           {groupedDisciplines.map(({ domain, items }) => (
-            <optgroup
-              key={domain.slug}
-              label={pickLocalized(domain.name, locale)}
-            >
+            <SelectGroup key={domain.slug}>
+              <SelectLabel>{pickLocalized(domain.name, locale)}</SelectLabel>
               {items.map((d) => (
-                <option key={d.slug} value={d.slug}>
+                <SelectItem key={d.slug} value={d.slug}>
                   {pickLocalized(d.name, locale)}
-                </option>
+                </SelectItem>
               ))}
-            </optgroup>
+            </SelectGroup>
           ))}
-        </Select>
+        </BrandSelect>
       </FieldBlock>
 
       <FieldBlock label={t("city")}>
-        <Select
+        <BrandSelect
           value={citySlug}
-          onChange={(e) => handleCityChange(e.target.value)}
+          onChange={handleCityChange}
+          placeholder={t("city_placeholder")}
+          allLabel={t("city_placeholder")}
           ariaLabel={t("city")}
         >
-          <option value="">{t("city_placeholder")}</option>
           {priorityCities.length > 0 && (
-            <optgroup
-              label={locale === "tr" ? "Öncelikli şehirler" : "Priority cities"}
-            >
+            <SelectGroup>
+              <SelectLabel>
+                {locale === "tr" ? "Öncelikli şehirler" : "Priority cities"}
+              </SelectLabel>
               {priorityCities.map((c) => (
-                <option key={c.slug} value={c.slug}>
+                <SelectItem key={c.slug} value={c.slug}>
                   {locale === "tr" ? c.nameTr : c.nameEn}
-                </option>
+                </SelectItem>
               ))}
-            </optgroup>
+            </SelectGroup>
           )}
-          <optgroup label={locale === "tr" ? "Tüm şehirler" : "All cities"}>
+          <SelectGroup>
+            <SelectLabel>
+              {locale === "tr" ? "Tüm şehirler" : "All cities"}
+            </SelectLabel>
             {otherCities.map((c) => (
-              <option key={c.slug} value={c.slug}>
+              <SelectItem key={c.slug} value={c.slug}>
                 {locale === "tr" ? c.nameTr : c.nameEn}
-              </option>
+              </SelectItem>
             ))}
-          </optgroup>
-        </Select>
+          </SelectGroup>
+        </BrandSelect>
       </FieldBlock>
 
       <FieldBlock label={t("district")}>
-        <Select
+        <BrandSelect
           value={districtSlug}
-          onChange={(e) => setDistrictSlug(e.target.value)}
+          onChange={setDistrictSlug}
+          placeholder={
+            districtsForCity.length === 0
+              ? t("district_disabled")
+              : t("district_placeholder")
+          }
+          allLabel={t("district_placeholder")}
           ariaLabel={t("district")}
           disabled={districtsForCity.length === 0}
         >
-          <option value="">
-            {districtsForCity.length === 0
-              ? t("district_disabled")
-              : t("district_placeholder")}
-          </option>
           {districtsForCity.map((d) => (
-            <option key={d.slug} value={d.slug}>
+            <SelectItem key={d.slug} value={d.slug}>
               {locale === "tr" ? d.nameTr : d.nameEn}
-            </option>
+            </SelectItem>
           ))}
-        </Select>
+        </BrandSelect>
       </FieldBlock>
 
       <fieldset className="space-y-2">
@@ -295,53 +306,61 @@ function FieldBlock({
   );
 }
 
-function Select({
+/**
+ * Sentinel value for "no filter" — Radix Select doesn't allow `""` as a
+ * SelectItem value, so we round-trip through this token internally.
+ * `BrandSelect` translates back to `""` before calling `onChange`.
+ */
+const ALL_SLUG = "__all__";
+
+function BrandSelect({
   value,
   onChange,
+  placeholder,
+  allLabel,
   ariaLabel,
   disabled,
   children,
 }: {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (next: string) => void;
+  placeholder: string;
+  /** Label shown for the "no filter" item that resets the field. */
+  allLabel: string;
   ariaLabel: string;
   disabled?: boolean;
   children: React.ReactNode;
 }) {
-  // Native <select> with appearance:none + custom chevron. Keeps the
-  // mobile system picker (best a11y on iOS/Android) while bringing the
-  // visual treatment in line with the rest of the form (brand-aware
-  // hover, value-set tint, focus ring).
   const hasValue = value !== "";
   return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={onChange}
+    <ShadcnSelect
+      value={hasValue ? value : ALL_SLUG}
+      onValueChange={(next) => onChange(next === ALL_SLUG ? "" : next)}
+      disabled={disabled}
+    >
+      <SelectTrigger
         aria-label={ariaLabel}
-        disabled={disabled}
         className={cn(
-          "peer h-11 w-full appearance-none rounded-xl border bg-card pl-3.5 pr-10 text-sm font-medium text-foreground transition-all",
-          "cursor-pointer truncate",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+          "h-11 w-full rounded-xl border px-3.5 text-sm font-medium text-foreground transition-colors",
+          "data-[placeholder]:text-muted-foreground",
           hasValue
             ? "border-brand/50 bg-brand-soft/40"
-            : "border-border hover:border-brand/40",
+            : "border-border bg-card hover:border-brand/40",
           disabled && "cursor-not-allowed opacity-50 hover:border-border",
         )}
       >
-        {children}
-      </select>
-      <span
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 transition-colors",
-          disabled ? "text-muted-foreground/50" : "text-muted-foreground peer-hover:text-brand peer-focus-visible:text-brand",
-        )}
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent
+        position="popper"
+        align="start"
+        sideOffset={6}
+        className="max-h-[60vh] min-w-[var(--radix-select-trigger-width)]"
       >
-        <HugeiconsIcon icon={ArrowDown01Icon} size={16} strokeWidth={2.2} />
-      </span>
-    </div>
+        <SelectItem value={ALL_SLUG}>{allLabel}</SelectItem>
+        {children}
+      </SelectContent>
+    </ShadcnSelect>
   );
 }
 

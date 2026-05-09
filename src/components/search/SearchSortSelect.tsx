@@ -6,6 +6,13 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   buildSearchQuery,
   SORT_OPTIONS,
   type SortOption,
@@ -17,14 +24,14 @@ interface SearchSortSelectProps {
 }
 
 /**
- * Sort dropdown. Client island — on change it pushes a new URL with
+ * Sort dropdown. Client island — on selection it pushes a new URL with
  * the same filters but a different `sort=` param. The page is dynamic,
  * so the new URL re-renders on the server and returns the re-sorted
  * list without a full reload feel.
  *
- * Uses a native `<select>` rather than radix Select so the mobile
- * system picker handles it and we ship one fewer JS bundle to the
- * route.
+ * Uses the shadcn Select primitive for visual consistency with the
+ * filter sidebar (rounded pill trigger, animated dropdown, brand
+ * highlight on hover/selection).
  */
 export function SearchSortSelect({ filters }: SearchSortSelectProps) {
   const t = useTranslations("search.sort");
@@ -40,10 +47,10 @@ export function SearchSortSelect({ filters }: SearchSortSelectProps) {
     price_asc: t("price_asc"),
   };
 
-  function onChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const next = e.target.value as SortOption;
+  function onValueChange(next: string) {
+    const value = next as SortOption;
     const qs = buildSearchQuery(filters, {
-      sort: next === "relevance" ? null : next,
+      sort: value === "relevance" ? null : value,
     });
     startTransition(() => {
       router.push(`/ara${qs}`);
@@ -51,24 +58,34 @@ export function SearchSortSelect({ filters }: SearchSortSelectProps) {
   }
 
   return (
-    <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-      <span className="font-medium uppercase tracking-wider">{t("label")}</span>
-      <select
-        value={current}
-        onChange={onChange}
-        aria-label={t("label")}
-        aria-busy={isPending}
-        className={cn(
-          "h-10 rounded-xl border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-        )}
-      >
-        {SORT_OPTIONS.map((opt) => (
-          <option key={opt} value={opt}>
-            {labels[opt]}
-          </option>
-        ))}
-      </select>
-    </label>
+    <div className="inline-flex items-center gap-2">
+      <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        {t("label")}
+      </span>
+      <Select value={current} onValueChange={onValueChange}>
+        <SelectTrigger
+          aria-label={t("label")}
+          aria-busy={isPending}
+          className={cn(
+            "h-10 w-auto rounded-xl border-border bg-card px-3 text-sm font-medium text-foreground transition-colors",
+            "hover:border-brand/40",
+          )}
+        >
+          <SelectValue placeholder={labels.relevance} />
+        </SelectTrigger>
+        <SelectContent
+          position="popper"
+          align="end"
+          sideOffset={6}
+          className="min-w-[var(--radix-select-trigger-width)]"
+        >
+          {SORT_OPTIONS.map((opt) => (
+            <SelectItem key={opt} value={opt}>
+              {labels[opt]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
