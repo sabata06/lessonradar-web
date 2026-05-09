@@ -119,6 +119,130 @@ export function BrandCombobox({
   }, [options]);
 
   const hasValue = value !== "";
+  // Mobile + inside a Sheet → inline-expand mode. Popover doesn't work
+  // here because Radix positions it absolutely, so the Sheet's
+  // scrollHeight never grows to include the panel — users can't reach
+  // list content the keyboard hides. Inline expansion makes the panel
+  // part of the Sheet's natural flow, so the Sheet's `overflow-y-auto`
+  // body actually scrolls.
+  const isInlineMode = !isDesktop && portalContainer !== null;
+
+  const triggerClass = cn(
+    "flex h-11 w-full items-center justify-between gap-2 rounded-xl border px-3.5 text-left text-sm font-medium transition-colors",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+    hasValue
+      ? "border-brand/50 bg-brand-soft/40 text-foreground"
+      : "border-border bg-card text-foreground hover:border-brand/40",
+    disabled && "cursor-not-allowed opacity-50 hover:border-border",
+    triggerClassName,
+  );
+
+  const chevronIcon = (
+    <HugeiconsIcon
+      icon={UnfoldMoreIcon}
+      size={16}
+      strokeWidth={2}
+      aria-hidden
+      className="shrink-0 text-muted-foreground"
+    />
+  );
+
+  const triggerLabel = (
+    <span className={cn("truncate", !selected && "text-muted-foreground")}>
+      {selected ? selected.label : placeholder}
+    </span>
+  );
+
+  if (isInlineMode) {
+    return (
+      <div>
+        <button
+          type="button"
+          role="combobox"
+          aria-label={ariaLabel}
+          aria-expanded={open}
+          disabled={disabled}
+          onClick={() => setOpen((v) => !v)}
+          className={triggerClass}
+        >
+          {triggerLabel}
+          {chevronIcon}
+        </button>
+        {open && (
+          <div className="mt-2 overflow-hidden rounded-xl border border-border bg-popover shadow-card">
+            <Command
+              filter={(itemValue: string, search: string) =>
+                foldTr(itemValue).includes(foldTr(search)) ? 1 : 0
+              }
+            >
+              <CommandInput placeholder={searchPlaceholder ?? "Ara…"} />
+              <CommandList>
+                <CommandEmpty>{emptyText ?? "Sonuç yok"}</CommandEmpty>
+                {allLabel ? (
+                  <CommandGroup>
+                    <CommandItem
+                      value={allLabel}
+                      onSelect={() => {
+                        onChange("");
+                        setOpen(false);
+                      }}
+                      className={cn(!hasValue && "bg-brand-soft/50 font-medium")}
+                    >
+                      <span className="flex-1">{allLabel}</span>
+                      {!hasValue && (
+                        <HugeiconsIcon
+                          icon={Tick02Icon}
+                          size={16}
+                          strokeWidth={2.4}
+                          aria-hidden
+                          className="text-brand"
+                        />
+                      )}
+                    </CommandItem>
+                  </CommandGroup>
+                ) : null}
+                {sections.map((section) => (
+                  <CommandGroup
+                    key={section.heading || "ungrouped"}
+                    heading={section.heading || undefined}
+                  >
+                    {section.items.map((opt) => {
+                      const isSelected = opt.value === value;
+                      return (
+                        <CommandItem
+                          key={opt.value}
+                          value={`${opt.label} ${opt.value}`}
+                          onSelect={() => {
+                            onChange(opt.value);
+                            setOpen(false);
+                          }}
+                          className={cn(
+                            isSelected &&
+                              "bg-brand-soft/60 font-medium text-brand-soft-foreground",
+                          )}
+                        >
+                          <span className="flex-1 truncate">{opt.label}</span>
+                          {isSelected && (
+                            <HugeiconsIcon
+                              icon={Tick02Icon}
+                              size={16}
+                              strokeWidth={2.4}
+                              aria-hidden
+                              className="text-brand"
+                            />
+                          )}
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                ))}
+              </CommandList>
+            </Command>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -129,26 +253,10 @@ export function BrandCombobox({
           aria-label={ariaLabel}
           aria-expanded={open}
           disabled={disabled}
-          className={cn(
-            "flex h-11 w-full items-center justify-between gap-2 rounded-xl border px-3.5 text-left text-sm font-medium transition-colors",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-            hasValue
-              ? "border-brand/50 bg-brand-soft/40 text-foreground"
-              : "border-border bg-card text-foreground hover:border-brand/40",
-            disabled && "cursor-not-allowed opacity-50 hover:border-border",
-            triggerClassName,
-          )}
+          className={triggerClass}
         >
-          <span className={cn("truncate", !selected && "text-muted-foreground")}>
-            {selected ? selected.label : placeholder}
-          </span>
-          <HugeiconsIcon
-            icon={UnfoldMoreIcon}
-            size={16}
-            strokeWidth={2}
-            aria-hidden
-            className="shrink-0 text-muted-foreground"
-          />
+          {triggerLabel}
+          {chevronIcon}
         </button>
       </PopoverTrigger>
       <PopoverContent
