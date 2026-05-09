@@ -18,6 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { usePopoverPortalContainer } from "@/components/ui/popover-portal-context";
 
 export interface ComboboxOption {
   value: string;
@@ -73,6 +74,12 @@ export function BrandCombobox({
   triggerClassName,
 }: BrandComboboxProps) {
   const [open, setOpen] = React.useState(false);
+  // When this combobox is rendered inside a modal Sheet/Dialog, the
+  // wrapping `<PopoverPortalProvider>` advertises the dialog's content
+  // node as our portal target so touch scroll stays inside the modal
+  // scope. Outside such a wrapper the value is null and we fall back
+  // to the default body portal.
+  const portalContainer = usePopoverPortalContainer();
 
   const selected = React.useMemo(
     () => options.find((opt) => opt.value === value) ?? null,
@@ -135,10 +142,14 @@ export function BrandCombobox({
         // search row stays pinned at the top — even when the popover
         // flips up against the viewport.
         // `collisionPadding` keeps a small gap from the browser chrome.
+        // `container` retargets the Portal when this combobox sits
+        // inside a Radix modal (Sheet/Dialog) — without it the popover
+        // lands outside the modal scope and mobile touch scroll fails.
         className="flex w-[var(--radix-popover-trigger-width)] flex-col overflow-hidden p-0 max-h-[var(--radix-popover-content-available-height)] min-w-[var(--radix-popover-trigger-width)]"
         align="start"
         sideOffset={6}
         collisionPadding={12}
+        container={portalContainer}
       >
         <Command
           // cmdk's default fuzzy filter stumbles on Turkish diacritics

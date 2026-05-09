@@ -21,10 +21,20 @@ function PopoverContent({
   className,
   align = "center",
   sideOffset = 4,
+  // `container` lets callers retarget the Portal — useful when the
+  // popover is opened inside a Radix `<Dialog>`/`<Sheet>` (modal=true)
+  // because the default `body` portal lands the popover OUTSIDE the
+  // dialog's modal scope on mobile, where the dialog captures touch
+  // events and blocks scroll inside the popover. Re-portaling into
+  // the dialog's content keeps the popover inside the modal scope so
+  // touch scroll works.
+  container,
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+}: React.ComponentProps<typeof PopoverPrimitive.Content> & {
+  container?: HTMLElement | null
+}) {
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal container={container ?? undefined}>
       <PopoverPrimitive.Content
         data-slot="popover-content"
         align={align}
