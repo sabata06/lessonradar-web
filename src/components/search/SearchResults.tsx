@@ -118,7 +118,7 @@ export function SearchResults({
       )}
 
       <ul
-        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        className="grid gap-4 sm:grid-cols-2"
         aria-label={`${teachers.length} ${locale === "tr" ? "öğretmen" : "tutors"}`}
       >
         {teachers.map((teacher) => (

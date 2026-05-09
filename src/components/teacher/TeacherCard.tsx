@@ -1,12 +1,6 @@
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ArrowRight01Icon,
-  CheckmarkCircle02Icon,
-  Clock01Icon,
-  MapsLocation01Icon,
-  StarIcon,
-} from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, MapsLocation01Icon } from "@hugeicons/core-free-icons";
 
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -103,150 +97,81 @@ export function TeacherCard({
     );
   }
 
-  // default — vertical card for pSEO + search listings.
-  //
-  // Layout (top-down):
-  //   1. Profile-clickable header  : avatar + name (with inline verified
-  //                                  check) + headline (1 line truncated)
-  //                                  + meta strip (rating · location ·
-  //                                  response time, single wrap-friendly row).
-  //   2. Discipline + price line   : muted label / strong price baseline,
-  //                                  no divider — the surrounding card edge
-  //                                  is the visual frame.
-  //   3. Optional premium pill     : subtle, only when the teacher carries
-  //                                  the flag. Skips noise on free profiles.
-  //   4. Single primary CTA        : full-width "İletişime Geç" (amber
-  //                                  action). The whole header is already
-  //                                  the profile link, so we don't duplicate
-  //                                  with a secondary "Profile" button.
-  const cityLabel = pickLocalizedCity(city, locale);
-  const districtLabel = pickLocalizedCity(district, locale);
-  const locationText = districtLabel
-    ? `${districtLabel} · ${cityLabel}`
-    : cityLabel;
-  const responseMinutes = teacher.trust.responseTimeMinutes;
-  const responseText = responseMinutes
-    ? responseMinutes < 60
-      ? locale === "tr"
-        ? `${responseMinutes} dk yanıt`
-        : `${responseMinutes} min reply`
-      : locale === "tr"
-        ? `${Math.round(responseMinutes / 60)} sa yanıt`
-        : `${Math.round(responseMinutes / 60)}h reply`
-    : null;
-  const ratingText =
-    teacher.trust.ratingAverage > 0
-      ? `${teacher.trust.ratingAverage.toFixed(1)} (${teacher.trust.reviewCount})`
-      : null;
-  const disciplineLabel = discipline ? pickLocalized(discipline.name, locale) : "";
-  const priceLabel = pricing
-    ? formatHourlyRange(pricing.hourlyMin, pricing.hourlyMax, locale)
-    : "—";
-
+  // default — vertical card for pSEO + search listings (original layout
+  // restored). Top half is a profile-clickable Link with avatar + name +
+  // verified/premium badges + headline + rating; bottom half holds the
+  // location/trust meta row and the discipline+price line with a single
+  // amber "İletişime Geç" action button. The standalone "Profile" button
+  // was removed — the whole header already links to the profile.
   return (
     <article
       className={cn(
-        "group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elevated",
+        "group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-shadow hover:shadow-elevated",
         className,
       )}
     >
       <Link
         href={profileHref}
-        className="flex items-start gap-3 p-5 pb-4"
+        className="flex items-start gap-4 p-5"
         aria-label={teacher.fullName}
       >
-        <Avatar teacher={teacher} size={56} />
+        <Avatar teacher={teacher} size={72} />
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <h3 className="truncate text-base font-semibold text-foreground">
               {teacher.fullName}
             </h3>
-            {teacher.trust.isVerified && (
-              <HugeiconsIcon
-                icon={CheckmarkCircle02Icon}
-                size={16}
-                strokeWidth={2.2}
-                aria-label={locale === "tr" ? "Doğrulanmış" : "Verified"}
-                className="shrink-0 text-brand"
-              />
-            )}
+            {teacher.trust.isVerified && <VerifiedBadge size="sm" />}
+            {teacher.isPremium && <PremiumBadge />}
           </div>
-          <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">
+          <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
             {teacher.headline}
           </p>
-          <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-muted-foreground">
-            {ratingText && (
-              <span className="inline-flex items-center gap-1 text-foreground">
-                <HugeiconsIcon
-                  icon={StarIcon}
-                  size={12}
-                  strokeWidth={2.2}
-                  className="text-gold"
-                  aria-hidden
-                />
-                <span className="font-medium">{ratingText}</span>
-              </span>
-            )}
-            {cityLabel && (
-              <span className="inline-flex items-center gap-1">
-                <HugeiconsIcon
-                  icon={MapsLocation01Icon}
-                  size={12}
-                  strokeWidth={2}
-                  aria-hidden
-                />
-                <span className="line-clamp-1">{locationText}</span>
-              </span>
-            )}
-            {responseText && (
-              <span className="inline-flex items-center gap-1">
-                <HugeiconsIcon
-                  icon={Clock01Icon}
-                  size={12}
-                  strokeWidth={2}
-                  aria-hidden
-                />
-                {responseText}
-              </span>
-            )}
-          </div>
+          <RatingLine
+            className="mt-2"
+            rating={teacher.trust.ratingAverage}
+            count={teacher.trust.reviewCount}
+            locale={locale}
+          />
         </div>
       </Link>
 
       <div className="flex flex-col gap-3 px-5 pb-5">
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="line-clamp-1 text-sm text-muted-foreground">
-            {disciplineLabel}
-          </p>
-          <p className="shrink-0 text-base font-semibold text-foreground">
-            {priceLabel}
-          </p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1">
+            <HugeiconsIcon icon={MapsLocation01Icon} size={12} strokeWidth={2} />
+            {district
+              ? `${pickLocalizedCity(district, locale)} · ${pickLocalizedCity(city, locale)}`
+              : pickLocalizedCity(city, locale)}
+          </span>
+          <TrustRow trust={teacher.trust} locale={locale} nowIso={nowIso} />
         </div>
 
-        {teacher.isPremium && (
-          <span className="inline-flex w-fit items-center gap-1 rounded-full bg-action/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-action-foreground">
-            {locale === "tr" ? "Premium" : "Premium"}
-          </span>
-        )}
-
-        <Button
-          asChild
-          size="default"
-          className="h-11 w-full gap-2 bg-action text-action-foreground shadow-action hover:bg-action-hover"
-        >
-          <Link
-            href={requestHref}
-            className="inline-flex items-center justify-center"
+        <div className="flex items-end justify-between gap-3 border-t border-border pt-3">
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              {discipline ? pickLocalized(discipline.name, locale) : ""}
+            </p>
+            <p className="truncate text-base font-semibold text-foreground">
+              {pricing ? formatHourlyRange(pricing.hourlyMin, pricing.hourlyMax, locale) : "—"}
+            </p>
+          </div>
+          <Button
+            asChild
+            size="sm"
+            className="shrink-0 gap-1.5 bg-action text-action-foreground hover:bg-action-hover"
           >
-            {locale === "tr" ? "İletişime Geç" : "Contact"}
-            <HugeiconsIcon
-              icon={ArrowRight01Icon}
-              size={16}
-              strokeWidth={2.2}
-              aria-hidden
-            />
-          </Link>
-        </Button>
+            <Link href={requestHref}>
+              {locale === "tr" ? "İletişime Geç" : "Contact"}
+              <HugeiconsIcon
+                icon={ArrowRight01Icon}
+                size={14}
+                strokeWidth={2.2}
+                aria-hidden
+              />
+            </Link>
+          </Button>
+        </div>
       </div>
     </article>
   );
