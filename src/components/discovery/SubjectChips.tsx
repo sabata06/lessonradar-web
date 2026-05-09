@@ -155,17 +155,17 @@ export function SubjectChips({
       aria-label={locale === "tr" ? "Popüler branşlar" : "Popular subjects"}
       className={cn("relative", className)}
     >
-      {/* Scrolling track. No pill background — chips sit on the page
-          surface. Edge fades and floating chevrons handle the visual
-          framing instead, matching the Calm Editorial restraint. */}
+      {/* Scrolling track. No padding on the scroller itself — padding
+          inside an `overflow-x-auto` container with `snap-mandatory`
+          gets folded into `scrollWidth` and lets the browser auto-snap
+          past the leading edge on first paint, which is what made the
+          first chip clip and the left chevron flash on mount.
+          Chevron buttons sit *above* this track via absolute
+          positioning, with edge fade masks softening the overlap. */}
       <ul
         ref={scrollerRef}
         className={cn(
           "flex snap-x snap-mandatory gap-2.5 overflow-x-auto py-1 sm:gap-3",
-          // The leading/trailing padding gives chip cards breathing
-          // room from the chevron buttons + edge fade masks (where
-          // present).
-          "px-1 sm:px-12",
           "scroll-smooth motion-reduce:scroll-auto",
           "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           "[touch-action:pan-x]",

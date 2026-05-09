@@ -54,8 +54,8 @@ export function EmptyLeadCollection({
       </h2>
       <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
         {locale === "tr"
-          ? "Bu kombinasyon için şu an doğrulanmış öğretmenimiz yok. Branşını ve ihtiyacını söyle — eşleşen öğretmenler sana yazsın. Ücretsiz, app gerekmez."
-          : "We don't yet have verified tutors here. Tell us what you need and matching tutors will reach out. Free, no app required."}
+          ? "Bu kombinasyon için şu an doğrulanmış öğretmenimiz yok. Branşını ve ihtiyacını söyle — eşleşen öğretmenler sana yazsın. Ücretsiz ve hızlı."
+          : "We don't yet have verified tutors here. Tell us what you need and matching tutors will reach out. Free and fast."}
       </p>
       <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
         <Button

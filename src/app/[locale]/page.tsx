@@ -88,15 +88,7 @@ export default async function HomePage({
           }}
         />
         <Container className="flex flex-col items-center py-12 text-center sm:py-16 lg:py-24">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand/15 bg-brand-soft px-3 py-1 text-xs font-medium text-brand-soft-foreground">
-            <span
-              aria-hidden
-              className="size-1.5 rounded-full bg-success"
-              style={{ boxShadow: "0 0 0 3px oklch(0.94 0.04 165)" }}
-            />
-            {t("kicker")}
-          </span>
-          <h1 className="mt-6 max-w-3xl text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-3xl text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
             {t("title")}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">

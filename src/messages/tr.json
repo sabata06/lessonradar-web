@@ -31,9 +31,8 @@
   },
   "home": {
     "hero": {
-      "kicker": "Gaziantep'te canlı · Büyükşehirlere yayılıyor",
       "title": "Öğretmenini dakikalar içinde bul.",
-      "subtitle": "Yüz yüze ya da çevrimiçi — ilçendeki doğrulanmış öğretmenle anlaş, app indirmeden.",
+      "subtitle": "Yüz yüze ya da çevrimiçi — ilçendeki doğrulanmış öğretmenle dakikalar içinde anlaş.",
       "search_discipline_label": "Branş",
       "search_discipline_placeholder": "YKS matematik, gitar, İngilizce…",
       "search_city_label": "Şehir",
@@ -71,7 +70,7 @@
     },
     "how": {
       "kicker": "Nasıl çalışır?",
-      "title": "Üç adım, app indirmeden.",
+      "title": "Üç adımda öğretmenini bul.",
       "steps": {
         "one": {
           "title": "Branşını ve şehrini söyle",
@@ -101,7 +100,7 @@
   "lead": {
     "meta": {
       "title": "Ücretsiz ders talebi oluştur",
-      "description": "Branşını ve şehrini söyle, doğrulanmış öğretmenler sana ulaşsın. Ücretsiz, app gerekmez."
+      "description": "Branşını ve şehrini söyle, doğrulanmış öğretmenler sana ulaşsın. Ücretsiz ve hızlı."
     },
     "breadcrumb": "Ders talebi",
     "kicker": "Ders talebi · Ücretsiz",
@@ -265,7 +264,7 @@
       "subtitle": "Tüm alanları net doldur — kabul ettiğin alanlar olduğu gibi profiline yansır.",
       "submit": "Başvuruyu Gönder",
       "submit_loading": "Gönderiliyor…",
-      "submit_footnote": "Başvurun ekibimize iletilir. Form ücretsiz, app gerekmez.",
+      "submit_footnote": "Başvurun ekibimize iletilir. Form ücretsizdir.",
       "error_generic": "Başvuru gönderilemedi. Lütfen tekrar dene.",
       "sections": {
         "you": {

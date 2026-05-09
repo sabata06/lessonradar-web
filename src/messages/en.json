@@ -31,9 +31,8 @@
   },
   "home": {
     "hero": {
-      "kicker": "Live in Gaziantep · Expanding across Türkiye",
       "title": "Find your tutor in minutes.",
-      "subtitle": "In person or online — match with a verified tutor in your district, no app required.",
+      "subtitle": "In person or online — match with a verified tutor in your district in minutes.",
       "search_discipline_label": "Subject",
       "search_discipline_placeholder": "YKS math, guitar, English…",
       "search_city_label": "City",
@@ -71,7 +70,7 @@
     },
     "how": {
       "kicker": "How it works",
-      "title": "Three steps, no app required.",
+      "title": "Three steps to your tutor.",
       "steps": {
         "one": {
           "title": "Tell us subject and city",
@@ -101,7 +100,7 @@
   "lead": {
     "meta": {
       "title": "Post a free lesson request",
-      "description": "Tell us the subject and city — verified tutors will reach you. Free, no app required."
+      "description": "Tell us the subject and city — verified tutors will reach you. Free and fast."
     },
     "breadcrumb": "Lesson request",
     "kicker": "Lesson request · Free",
@@ -265,7 +264,7 @@
       "subtitle": "Fill the fields clearly — what you write here lands directly on your profile.",
       "submit": "Submit Application",
       "submit_loading": "Submitting…",
-      "submit_footnote": "Your application is sent to our team. The form is free, no app required.",
+      "submit_footnote": "Your application is sent to our team. The form is free.",
       "error_generic": "Couldn't submit your application. Please try again.",
       "sections": {
         "you": {
