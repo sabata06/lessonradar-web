@@ -44,10 +44,15 @@ export default async function HomePage({
   const domains: MarketplaceDomain[] = taxonomyRoot.domains.map(adaptDomain);
   const disciplines: MarketplaceDiscipline[] =
     allDisciplinesEnvelope.results.map(adaptDiscipline);
-  // Subject chips carousel uses the curated featured set (~10 entries)
-  // instead of the full 78-discipline catalog — the search hero
-  // dropdown still surfaces every discipline via search.
-  const featuredDisciplines = disciplines.filter((d) => d.isFeatured);
+  // Subject carousel surfaces the full active catalog. The horizontal
+  // scroll + chevron pagination handles the long list comfortably and
+  // gives users a sense of the breadth on offer (matches the Superprof
+  // pattern). Featured items naturally sort to the front via
+  // `sort_order`, so they're still the first chips visible.
+  const carouselDisciplines = [...disciplines].sort((a, b) => {
+    if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+    return a.sortOrder - b.sortOrder;
+  });
   const cities: City[] = citiesEnvelope.results.map((c) => ({
     slug: c.slug,
     nameTr: c.name_tr,
@@ -108,7 +113,7 @@ export default async function HomePage({
 
             <div className="mt-6">
               <SubjectChips
-                disciplines={featuredDisciplines}
+                disciplines={carouselDisciplines}
                 citySlug="gaziantep"
                 locale={typedLocale}
               />

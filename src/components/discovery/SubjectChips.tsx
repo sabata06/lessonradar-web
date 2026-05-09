@@ -109,34 +109,41 @@ export function SubjectChips({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  // Track scroll edges so the chevron buttons can fade in/out.
+  // Threshold of 4px tolerates sub-pixel scroll values in some browsers
+  // — without it the right chevron flickers near the very end.
   const updateEdges = useCallback(() => {
     const el = scrollerRef.current;
     if (!el) return;
     const maxScroll = el.scrollWidth - el.clientWidth;
-    setCanScrollLeft(el.scrollLeft > 8);
-    setCanScrollRight(el.scrollLeft < maxScroll - 8);
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < maxScroll - 4);
   }, []);
 
   useEffect(() => {
-    updateEdges();
     const el = scrollerRef.current;
     if (!el) return;
+    // Defer the first measurement to the next frame so layout has
+    // settled (icons + labels) before we decide whether right-chevron
+    // should appear. Without this the edge state can be stale on mount
+    // — long content correctly overflows but `scrollWidth` reads as
+    // `clientWidth` on the very first paint.
+    const raf = requestAnimationFrame(updateEdges);
     el.addEventListener("scroll", updateEdges, { passive: true });
     const ro = new ResizeObserver(updateEdges);
     ro.observe(el);
     return () => {
+      cancelAnimationFrame(raf);
       el.removeEventListener("scroll", updateEdges);
       ro.disconnect();
     };
   }, [updateEdges]);
 
-  const scrollBy = (dir: -1 | 1) => {
+  const scrollByPage = (dir: -1 | 1) => {
     const el = scrollerRef.current;
     if (!el) return;
-    // Scroll one viewport-width worth of items at a time — matches the
-    // Superprof "page" feel where pressing the chevron advances the
-    // visible window without skipping past unseen items.
+    // Scroll one viewport-width worth of items so each chevron press
+    // advances a full "page" — matches the Superprof rhythm where the
+    // visible window slides without skipping past unseen items.
     const delta = el.clientWidth * 0.8 * dir;
     el.scrollBy({ left: delta, behavior: "smooth" });
   };
@@ -148,94 +155,112 @@ export function SubjectChips({
       aria-label={locale === "tr" ? "Popüler branşlar" : "Popular subjects"}
       className={cn("relative", className)}
     >
-      <div className="relative rounded-full bg-brand-soft/30 px-2 py-2 sm:px-3">
-        {/* Left chevron — desktop only; mobile relies on touch swipe */}
-        <button
-          type="button"
-          onClick={() => scrollBy(-1)}
-          aria-label={locale === "tr" ? "Sola kaydır" : "Scroll left"}
-          tabIndex={canScrollLeft ? 0 : -1}
-          className={cn(
-            "absolute left-1 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full bg-card text-foreground shadow-elevated ring-1 ring-border transition-opacity sm:flex",
-            "size-9 hover:bg-brand-soft hover:text-brand",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-            !canScrollLeft &&
-              "pointer-events-none opacity-0",
-          )}
-        >
-          <HugeiconsIcon icon={ArrowLeft01Icon} size={18} strokeWidth={2.2} aria-hidden />
-        </button>
-
-        <ul
-          ref={scrollerRef}
-          className={cn(
-            "flex snap-x snap-mandatory gap-1 overflow-x-auto scroll-smooth py-1 sm:gap-2 sm:px-10",
-            "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-            "[touch-action:pan-x]",
-          )}
-        >
-          {disciplines.map((d) => {
-            const icon = pickIcon(d);
-            return (
-              <li key={d.slug} className="snap-start shrink-0">
-                <Link
-                  href={`/${citySlug}/${d.slug}`}
-                  className={cn(
-                    "group inline-flex min-w-[88px] flex-col items-center justify-center gap-1.5 rounded-2xl px-3 py-3 text-center text-xs font-medium text-foreground transition-colors sm:min-w-[100px] sm:gap-2 sm:text-sm",
-                    "hover:bg-card hover:shadow-card",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-                  )}
+      {/* Scrolling track. No pill background — chips sit on the page
+          surface. Edge fades and floating chevrons handle the visual
+          framing instead, matching the Calm Editorial restraint. */}
+      <ul
+        ref={scrollerRef}
+        className={cn(
+          "flex snap-x snap-mandatory gap-2.5 overflow-x-auto py-1 sm:gap-3",
+          // The leading/trailing padding gives chip cards breathing
+          // room from the chevron buttons + edge fade masks (where
+          // present).
+          "px-1 sm:px-12",
+          "scroll-smooth motion-reduce:scroll-auto",
+          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          "[touch-action:pan-x]",
+        )}
+      >
+        {disciplines.map((d) => {
+          const icon = pickIcon(d);
+          return (
+            <li key={d.slug} className="snap-start shrink-0">
+              <Link
+                href={`/${citySlug}/${d.slug}`}
+                className={cn(
+                  // Card sized like Superprof: ~100px wide on mobile,
+                  // ~112px on desktop. Fixed height keeps the row
+                  // visually even when one label wraps to two lines.
+                  "group flex h-[104px] w-[96px] flex-col items-center justify-center gap-2 rounded-2xl bg-card px-2 py-3 text-center shadow-card ring-1 ring-border/60 transition-all sm:h-[116px] sm:w-[112px] sm:gap-2.5",
+                  "hover:-translate-y-0.5 hover:ring-brand/40 hover:shadow-elevated",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                )}
+              >
+                <span
+                  aria-hidden
+                  className="grid size-10 place-items-center rounded-full bg-brand-soft/70 text-brand transition-colors group-hover:bg-brand-soft"
                 >
-                  <span className="grid size-9 place-items-center rounded-full bg-card text-brand transition-transform group-hover:scale-105 sm:size-10">
-                    <HugeiconsIcon
-                      icon={icon}
-                      size={20}
-                      strokeWidth={1.7}
-                      aria-hidden
-                    />
-                  </span>
-                  <span className="line-clamp-1">
-                    {pickLocalized(d.name, locale)}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                  <HugeiconsIcon
+                    icon={icon}
+                    size={20}
+                    strokeWidth={1.7}
+                  />
+                </span>
+                <span className="line-clamp-2 break-words text-[11px] font-medium leading-tight text-foreground sm:text-xs">
+                  {pickLocalized(d.name, locale)}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
 
-        {/* Right chevron */}
-        <button
-          type="button"
-          onClick={() => scrollBy(1)}
-          aria-label={locale === "tr" ? "Sağa kaydır" : "Scroll right"}
-          tabIndex={canScrollRight ? 0 : -1}
-          className={cn(
-            "absolute right-1 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-center rounded-full bg-card text-foreground shadow-elevated ring-1 ring-border transition-opacity sm:flex",
-            "size-9 hover:bg-brand-soft hover:text-brand",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
-            !canScrollRight &&
-              "pointer-events-none opacity-0",
-          )}
-        >
-          <HugeiconsIcon icon={ArrowRight01Icon} size={18} strokeWidth={2.2} aria-hidden />
-        </button>
+      {/* Edge fade masks. Sit on top of the scrolling track to soften
+          where chips disappear under the chevron buttons. Page surface
+          is `--background` (cream), so the gradient fades to that
+          token, not to a brand tint. Hidden on mobile — touch users
+          rely on the swipe gesture, no chevron buttons. */}
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-y-0 left-0 hidden w-16 bg-gradient-to-r from-background via-background/95 to-transparent transition-opacity duration-200 sm:block",
+          !canScrollLeft && "opacity-0",
+        )}
+      />
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l from-background via-background/95 to-transparent transition-opacity duration-200 sm:block",
+          !canScrollRight && "opacity-0",
+        )}
+      />
 
-        {/* Edge fade masks — soften where chips disappear under the chevron buttons */}
-        <div
-          aria-hidden
-          className={cn(
-            "pointer-events-none absolute inset-y-2 left-2 hidden w-12 rounded-l-full bg-gradient-to-r from-brand-soft/80 to-transparent transition-opacity sm:block",
-            !canScrollLeft && "opacity-0",
-          )}
-        />
-        <div
-          aria-hidden
-          className={cn(
-            "pointer-events-none absolute inset-y-2 right-2 hidden w-12 rounded-r-full bg-gradient-to-l from-brand-soft/80 to-transparent transition-opacity sm:block",
-            !canScrollRight && "opacity-0",
-          )}
-        />
-      </div>
+      {/* Floating chevrons. `-left-3` / `-right-3` lets them bridge the
+          carousel edge like Superprof's pattern: half over the content,
+          half hovering off the side. Hidden on mobile (touch users
+          swipe). `aria-hidden` when inactive so screen readers don't
+          announce a stale "scroll left" affordance. */}
+      <button
+        type="button"
+        onClick={() => scrollByPage(-1)}
+        aria-label={locale === "tr" ? "Sola kaydır" : "Scroll left"}
+        aria-hidden={!canScrollLeft}
+        tabIndex={canScrollLeft ? 0 : -1}
+        className={cn(
+          "absolute -left-3 top-1/2 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-card text-foreground shadow-elevated ring-1 ring-border transition-all duration-200 sm:flex",
+          "hover:-translate-x-0.5 hover:-translate-y-1/2 hover:bg-brand-soft hover:text-brand hover:ring-brand/30",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+          !canScrollLeft && "pointer-events-none scale-90 opacity-0",
+        )}
+      >
+        <HugeiconsIcon icon={ArrowLeft01Icon} size={18} strokeWidth={2.2} aria-hidden />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => scrollByPage(1)}
+        aria-label={locale === "tr" ? "Sağa kaydır" : "Scroll right"}
+        aria-hidden={!canScrollRight}
+        tabIndex={canScrollRight ? 0 : -1}
+        className={cn(
+          "absolute -right-3 top-1/2 hidden size-10 -translate-y-1/2 items-center justify-center rounded-full bg-card text-foreground shadow-elevated ring-1 ring-border transition-all duration-200 sm:flex",
+          "hover:translate-x-0.5 hover:-translate-y-1/2 hover:bg-brand-soft hover:text-brand hover:ring-brand/30",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+          !canScrollRight && "pointer-events-none scale-90 opacity-0",
+        )}
+      >
+        <HugeiconsIcon icon={ArrowRight01Icon} size={18} strokeWidth={2.2} aria-hidden />
+      </button>
     </nav>
   );
 }
