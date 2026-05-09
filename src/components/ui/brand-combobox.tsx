@@ -74,6 +74,21 @@ export function BrandCombobox({
   triggerClassName,
 }: BrandComboboxProps) {
   const [open, setOpen] = React.useState(false);
+
+  // Auto-close once a selection lands. cmdk's `onSelect` re-mounts
+  // the Command tree as items are filtered, which can swallow a
+  // direct `setOpen(false)` call inside the handler — especially in
+  // inline-expand mode where the Command stays mounted between
+  // renders. Reacting to the value change instead is mode-agnostic
+  // and survives both Popover and inline trees.
+  const lastValueRef = React.useRef(value);
+  React.useEffect(() => {
+    if (lastValueRef.current !== value) {
+      lastValueRef.current = value;
+      setOpen(false);
+    }
+  }, [value]);
+
   // When this combobox is rendered inside a modal Sheet/Dialog, the
   // wrapping `<PopoverPortalProvider>` advertises the dialog's content
   // node as our portal target so touch scroll stays inside the modal
