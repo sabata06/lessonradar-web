@@ -431,6 +431,8 @@
       "apply": "Sonuçları göster",
       "apply_pending": "Yükleniyor…",
       "clear_all": "Filtreleri temizle",
+      "search_placeholder": "Ara…",
+      "search_empty": "Eşleşen sonuç yok",
       "discipline": "Branş",
       "discipline_placeholder": "Tüm branşlar",
       "city": "Şehir",

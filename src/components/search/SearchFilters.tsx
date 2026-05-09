@@ -10,14 +10,9 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  Select as ShadcnSelect,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  BrandCombobox,
+  type ComboboxOption,
+} from "@/components/ui/brand-combobox";
 import type {
   City,
   District,
@@ -116,6 +111,47 @@ export function SearchFilters({
     [districts, citySlug],
   );
 
+  // Combobox option arrays — flatten the grouped maps once so the
+  // `<BrandCombobox>` instances stay declarative and re-render cheap.
+  const disciplineOptions: ComboboxOption[] = useMemo(
+    () =>
+      groupedDisciplines.flatMap(({ domain, items }) =>
+        items.map((d) => ({
+          value: d.slug,
+          label: pickLocalized(d.name, locale),
+          group: pickLocalized(domain.name, locale),
+        })),
+      ),
+    [groupedDisciplines, locale],
+  );
+
+  const cityOptions: ComboboxOption[] = useMemo(() => {
+    const priorityHeader =
+      locale === "tr" ? "Öncelikli şehirler" : "Priority cities";
+    const allHeader = locale === "tr" ? "Tüm şehirler" : "All cities";
+    return [
+      ...priorityCities.map((c) => ({
+        value: c.slug,
+        label: locale === "tr" ? c.nameTr : c.nameEn,
+        group: priorityHeader,
+      })),
+      ...otherCities.map((c) => ({
+        value: c.slug,
+        label: locale === "tr" ? c.nameTr : c.nameEn,
+        group: allHeader,
+      })),
+    ];
+  }, [priorityCities, otherCities, locale]);
+
+  const districtOptions: ComboboxOption[] = useMemo(
+    () =>
+      districtsForCity.map((d) => ({
+        value: d.slug,
+        label: locale === "tr" ? d.nameTr : d.nameEn,
+      })),
+    [districtsForCity, locale],
+  );
+
   function handleCityChange(next: string) {
     setCitySlug(next);
     // Reset district whenever the city changes — yesterday's district is
@@ -171,78 +207,47 @@ export function SearchFilters({
       </div>
 
       <FieldBlock label={t("discipline")}>
-        <BrandSelect
+        <BrandCombobox
           value={disciplineSlug}
           onChange={setDisciplineSlug}
+          options={disciplineOptions}
           placeholder={t("discipline_placeholder")}
           allLabel={t("discipline_placeholder")}
+          searchPlaceholder={t("search_placeholder")}
+          emptyText={t("search_empty")}
           ariaLabel={t("discipline")}
-        >
-          {groupedDisciplines.map(({ domain, items }) => (
-            <SelectGroup key={domain.slug}>
-              <SelectLabel>{pickLocalized(domain.name, locale)}</SelectLabel>
-              {items.map((d) => (
-                <SelectItem key={d.slug} value={d.slug}>
-                  {pickLocalized(d.name, locale)}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          ))}
-        </BrandSelect>
+        />
       </FieldBlock>
 
       <FieldBlock label={t("city")}>
-        <BrandSelect
+        <BrandCombobox
           value={citySlug}
           onChange={handleCityChange}
+          options={cityOptions}
           placeholder={t("city_placeholder")}
           allLabel={t("city_placeholder")}
+          searchPlaceholder={t("search_placeholder")}
+          emptyText={t("search_empty")}
           ariaLabel={t("city")}
-        >
-          {priorityCities.length > 0 && (
-            <SelectGroup>
-              <SelectLabel>
-                {locale === "tr" ? "Öncelikli şehirler" : "Priority cities"}
-              </SelectLabel>
-              {priorityCities.map((c) => (
-                <SelectItem key={c.slug} value={c.slug}>
-                  {locale === "tr" ? c.nameTr : c.nameEn}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          )}
-          <SelectGroup>
-            <SelectLabel>
-              {locale === "tr" ? "Tüm şehirler" : "All cities"}
-            </SelectLabel>
-            {otherCities.map((c) => (
-              <SelectItem key={c.slug} value={c.slug}>
-                {locale === "tr" ? c.nameTr : c.nameEn}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </BrandSelect>
+        />
       </FieldBlock>
 
       <FieldBlock label={t("district")}>
-        <BrandSelect
+        <BrandCombobox
           value={districtSlug}
           onChange={setDistrictSlug}
+          options={districtOptions}
           placeholder={
             districtsForCity.length === 0
               ? t("district_disabled")
               : t("district_placeholder")
           }
           allLabel={t("district_placeholder")}
+          searchPlaceholder={t("search_placeholder")}
+          emptyText={t("search_empty")}
           ariaLabel={t("district")}
           disabled={districtsForCity.length === 0}
-        >
-          {districtsForCity.map((d) => (
-            <SelectItem key={d.slug} value={d.slug}>
-              {locale === "tr" ? d.nameTr : d.nameEn}
-            </SelectItem>
-          ))}
-        </BrandSelect>
+        />
       </FieldBlock>
 
       <fieldset className="space-y-2">
@@ -306,63 +311,6 @@ function FieldBlock({
   );
 }
 
-/**
- * Sentinel value for "no filter" — Radix Select doesn't allow `""` as a
- * SelectItem value, so we round-trip through this token internally.
- * `BrandSelect` translates back to `""` before calling `onChange`.
- */
-const ALL_SLUG = "__all__";
-
-function BrandSelect({
-  value,
-  onChange,
-  placeholder,
-  allLabel,
-  ariaLabel,
-  disabled,
-  children,
-}: {
-  value: string;
-  onChange: (next: string) => void;
-  placeholder: string;
-  /** Label shown for the "no filter" item that resets the field. */
-  allLabel: string;
-  ariaLabel: string;
-  disabled?: boolean;
-  children: React.ReactNode;
-}) {
-  const hasValue = value !== "";
-  return (
-    <ShadcnSelect
-      value={hasValue ? value : ALL_SLUG}
-      onValueChange={(next) => onChange(next === ALL_SLUG ? "" : next)}
-      disabled={disabled}
-    >
-      <SelectTrigger
-        aria-label={ariaLabel}
-        className={cn(
-          "h-11 w-full rounded-xl border px-3.5 text-sm font-medium text-foreground transition-colors",
-          "data-[placeholder]:text-muted-foreground",
-          hasValue
-            ? "border-brand/50 bg-brand-soft/40"
-            : "border-border bg-card hover:border-brand/40",
-          disabled && "cursor-not-allowed opacity-50 hover:border-border",
-        )}
-      >
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent
-        position="popper"
-        align="start"
-        sideOffset={6}
-        className="max-h-[60vh] min-w-[var(--radix-select-trigger-width)]"
-      >
-        <SelectItem value={ALL_SLUG}>{allLabel}</SelectItem>
-        {children}
-      </SelectContent>
-    </ShadcnSelect>
-  );
-}
 
 function ModalityToggle({
   label,

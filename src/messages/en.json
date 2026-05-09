@@ -430,6 +430,8 @@
       "apply": "Show results",
       "apply_pending": "Loading…",
       "clear_all": "Clear all filters",
+      "search_placeholder": "Search…",
+      "search_empty": "No matches",
       "discipline": "Subject",
       "discipline_placeholder": "All subjects",
       "city": "City",
