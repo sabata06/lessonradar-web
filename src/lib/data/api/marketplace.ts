@@ -147,9 +147,44 @@ export async function fetchTeacherDetailBySlug(
   }
 }
 
+const EMPTY_TAXONOMY_ROOT: ApiTaxonomyRoot = {
+  domains: [],
+  featured_disciplines: [],
+  meta: { max_discipline_count: 5 },
+};
+
+const EMPTY_DISCIPLINE_ENVELOPE: ApiListEnvelope<ApiDiscipline> = {
+  count: 0,
+  results: [],
+};
+
+const EMPTY_CITIES_ENVELOPE: ApiListEnvelope<ApiCity> = {
+  count: 0,
+  results: [],
+};
+
+function isApiUnreachable(error: unknown): boolean {
+  // Treat any 4xx/5xx OR network-level failure as "unreachable" so the
+  // build pipeline can still produce a sitemap / pSEO shell instead of
+  // crashing on a transient backend hiccup. Once backend recovers ISR
+  // refreshes the cached payloads automatically.
+  if (!error || typeof error !== "object") return false;
+  const status = (error as { status?: unknown }).status;
+  if (typeof status === "number" && status >= 400) return true;
+  // fetch() network errors (DNS, TCP, abort) surface as TypeError or
+  // AbortError without a `.status` field.
+  if (error instanceof TypeError) return true;
+  return false;
+}
+
 /**
  * Fetch the bootstrap taxonomy payload (domains + featured disciplines).
  * Used for quick-pick chips and homepage subject highlight rows.
+ *
+ * Tolerates backend outages — returns an empty payload instead of
+ * throwing so build-time consumers (sitemap, pSEO `generateStaticParams`)
+ * can still produce a valid skeleton page. ISR will pick up real data
+ * on the next revalidation tick once backend is healthy again.
  */
 export async function fetchTaxonomyRoot(options?: {
   revalidate?: number;
@@ -159,14 +194,22 @@ export async function fetchTaxonomyRoot(options?: {
     return mockFetchTaxonomyRoot();
   }
 
-  return apiClient.get<ApiTaxonomyRoot>(ENDPOINTS.MARKETPLACE_TAXONOMY, {
-    cache: "force-cache",
-    next: {
-      revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
-      tags: ["marketplace:taxonomy"],
-    },
-    signal: options?.signal,
-  });
+  try {
+    return await apiClient.get<ApiTaxonomyRoot>(ENDPOINTS.MARKETPLACE_TAXONOMY, {
+      cache: "force-cache",
+      next: {
+        revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
+        tags: ["marketplace:taxonomy"],
+      },
+      signal: options?.signal,
+    });
+  } catch (error) {
+    if (isApiUnreachable(error)) {
+      console.warn("[fetchTaxonomyRoot] backend unreachable, falling back to empty payload", error);
+      return EMPTY_TAXONOMY_ROOT;
+    }
+    throw error;
+  }
 }
 
 /**
@@ -174,6 +217,8 @@ export async function fetchTaxonomyRoot(options?: {
  * carries `featured_disciplines`; this endpoint returns every active
  * discipline (capped at 300 server-side) so the search sidebar and
  * pSEO route generation can enumerate the complete catalog.
+ *
+ * Same outage-tolerant pattern as `fetchTaxonomyRoot`.
  */
 export async function fetchAllDisciplines(options?: {
   revalidate?: number;
@@ -183,17 +228,25 @@ export async function fetchAllDisciplines(options?: {
     return mockFetchAllDisciplines();
   }
 
-  return apiClient.get<ApiListEnvelope<ApiDiscipline>>(
-    ENDPOINTS.MARKETPLACE_TAXONOMY_DISCIPLINES,
-    {
-      cache: "force-cache",
-      next: {
-        revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
-        tags: ["marketplace:taxonomy:disciplines"],
+  try {
+    return await apiClient.get<ApiListEnvelope<ApiDiscipline>>(
+      ENDPOINTS.MARKETPLACE_TAXONOMY_DISCIPLINES,
+      {
+        cache: "force-cache",
+        next: {
+          revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
+          tags: ["marketplace:taxonomy:disciplines"],
+        },
+        signal: options?.signal,
       },
-      signal: options?.signal,
-    },
-  );
+    );
+  } catch (error) {
+    if (isApiUnreachable(error)) {
+      console.warn("[fetchAllDisciplines] backend unreachable, falling back to empty list", error);
+      return EMPTY_DISCIPLINE_ENVELOPE;
+    }
+    throw error;
+  }
 }
 
 /**
@@ -208,14 +261,25 @@ export async function fetchCities(options?: {
     return mockFetchCities();
   }
 
-  return apiClient.get<ApiListEnvelope<ApiCity>>(ENDPOINTS.MARKETPLACE_CITIES, {
-    cache: "force-cache",
-    next: {
-      revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
-      tags: ["marketplace:cities"],
-    },
-    signal: options?.signal,
-  });
+  try {
+    return await apiClient.get<ApiListEnvelope<ApiCity>>(
+      ENDPOINTS.MARKETPLACE_CITIES,
+      {
+        cache: "force-cache",
+        next: {
+          revalidate: options?.revalidate ?? REVALIDATE_CITIES_SECONDS,
+          tags: ["marketplace:cities"],
+        },
+        signal: options?.signal,
+      },
+    );
+  } catch (error) {
+    if (isApiUnreachable(error)) {
+      console.warn("[fetchCities] backend unreachable, falling back to empty list", error);
+      return EMPTY_CITIES_ENVELOPE;
+    }
+    throw error;
+  }
 }
 
 // ─── helpers ────────────────────────────────────────────────────────────────
