@@ -750,6 +750,27 @@
       },
       "support_prefix": "Sorun ya da öneri için:",
       "support_email": "destek@lessonradar.com"
+    },
+    "settings": {
+      "meta_title": "Ayarlar",
+      "meta_description": "Hesap ayarlarını yönet — profil, şifre, bildirimler ve dil tercihleri.",
+      "title": "Hesap ayarların hazırlanıyor",
+      "subtitle": "Yakında profilini, şifreni, bildirim tercihlerini ve dil seçimini buradan yöneteceksin.",
+      "features_heading": "Yakında bu sayfada",
+      "features": {
+        "profile_title": "Profil bilgileri",
+        "profile_description": "Adını, telefonunu ve ders tercihlerini güncelle.",
+        "password_title": "Şifre güvenliği",
+        "password_description": "Şifreni değiştir, oturumlarını yönet.",
+        "notifications_title": "Bildirimler",
+        "notifications_description": "E-posta ve uygulama bildirimlerini özelleştir.",
+        "language_title": "Dil ve bölge",
+        "language_description": "Arayüz dilini ve para birimi tercihini seç."
+      },
+      "danger_heading": "Hesap yönetimi",
+      "danger_title": "Hesabımı sil",
+      "danger_description": "Hesabını ve verilerini kalıcı olarak silmek istiyorsan, KVKK kapsamında bizimle iletişime geç.",
+      "danger_cta": "destek@lessonradar.com"
     }
   },
   "footer": {

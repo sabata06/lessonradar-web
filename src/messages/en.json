@@ -749,6 +749,27 @@
       },
       "support_prefix": "Questions or feedback:",
       "support_email": "support@lessonradar.com"
+    },
+    "settings": {
+      "meta_title": "Settings",
+      "meta_description": "Manage your account settings — profile, password, notifications, and language preferences.",
+      "title": "Your settings are on the way",
+      "subtitle": "Soon you'll manage your profile, password, notification preferences and language — all from here.",
+      "features_heading": "Coming to this page",
+      "features": {
+        "profile_title": "Profile details",
+        "profile_description": "Update your name, phone, and lesson preferences.",
+        "password_title": "Password & security",
+        "password_description": "Change your password and manage active sessions.",
+        "notifications_title": "Notifications",
+        "notifications_description": "Customize email and in-app notifications.",
+        "language_title": "Language & region",
+        "language_description": "Pick your interface language and currency preference."
+      },
+      "danger_heading": "Account management",
+      "danger_title": "Delete my account",
+      "danger_description": "If you want to permanently delete your account and data, contact us under KVKK / GDPR.",
+      "danger_cta": "support@lessonradar.com"
     }
   },
   "footer": {
