@@ -10,12 +10,13 @@ export const dynamic = "force-dynamic";
  * Returns the authenticated user (sanitized — no JWTs).
  * 200 with {user} when authenticated, 401 otherwise.
  *
- * `getSession()` lazily rotates the Django access token if needed. We also
- * mint/refresh the double-submit CSRF token here so any tab that hydrates
- * via `/api/auth/me` is immediately ready to call logout/refresh.
+ * This Route Handler can safely rotate cookies. Server Components use
+ * read-only session access; `/api/auth/me` handles the lazy access-token
+ * refresh and also mints/refreshes the double-submit CSRF token so any tab
+ * that hydrates here is ready to call logout/refresh.
  */
 export async function GET() {
-  const session = await getSession();
+  const session = await getSession({ refresh: true });
   if (!session) {
     return NextResponse.json({ user: null }, { status: 401 });
   }

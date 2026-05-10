@@ -10,9 +10,8 @@ export const dynamic = "force-dynamic";
 /**
  * Manually trigger an access-token refresh.
  *
- * `getSession()` already refreshes lazily on every read; this endpoint exists
- * for cases where the client wants to force a rotation (e.g. after a
- * permission-sensitive action) without reloading the page.
+ * Route Handlers can modify cookies, so this endpoint explicitly enables
+ * session refresh. Server Components keep session reads read-only.
  */
 export async function POST(req: Request) {
   if (!validateOrigin(req)) {
@@ -22,7 +21,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_csrf" }, { status: 403 });
   }
 
-  const session = await getSession();
+  const session = await getSession({ refresh: true });
   if (!session) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }

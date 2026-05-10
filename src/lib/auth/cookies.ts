@@ -16,6 +16,15 @@ import {
 /** Re-export for callers that prefer the next/headers shape. */
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
+interface GetSessionOptions {
+  /**
+   * Refreshing or clearing the cookie requires a Route Handler / Server
+   * Action. Server Components must leave this false and only read the
+   * encrypted user snapshot.
+   */
+  refresh?: boolean;
+}
+
 const IS_PROD = process.env.NODE_ENV === "production";
 
 const BASE_COOKIE_OPTIONS = {
@@ -48,18 +57,20 @@ export async function clearSessionCookie(): Promise<void> {
 }
 
 /**
- * Read the session and auto-refresh the Django access token if expired.
+ * Read the session.
  *
- * Safe to call from RSCs, server actions, and route handlers. Returns `null`
- * when the user is not authenticated or the session is unrecoverable; in the
- * latter case the cookie is cleared.
+ * Safe to call from RSCs, server actions, and route handlers when used in the
+ * default read-only mode. Passing `{ refresh: true }` may modify cookies and
+ * must only be used from a Route Handler or Server Action.
  *
- * Cost: a single `cookies()` read; one fetch + one cookie write only when the
- * access token is within `ACCESS_REFRESH_LEEWAY_SEC` of expiry.
+ * Cost: a single `cookies()` read; one fetch + one cookie write only in
+ * refresh mode when the access token is within `ACCESS_REFRESH_LEEWAY_SEC`.
  */
-export async function getSession(): Promise<SessionPayload | null> {
+export async function getSession(
+  options: GetSessionOptions = {},
+): Promise<SessionPayload | null> {
   const store = await cookies();
-  return getSessionFromStore(store);
+  return getSessionFromStore(store, options);
 }
 
 /**
@@ -70,6 +81,7 @@ export async function getSession(): Promise<SessionPayload | null> {
  */
 export async function getSessionFromStore(
   storeOrPromise: CookieStore | Promise<CookieStore>,
+  options: GetSessionOptions = {},
 ): Promise<SessionPayload | null> {
   const store = await storeOrPromise;
   const raw = store.get(SESSION_COOKIE_NAME)?.value;
@@ -77,11 +89,15 @@ export async function getSessionFromStore(
 
   const session = await decryptSession(raw);
   if (!session) {
-    await clearSessionCookie();
+    if (options.refresh) {
+      await clearSessionCookie();
+    }
     return null;
   }
 
   if (!isAccessExpired(session)) return session;
+
+  if (!options.refresh) return session;
 
   const next = await refreshAccessToken(session);
   if (!next) {
@@ -105,6 +121,6 @@ export async function getSafeUserPromise(
 
 /** Convenience accessor — returns just the access token, refreshing if needed. */
 export async function getAccessToken(): Promise<string | null> {
-  const session = await getSession();
+  const session = await getSession({ refresh: true });
   return session?.djangoAccess ?? null;
 }
