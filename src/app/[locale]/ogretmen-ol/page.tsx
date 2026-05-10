@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
 import { Container } from "@/components/layout/Container";
 import { Breadcrumb } from "@/components/discovery/Breadcrumb";
 import { OnboardingHero } from "@/components/onboarding/OnboardingHero";
 import { OnboardingValueProps } from "@/components/onboarding/OnboardingValueProps";
 import { OnboardingHowItWorks } from "@/components/onboarding/OnboardingHowItWorks";
-import { TeacherApplicationForm } from "@/components/onboarding/TeacherApplicationForm";
 
+import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import type { SupportedLocale } from "@/lib/types";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -30,14 +29,13 @@ export async function generateMetadata({
     path: "/ogretmen-ol",
     title: t("title"),
     description: t("description"),
-    // Indexable — this is a public, evergreen landing aimed at the
-    // search query "öğretmen ol" / "özel ders öğretmenliği başvurusu".
+    // Indexable — public, evergreen landing targeting "öğretmen ol".
     noindex: false,
   });
 }
 
-const FORM_ANCHOR_ID = "onboarding-form";
 const HOW_ANCHOR_ID = "onboarding-how";
+const APPLY_ANCHOR_ID = "onboarding-apply";
 
 export default async function OnboardingPage({
   params,
@@ -48,10 +46,7 @@ export default async function OnboardingPage({
   setRequestLocale(locale);
 
   const typedLocale = locale as Locale;
-  const supportedLocale = locale as SupportedLocale;
-
   const t = await getTranslations({ locale, namespace: "onboarding" });
-  const tForm = await getTranslations({ locale, namespace: "onboarding.form" });
 
   return (
     <>
@@ -66,7 +61,7 @@ export default async function OnboardingPage({
 
       <Container className="space-y-2">
         <OnboardingHero
-          formAnchor={`#${FORM_ANCHOR_ID}`}
+          formAnchor={`#${APPLY_ANCHOR_ID}`}
           howAnchor={`#${HOW_ANCHOR_ID}`}
         />
         <OnboardingValueProps />
@@ -75,57 +70,47 @@ export default async function OnboardingPage({
 
       <Container className="pb-20">
         <section
-          id={FORM_ANCHOR_ID}
-          aria-labelledby="onboarding-form-title"
-          className="scroll-mt-24 grid gap-8 lg:grid-cols-[1fr_18rem] lg:items-start lg:gap-10"
+          id={APPLY_ANCHOR_ID}
+          aria-labelledby="onboarding-apply-title"
+          className="scroll-mt-24 rounded-3xl border border-border bg-card p-8 shadow-card sm:p-10"
         >
-          <div>
-            <header className="space-y-3 pb-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand">
-                {tForm("kicker")}
-              </p>
-              <h2
-                id="onboarding-form-title"
-                className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+          <div className="max-w-2xl space-y-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand">
+              {t("apply.kicker")}
+            </p>
+            <h2
+              id="onboarding-apply-title"
+              className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+            >
+              {t("apply.title")}
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {t("apply.body")}
+            </p>
+            <ul className="space-y-2 text-sm leading-relaxed text-foreground/85">
+              <li>• {t("apply.bullet_autosave")}</li>
+              <li>• {t("apply.bullet_review")}</li>
+              <li>• {t("apply.bullet_publish")}</li>
+            </ul>
+
+            <div className="pt-2">
+              <Link
+                href="/ogretmen-ol/olusturma"
+                className="inline-flex h-12 items-center gap-2 rounded-2xl bg-action px-6 text-sm font-semibold text-action-foreground shadow-action transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               >
-                {tForm("title")}
-              </h2>
-              <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {tForm("subtitle")}
-              </p>
-            </header>
-
-            <TeacherApplicationForm
-              locale={supportedLocale}
-              domains={MOCK_DOMAINS}
-              disciplines={MOCK_DISCIPLINES}
-              cities={TR_CITIES}
-              districts={TR_DISTRICTS}
-            />
-          </div>
-
-          <aside className="lg:sticky lg:top-24">
-            <div className="space-y-3 rounded-2xl border border-dashed border-border bg-muted/30 p-5">
-              <h3 className="text-sm font-semibold text-foreground">
-                {t("how.title")}
-              </h3>
-              <ol className="space-y-2 text-sm">
-                {(["one", "two", "three"] as const).map((step, i) => (
-                  <li key={step} className="flex items-start gap-2">
-                    <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-brand text-[10px] font-semibold text-primary-foreground">
-                      {i + 1}
-                    </span>
-                    <span className="leading-relaxed text-foreground/80">
-                      {t(`how.steps.${step}.title`)}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {t("how.verification_note")}
+                {t("apply.cta")}
+                <HugeiconsIcon
+                  icon={ArrowRight01Icon}
+                  size={16}
+                  strokeWidth={2.5}
+                  aria-hidden
+                />
+              </Link>
+              <p className="mt-3 text-xs text-muted-foreground">
+                {t("apply.cta_helper")}
               </p>
             </div>
-          </aside>
+          </div>
         </section>
 
         <p className="mt-10 rounded-2xl border border-dashed border-border bg-muted/30 px-4 py-3 text-xs leading-relaxed text-muted-foreground">

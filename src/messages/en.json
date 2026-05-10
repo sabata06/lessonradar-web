@@ -215,7 +215,7 @@
       "kicker": "Become a tutor",
       "title": "Share what you teach. Get matched with real requests.",
       "subtitle": "Students post lesson requests in Gaziantep and major cities every day. Build your profile, our team reviews and approves it, and matches start coming through.",
-      "cta_primary": "Start the application",
+      "cta_primary": "Start application",
       "cta_secondary": "How it works"
     },
     "value_props": {
@@ -259,128 +259,123 @@
       },
       "verification_note": "Document upload isn't enabled yet. Approval currently happens over email with our team."
     },
-    "form": {
-      "kicker": "Application",
-      "title": "Start your profile",
-      "subtitle": "Fill the fields clearly — what you write here lands directly on your profile.",
-      "submit": "Submit Application",
-      "submit_loading": "Submitting…",
-      "submit_footnote": "Your application is sent to our team. The form is free.",
-      "error_generic": "Couldn't submit your application. Please try again.",
-      "sections": {
-        "you": {
-          "title": "Who are you?",
-          "description": "Name and contact. Your phone is shared only when you match a student."
-        },
-        "teach": {
-          "title": "What do you teach?",
-          "description": "Pick subjects, set the price range, add your years of experience."
-        },
-        "where": {
-          "title": "Where do you teach?",
-          "description": "City and lesson modality. District is preferred."
-        },
-        "about": {
-          "title": "Tell us about yourself",
-          "description": "Short pitch and longer bio. Both appear on your profile as written."
-        },
-        "consents": {
-          "title": "Consents",
-          "description": "Legal agreements. Both must be ticked to continue."
-        }
+    "apply": {
+      "kicker": "Application wizard",
+      "title": "Start your application in 5 minutes",
+      "body": "Once approved, your profile appears in search results and city × subject pages, and matching students reach you. Every step is auto-saved.",
+      "bullet_autosave": "Auto-saved steps — leave and resume anytime.",
+      "bullet_review": "Our team reviews within 3 business days.",
+      "bullet_publish": "Live profile right after approval.",
+      "cta": "Start application",
+      "cta_helper": "If you don't have an account yet, you'll be asked to register first, then redirected back here."
+    },
+    "policy_notice": "Verification and listing depend on our team's review. This page is not an offer of employment."
+  },
+  "teacherApplication": {
+    "wizard": {
+      "progress_label": "Application steps",
+      "progress_step": "Step {current}/{total}",
+      "steps": {
+        "s1": "You & main subject",
+        "s2": "Levels & exams",
+        "s3": "Headline",
+        "s4": "About you & lesson",
+        "s5": "City & format",
+        "s6": "Pricing & contact",
+        "s7": "Preview & submit",
+        "s1_title": "Tell us about you and your main subject",
+        "s1_desc": "Your name appears on your profile; the main subject anchors your placement in search.",
+        "s2_title": "Which levels and exams do you cover?",
+        "s2_desc": "Pick all that apply — broader coverage means more matches.",
+        "s3_title": "Write your listing headline",
+        "s3_desc": "One strong sentence — the first thing students see on the card.",
+        "s4_title": "Describe your lesson and yourself",
+        "s4_desc": "How do you teach, what's your specialty? These texts publish on your profile as written.",
+        "s5_title": "Where do you teach?",
+        "s5_desc": "City + optional district + lesson format. Format affects whether students filtering for it find you.",
+        "s6_title": "Pricing and contact",
+        "s6_desc": "You set the range; price transparency is part of LessonRadar's brand. Your phone is only shared on approved matches.",
+        "s7_title": "Preview and submit",
+        "s7_desc": "The summary below is how your profile will look. You can step back and fix anything before submitting."
       },
       "fields": {
-        "fullName": { "label": "Full name", "placeholder": "e.g. Jane Doe" },
-        "headline": {
-          "label": "Short pitch",
-          "placeholder": "e.g. 10-year YKS math tutor",
-          "hint": "Shows on your profile card. 10–120 chars."
+        "full_name_label": "Your full name",
+        "full_name_hint": "As it should appear on your profile.",
+        "primary_discipline_label": "Main subject",
+        "primary_discipline_placeholder": "Pick a subject",
+        "primary_discipline_hint": "The subject your profile is categorized under.",
+        "specialty_disciplines_label": "Other subjects (optional)",
+        "specialty_disciplines_hint": "Tap to add additional subjects you teach.",
+        "headline_label": "Headline",
+        "headline_placeholder": "e.g. 10-year YKS math tutor",
+        "headline_hint": "10–120 chars. Appears on the card.",
+        "headline_count": "{n}/{max} chars",
+        "about_lessons_label": "About your lesson",
+        "about_lessons_hint": "At least {min} chars. How do you teach, what's your approach?",
+        "about_teacher_label": "About yourself",
+        "about_teacher_hint": "At least {min} chars. Your experience, education, student outcomes.",
+        "char_count": "{n}/{max} chars",
+        "city_label": "City",
+        "city_placeholder": "Pick a city",
+        "district_label": "District (optional)",
+        "district_placeholder": "Pick a district",
+        "modality_label": "Lesson format",
+        "modality_hint": "Pick 'Both' to cover online + in-person.",
+        "modality_in_person": "In person",
+        "modality_online": "Online",
+        "modality_hybrid": "Both",
+        "hourly_min_label": "Min. hourly rate (₺)",
+        "hourly_min_hint": "Lowest hourly you'd accept.",
+        "hourly_max_label": "Max. hourly rate (₺)",
+        "hourly_max_hint": "Highest hourly you'd ask.",
+        "experience_label": "Experience (years)",
+        "experience_hint": "Total years of teaching.",
+        "phone_label": "Phone",
+        "phone_hint": "Only shared with approved + matched students.",
+        "email_label": "Email",
+        "levels_label": "Levels",
+        "levels": {
+          "ilkokul": "Primary",
+          "ortaokul": "Middle school",
+          "lise": "High school",
+          "universite": "University",
+          "yetiskin": "Adult"
         },
-        "bio": {
-          "label": "Biography",
-          "placeholder": "Your school, experience, teaching approach, achievements…",
-          "hint": "60–1500 chars. Shown verbatim on your profile."
-        },
-        "phone": {
-          "label": "Phone",
-          "placeholder": "5XX XXX XX XX",
-          "hint": "Shared only with matching students."
-        },
-        "email": {
-          "label": "Email",
-          "placeholder": "you@email.com",
-          "hint": "Used for the approval process."
-        },
-        "yearsExperience": {
-          "label": "Experience (years)",
-          "placeholder": "e.g. 5"
-        },
-        "hourlyMin": {
-          "label": "Min. hourly rate (₺)",
-          "placeholder": "e.g. 350"
-        },
-        "hourlyMax": {
-          "label": "Max. hourly rate (₺)",
-          "placeholder": "e.g. 600"
-        },
-        "disciplines": {
-          "label": "Subjects you teach",
-          "hint": "Pick at least 1, up to 8."
-        },
-        "city": { "label": "City", "placeholder": "Pick a city" },
-        "district": {
-          "label": "District",
-          "placeholder": "Pick a district",
-          "disabled_placeholder": "Pick a city first"
-        },
-        "modalities": {
-          "label": "Lesson type",
-          "in_person": "In person",
-          "online": "Online",
-          "hint": "Tick both if applicable."
-        },
-        "referral": {
-          "label": "How did you hear about us?",
-          "placeholder": "e.g. Google, friend, social media…"
-        }
+        "exams_label": "Exam types (optional)",
+        "exams_hint": "Pick the exams you prepare students for — LGS, TYT, AYT, YKS, etc."
       },
-      "consents": {
-        "kvkk": "I have read the <privacy>KVKK & Privacy Policy</privacy> and consent to the processing of my personal data.",
-        "teacher_terms": "I have read and agree to the <terms>LessonRadar Tutor Agreement</terms>."
+      "preview": {
+        "full_name": "Full name",
+        "primary": "Main subject",
+        "location": "Location",
+        "modality": "Format",
+        "headline": "Headline",
+        "hourly": "Hourly rate",
+        "phone": "Phone",
+        "email": "Email",
+        "review_note_title": "Our team reviews your application",
+        "review_note_body": "Your profile goes live after approval. If we need more info we'll email you with a small change request.",
+        "consents": "Consents",
+        "kvkk_consent": "I have read the <kvkk>KVKK & Privacy Policy</kvkk> and consent to processing my personal data.",
+        "agreement_consent": "I have read and agree to the <agreement>LessonRadar Tutor Agreement</agreement>.",
+        "consent_required": "Tick both consents to continue.",
+        "fix_errors_first": "Some fields are missing or invalid. Fix them first."
+      },
+      "save": {
+        "saving": "Saving…",
+        "saved": "Saved"
+      },
+      "nav": {
+        "prev": "Back",
+        "next": "Next",
+        "submit": "Submit application",
+        "submitting": "Submitting…"
       },
       "errors": {
-        "fullname_too_short": "Name is too short.",
-        "fullname_too_long": "Name is too long.",
-        "headline_too_short": "Short pitch must be at least 10 characters.",
-        "headline_too_long": "Short pitch is too long.",
-        "bio_too_short": "Biography must be at least 60 characters.",
-        "bio_too_long": "Biography is too long.",
-        "phone_invalid": "Enter a valid TR mobile number (5XX XXX XX XX).",
-        "email_invalid": "Enter a valid email address.",
-        "hourly_required": "Enter an hourly rate.",
-        "hourly_too_low": "Hourly rate is too low.",
-        "hourly_too_high": "Hourly rate is too high.",
-        "hourly_range_invalid": "Max rate cannot be lower than min rate.",
-        "disciplines_required": "Pick at least one subject.",
-        "disciplines_too_many": "You can pick up to 8 subjects.",
-        "city_required": "Pick a city.",
-        "modality_required": "Pick at least one lesson type.",
-        "kvkk_required": "Tick the KVKK consent to continue.",
-        "teacher_terms_required": "Tick the Tutor Agreement to continue."
+        "cooldown": "You can't start a new application within the 7-day cooldown.",
+        "generic": "Couldn't submit your application. Please try again."
       }
-    },
-    "success": {
-      "meta_title": "Application received",
-      "title": "Your application is in.",
-      "subtitle": "Our team will review it within a few business days. We'll reach out by email and may ask for additional documents.",
-      "what_next_title": "What happens next?",
-      "what_next_step1": "Our verification team reviews your application (1–3 business days).",
-      "what_next_step2": "We share the outcome by email and may request documents (ID, diploma).",
-      "what_next_step3": "Approved profiles appear in search results and city × subject pages.",
-      "back_home": "Back to homepage",
-      "see_listings": "See verified tutors"
-    },
-    "policy_notice": "This form is not an offer of employment. Verification and listing depend on our team's review."
+    }
   },
   "search": {
     "meta": {

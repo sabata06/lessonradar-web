@@ -51,8 +51,13 @@ export const ENDPOINTS = {
   LEAD_PHONE_OTP_REQUEST: "/api/marketplace/leads/phone-otp/request/",
   LEAD_PHONE_OTP_VERIFY: "/api/marketplace/leads/phone-otp/verify/",
 
-  // ── Teacher application (B5 — backend pending) ──────────────────────────
-  TEACHER_APPLICATION_SUBMIT: "/api/teacher-applications/",
+  // ── Teacher application (B5a LIVE) ──────────────────────────────────────
+  TEACHER_APPLICATION_START: "/api/teacher-applications/",
+  TEACHER_APPLICATION_CURRENT: "/api/teacher-applications/current/",
+  TEACHER_APPLICATION_DETAIL: (uuid: string) =>
+    `/api/teacher-applications/${encodeURIComponent(uuid)}/`,
+  TEACHER_APPLICATION_SUBMIT: (uuid: string) =>
+    `/api/teacher-applications/${encodeURIComponent(uuid)}/submit/`,
 } as const;
 
 export type EndpointKey = keyof typeof ENDPOINTS;

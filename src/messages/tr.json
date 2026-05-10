@@ -215,7 +215,7 @@
       "kicker": "Öğretmen ol",
       "title": "Bilgini paylaş, ders talepleriyle eşleş.",
       "subtitle": "Gaziantep ve büyükşehirlerde öğrenciler her gün ders talebi bırakıyor. Sen profilini oluştur, ekibimiz inceleyip onaylayınca eşleşmeler sana ulaşmaya başlasın.",
-      "cta_primary": "Başvuru formunu doldur",
+      "cta_primary": "Başvuruya başla",
       "cta_secondary": "Nasıl çalışır?"
     },
     "value_props": {
@@ -259,129 +259,123 @@
       },
       "verification_note": "Şu an kimlik ve diploma yükleme akışı kapalı. Onaylama süreci ekibimizle e-posta üzerinden ilerliyor."
     },
-    "form": {
-      "kicker": "Başvuru formu",
-      "title": "Profilini başlat",
-      "subtitle": "Tüm alanları net doldur — kabul ettiğin alanlar olduğu gibi profiline yansır.",
-      "submit": "Başvuruyu Gönder",
-      "submit_loading": "Gönderiliyor…",
-      "submit_footnote": "Başvurun ekibimize iletilir. Form ücretsizdir.",
-      "error_generic": "Başvuru gönderilemedi. Lütfen tekrar dene.",
-      "sections": {
-        "you": {
-          "title": "Sen kimsin?",
-          "description": "Adın ve iletişim bilgilerin. Telefon numaran sadece eşleşmelerde paylaşılır."
-        },
-        "teach": {
-          "title": "Ne öğretiyorsun?",
-          "description": "Verdiğin branşları seç, fiyat aralığını belirle, deneyimini ekle."
-        },
-        "where": {
-          "title": "Nerede ders veriyorsun?",
-          "description": "Şehir ve ders türleri. İlçe vermek tercih edilir."
-        },
-        "about": {
-          "title": "Kendinden bahset",
-          "description": "Kısa pitch ve uzun özgeçmiş. Bu metinler profilinde görünür."
-        },
-        "consents": {
-          "title": "Onaylar",
-          "description": "Yasal sözleşmeler. Devam etmek için her ikisini de onayla."
-        }
+    "apply": {
+      "kicker": "Başvuru sihirbazı",
+      "title": "5 dakikada başvurunu başlat",
+      "body": "Profilin onaylanınca arama sonuçlarına ve şehir × branş sayfalarına eklenir; eşleşen öğrenciler sana ulaşır. Her adım otomatik kaydedilir.",
+      "bullet_autosave": "Adımlar otomatik kaydedilir, istediğin zaman ara verebilirsin.",
+      "bullet_review": "Ekibimiz başvuruyu en geç 3 iş günü içinde inceler.",
+      "bullet_publish": "Onay sonrası profilin canlı yayınlanır.",
+      "cta": "Başvuruya başla",
+      "cta_helper": "Hesabın yoksa önce kısa bir kayıt isteriz; sonra wizard'a yönlendirilirsin."
+    },
+    "policy_notice": "Onaylanmış doğrulama ve listeleme süreci ekibimizin incelemesine bağlıdır. Bu sayfa bir iş ilişkisi vaadi değildir."
+  },
+  "teacherApplication": {
+    "wizard": {
+      "progress_label": "Başvuru adımları",
+      "progress_step": "Adım {current}/{total}",
+      "steps": {
+        "s1": "Sen ve ana branş",
+        "s2": "Seviye ve sınavlar",
+        "s3": "İlan başlığı",
+        "s4": "Kendin ve dersin",
+        "s5": "Şehir ve format",
+        "s6": "Fiyat ve iletişim",
+        "s7": "Önizleme ve onay",
+        "s1_title": "Kendini ve ana branşını anlat",
+        "s1_desc": "Ad soyadın profilinde görünür; ana branşın arama sayfalarındaki konumunu belirler.",
+        "s2_title": "Hangi seviyeleri ve sınavları çalışıyorsun?",
+        "s2_desc": "Birden fazla seviye/sınav seçebilirsin. Çalıştığın alanlar daha hızlı eşleşme sağlar.",
+        "s3_title": "İlan başlığını yaz",
+        "s3_desc": "Tek satırlık güçlü pitch — profil kartında ilk görünen yer. Net ve sade olsun.",
+        "s4_title": "Dersini ve kendini anlat",
+        "s4_desc": "Dersi nasıl işliyorsun, neyin uzmanısın? Bu metinler profilinde aynen yayınlanır.",
+        "s5_title": "Nerede ders veriyorsun?",
+        "s5_desc": "Şehir + isteğe bağlı ilçe + ders formatı. Format öğrencinin filtre tercihiyle eşleşmeni etkiler.",
+        "s6_title": "Fiyat ve iletişim bilgisi",
+        "s6_desc": "Saat aralığını sen belirle; gerçek fiyat şeffaflığı LessonRadar'ın markasını taşır. Telefon yalnızca onaylı eşleşmelerde paylaşılır.",
+        "s7_title": "Önizleme ve onay",
+        "s7_desc": "Aşağıdaki özet senin profilin olarak görünür. Düzeltmek istediğin bir şey varsa geri dönüp güncelleyebilirsin."
       },
       "fields": {
-        "fullName": { "label": "Ad Soyad", "placeholder": "ör. Ayşe Yılmaz" },
-        "headline": {
-          "label": "Kısa pitch",
-          "placeholder": "ör. 10 yıllık YKS matematik öğretmeni",
-          "hint": "Profil kartında görünür. 10–120 karakter."
+        "full_name_label": "Ad ve soyadın",
+        "full_name_hint": "Profilde göründüğü gibi yazılır.",
+        "primary_discipline_label": "Ana branşın",
+        "primary_discipline_placeholder": "Branş seç",
+        "primary_discipline_hint": "Profilinin kategorize edileceği ana ders.",
+        "specialty_disciplines_label": "Ek uzmanlıklar (opsiyonel)",
+        "specialty_disciplines_hint": "Ana branşa ek olarak çalıştığın disiplinleri seç.",
+        "headline_label": "Başlık",
+        "headline_placeholder": "Örn. 10 yıllık YKS matematik öğretmeni",
+        "headline_hint": "10–120 karakter. Profil kartında görünür.",
+        "headline_count": "{n}/{max} karakter",
+        "about_lessons_label": "Dersini anlat",
+        "about_lessons_hint": "En az {min} karakter. Dersi nasıl işliyorsun, hangi yaklaşımı kullanıyorsun?",
+        "about_teacher_label": "Kendini tanıt",
+        "about_teacher_hint": "En az {min} karakter. Deneyimin, eğitimin, öğrenci başarın.",
+        "char_count": "{n}/{max} karakter",
+        "city_label": "Şehir",
+        "city_placeholder": "Şehir seç",
+        "district_label": "İlçe (opsiyonel)",
+        "district_placeholder": "İlçe seç",
+        "modality_label": "Ders formatı",
+        "modality_hint": "Birden fazla seçenek için 'Her ikisi'.",
+        "modality_in_person": "Yüz yüze",
+        "modality_online": "Online",
+        "modality_hybrid": "Her ikisi",
+        "hourly_min_label": "Min. saatlik ücret (₺)",
+        "hourly_min_hint": "Saatlik en düşük teklif.",
+        "hourly_max_label": "Maks. saatlik ücret (₺)",
+        "hourly_max_hint": "Saatlik en yüksek teklif.",
+        "experience_label": "Deneyim (yıl)",
+        "experience_hint": "Toplam öğretmenlik yılın.",
+        "phone_label": "Telefon",
+        "phone_hint": "Yalnızca eşleşen + onaylı öğrencilerle paylaşılır.",
+        "email_label": "E-posta",
+        "levels_label": "Seviyeler",
+        "levels": {
+          "ilkokul": "İlkokul",
+          "ortaokul": "Ortaokul",
+          "lise": "Lise",
+          "universite": "Üniversite",
+          "yetiskin": "Yetişkin"
         },
-        "bio": {
-          "label": "Özgeçmiş",
-          "placeholder": "Mezun olduğun okul, deneyim, ders verme yaklaşımın, başarıların…",
-          "hint": "60–1500 karakter. Bu metin profilinde aynen görünür."
-        },
-        "phone": {
-          "label": "Telefon",
-          "placeholder": "5XX XXX XX XX",
-          "hint": "Sadece eşleşen öğrencilerle paylaşılır."
-        },
-        "email": {
-          "label": "E-posta",
-          "placeholder": "ornek@email.com",
-          "hint": "Onay süreci için kullanılır."
-        },
-        "yearsExperience": {
-          "label": "Deneyim (yıl)",
-          "placeholder": "ör. 5"
-        },
-        "hourlyMin": {
-          "label": "Saatlik min. ücret (₺)",
-          "placeholder": "ör. 350"
-        },
-        "hourlyMax": {
-          "label": "Saatlik maks. ücret (₺)",
-          "placeholder": "ör. 600"
-        },
-        "disciplines": {
-          "label": "Verdiğin branşlar",
-          "hint": "En az 1, en fazla 8 branş seçebilirsin."
-        },
-        "city": { "label": "Şehir", "placeholder": "Şehir seç" },
-        "district": {
-          "label": "İlçe",
-          "placeholder": "İlçe seç",
-          "disabled_placeholder": "Önce şehir seç"
-        },
-        "modalities": {
-          "label": "Ders türü",
-          "in_person": "Yüz yüze",
-          "online": "Çevrimiçi",
-          "hint": "İkisini de işaretleyebilirsin."
-        },
-        "referral": {
-          "label": "Bizi nereden duydun?",
-          "placeholder": "ör. Google, arkadaş tavsiyesi, sosyal medya…"
-        }
+        "exams_label": "Sınav türleri (opsiyonel)",
+        "exams_hint": "Çalıştığın sınavları seç — LGS, TYT, AYT, YKS gibi."
       },
-      "consents": {
-        "kvkk": "<privacy>KVKK Aydınlatma Metni</privacy> ve gizlilik politikasını okudum, kişisel verilerimin işlenmesine onay veriyorum.",
-        "teacher_terms": "<terms>LessonRadar Öğretmen Sözleşmesi</terms>'ni okudum ve kabul ediyorum."
+      "preview": {
+        "full_name": "Ad Soyad",
+        "primary": "Ana branş",
+        "location": "Lokasyon",
+        "modality": "Format",
+        "headline": "Başlık",
+        "hourly": "Saat ücreti",
+        "phone": "Telefon",
+        "email": "E-posta",
+        "review_note_title": "Ekibimiz başvurunu inceler",
+        "review_note_body": "Onay sonrası profilin yayınlanır. Gerekirse ek belge isteyebilir veya küçük düzeltmeler için sana yazabiliriz.",
+        "consents": "Onaylar",
+        "kvkk_consent": "<kvkk>KVKK Aydınlatma Metni</kvkk>'ni okudum, kişisel verilerimin işlenmesine onay veriyorum.",
+        "agreement_consent": "<agreement>LessonRadar Öğretmen Sözleşmesi</agreement>'ni okudum ve kabul ediyorum.",
+        "consent_required": "Devam etmek için her iki onayı da işaretle.",
+        "fix_errors_first": "Eksik veya hatalı alanlar var. Önce onları düzelt."
+      },
+      "save": {
+        "saving": "Kaydediliyor…",
+        "saved": "Kaydedildi"
+      },
+      "nav": {
+        "prev": "Geri",
+        "next": "İleri",
+        "submit": "Başvuruyu gönder",
+        "submitting": "Gönderiliyor…"
       },
       "errors": {
-        "fullname_too_short": "Ad Soyad çok kısa.",
-        "fullname_too_long": "Ad Soyad çok uzun.",
-        "headline_too_short": "Kısa pitch en az 10 karakter olmalı.",
-        "headline_too_long": "Kısa pitch çok uzun.",
-        "bio_too_short": "Özgeçmiş en az 60 karakter olmalı.",
-        "bio_too_long": "Özgeçmiş çok uzun.",
-        "phone_invalid": "Geçerli bir TR cep numarası gir (5XX XXX XX XX).",
-        "email_invalid": "Geçerli bir e-posta adresi gir.",
-        "hourly_required": "Saatlik ücret gir.",
-        "hourly_too_low": "Saatlik ücret çok düşük.",
-        "hourly_too_high": "Saatlik ücret çok yüksek.",
-        "hourly_range_invalid": "Maksimum ücret minimumdan küçük olamaz.",
-        "disciplines_required": "En az 1 branş seç.",
-        "disciplines_too_many": "En fazla 8 branş seçebilirsin.",
-        "city_required": "Şehir seç.",
-        "modality_required": "En az bir ders türü seç.",
-        "kvkk_required": "Devam etmek için KVKK onayını işaretle.",
-        "teacher_terms_required": "Devam etmek için Öğretmen Sözleşmesi onayını işaretle.",
-        "turnstile_error": "Güvenlik doğrulaması başarısız. Lütfen tekrar dene."
+        "cooldown": "7 günlük süre dolmadan yeni başvuru başlatamazsın.",
+        "generic": "Başvuru gönderilemedi. Lütfen tekrar dene."
       }
-    },
-    "success": {
-      "meta_title": "Başvurun alındı",
-      "title": "Başvurun alındı.",
-      "subtitle": "Ekibimiz başvurunu birkaç iş günü içinde inceleyecek. Onay sürecinde e-posta ile sana ulaşırız; gerekirse ek belge isteriz.",
-      "what_next_title": "Bundan sonra ne olur?",
-      "what_next_step1": "Başvurunu doğrulama ekibimiz inceler (1–3 iş günü).",
-      "what_next_step2": "E-posta ile sonucu paylaşır, gerekirse ek belge isteriz (kimlik, diploma).",
-      "what_next_step3": "Onaylanan profilin arama sonuçlarına ve şehir × branş sayfalarına eklenir.",
-      "back_home": "Ana sayfaya dön",
-      "see_listings": "Doğrulanmış öğretmenleri gör"
-    },
-    "policy_notice": "Bu form bir iş ilişkisi vaadi değildir. Onaylanmış doğrulama ve listeleme süreci ekibimizin incelemesine bağlıdır."
+    }
   },
   "search": {
     "meta": {
