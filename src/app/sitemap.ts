@@ -10,6 +10,7 @@ import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { computeProfileIndexPolicy } from "@/lib/seo/profile-quality";
 import { computeQualityScore } from "@/lib/seo/quality-score";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 import type { TeacherProfile } from "@/lib/types";
 import { buildHreflangAlternates, buildLocaleUrl } from "@/lib/seo/site";
 
@@ -102,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
       if (quality.policy !== "index") continue;
 
-      const path = `/${city.slug}/${discipline.slug}`;
+      const path = `/${city.slug}/${toPseoDisciplinePathSlug(discipline.slug)}`;
       entries.push({
         url: buildLocaleUrl(routing.defaultLocale, path),
         lastModified: now,

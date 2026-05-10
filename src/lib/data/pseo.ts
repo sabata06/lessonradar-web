@@ -3,8 +3,8 @@
  * /[city]/[discipline] route — keeps render-time concerns out of the page.
  *
  * Backend reads: `GET /api/marketplace/teachers/?city=<slug>&discipline=<slug>`
- * pulls the visible teachers for that combination; the city + discipline
- * master data still lives in the local mock since both are static seeds.
+ * pulls the visible teachers for that combination; city + discipline master
+ * data comes from the live marketplace registry endpoints.
  *
  * Quality score is computed here so the same view-model that the page
  * uses can decide its own indexability — a pure function of the data we
@@ -27,6 +27,10 @@ import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { locativeSuffix } from "@/lib/format";
 import {
+  toPseoDisciplinePathSlug,
+  toTaxonomyDisciplineSlug,
+} from "@/lib/seo/pseo-slugs";
+import {
   computeQualityScore,
   type IndexPolicy,
   type QualityScoreBreakdown,
@@ -35,6 +39,8 @@ import {
 export interface PSEOLandingData {
   city: City;
   discipline: MarketplaceDiscipline;
+  canonicalDisciplineSlug: string;
+  taxonomyDisciplineSlug: string;
   districts: District[];
   teachers: TeacherProfile[];
   quality: QualityScoreBreakdown;
@@ -50,21 +56,22 @@ export interface PSEOLandingData {
 
 export async function getPSEOLandingData(
   citySlug: string,
-  disciplineSlug: string,
+  disciplinePathSlug: string,
 ): Promise<PSEOLandingData | null> {
+  const taxonomyDisciplineSlug = toTaxonomyDisciplineSlug(disciplinePathSlug);
   // Three independent backend reads, all ISR-cached for 24h. The cities
   // + disciplines payloads are shared across all pSEO routes for the
   // same build, so the second + third fetches typically resolve from
   // Next's data cache without a network hop.
   const [list, citiesEnvelope, disciplinesEnvelope] = await Promise.all([
-    fetchTeacherList({ city: citySlug, discipline: disciplineSlug }),
+    fetchTeacherList({ city: citySlug, discipline: taxonomyDisciplineSlug }),
     fetchCities(),
     fetchAllDisciplines(),
   ]);
 
   const cityRow = citiesEnvelope.results.find((c) => c.slug === citySlug);
   const disciplineRow = disciplinesEnvelope.results.find(
-    (d) => d.slug === disciplineSlug,
+    (d) => d.slug === taxonomyDisciplineSlug,
   );
   if (!cityRow || !disciplineRow) return null;
 
@@ -75,6 +82,7 @@ export async function getPSEOLandingData(
     isPriority: cityRow.is_priority,
   };
   const discipline: MarketplaceDiscipline = adaptDiscipline(disciplineRow);
+  const canonicalDisciplineSlug = toPseoDisciplinePathSlug(discipline.slug);
   const districts: District[] = cityRow.districts.map((d) => ({
     slug: d.slug,
     citySlug: cityRow.slug,
@@ -94,7 +102,7 @@ export async function getPSEOLandingData(
   let maxHourly: number | null = null;
   for (const t of teachers) {
     const pricing = t.disciplines.find(
-      (d) => d.disciplineSlug === disciplineSlug,
+      (d) => d.disciplineSlug === taxonomyDisciplineSlug,
     );
     if (!pricing) continue;
     if (pricing.hourlyMin > 0) {
@@ -124,6 +132,8 @@ export async function getPSEOLandingData(
   return {
     city,
     discipline,
+    canonicalDisciplineSlug,
+    taxonomyDisciplineSlug,
     districts,
     teachers,
     quality,

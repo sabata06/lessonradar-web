@@ -3,6 +3,7 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 import type {
   City,
   MarketplaceDiscipline,
@@ -64,7 +65,7 @@ export function RelatedLinks({
             {otherCities.map((c) => (
               <RelatedLink
                 key={c.slug}
-                href={`/${c.slug}/${discipline.slug}`}
+                href={`/${c.slug}/${toPseoDisciplinePathSlug(discipline.slug)}`}
                 label={`${locale === "tr" ? c.nameTr : c.nameEn} ${disciplineLabel}`}
               />
             ))}
@@ -83,7 +84,7 @@ export function RelatedLinks({
             {otherDisciplines.map((d) => (
               <RelatedLink
                 key={d.slug}
-                href={`/${city.slug}/${d.slug}`}
+                href={`/${city.slug}/${toPseoDisciplinePathSlug(d.slug)}`}
                 label={`${cityLabel} ${pickLocalized(d.name, locale)}`}
               />
             ))}

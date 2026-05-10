@@ -18,12 +18,13 @@ import type {
 } from "@/lib/types";
 
 import {
+  fetchAllDisciplines,
+  fetchCities,
   fetchTeacherDetailBySlug,
   fetchTeacherList,
 } from "@/lib/data/api/marketplace";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
-import { getCityBySlug, getDistrictBySlug } from "./mock/cities";
-import { getDisciplineBySlug, MOCK_DISCIPLINES } from "./mock/disciplines";
+import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
 import {
   computeProfileIndexPolicy,
   type ProfileIndexBreakdown,
@@ -57,16 +58,55 @@ export async function getTeacherProfileData(
 
   const teacher = adaptTeacher(apiTeacher);
 
-  const city = getCityBySlug(teacher.citySlug);
-  const district = teacher.districtSlug
-    ? getDistrictBySlug(teacher.citySlug, teacher.districtSlug)
-    : undefined;
+  const [citiesEnvelope, disciplinesEnvelope, similarTeachers] = await Promise.all([
+    fetchCities(),
+    fetchAllDisciplines(),
+    teacher.citySlug ? getSimilarTeachers(teacher) : Promise.resolve([]),
+  ]);
 
-  const primaryDiscipline = getDisciplineBySlug(teacher.primaryDisciplineSlug);
+  const cityRow = citiesEnvelope.results.find((c) => c.slug === teacher.citySlug);
+  const city = cityRow
+    ? {
+        slug: cityRow.slug,
+        nameTr: cityRow.name_tr,
+        nameEn: cityRow.name_en,
+        isPriority: cityRow.is_priority,
+      }
+    : teacher.citySlug && teacher.cityName
+      ? {
+          slug: teacher.citySlug,
+          nameTr: teacher.cityName.tr,
+          nameEn: teacher.cityName.en,
+        }
+    : undefined;
+  const districtRow = cityRow?.districts.find(
+    (d) => d.slug === teacher.districtSlug,
+  );
+  const district =
+    districtRow && cityRow
+      ? {
+          slug: districtRow.slug,
+          citySlug: cityRow.slug,
+          nameTr: districtRow.name_tr,
+          nameEn: districtRow.name_en,
+        }
+      : teacher.districtSlug && teacher.districtName
+        ? {
+            slug: teacher.districtSlug,
+            citySlug: teacher.citySlug,
+            nameTr: teacher.districtName.tr,
+            nameEn: teacher.districtName.en,
+          }
+      : undefined;
+
+  const disciplines = disciplinesEnvelope.results.map(adaptDiscipline);
+  const disciplineBySlug = new Map(disciplines.map((d) => [d.slug, d]));
+
+  const primaryDiscipline = disciplineBySlug.get(teacher.primaryDisciplineSlug);
 
   const disciplineViews: TeacherDisciplineView[] = teacher.disciplines
     .map((pricing) => {
-      const discipline = getDisciplineBySlug(pricing.disciplineSlug);
+      const discipline = disciplineBySlug.get(pricing.disciplineSlug);
       if (!discipline) return null;
       return {
         pricing,
@@ -88,13 +128,6 @@ export async function getTeacherProfileData(
   const pricingRange = allHourly.length
     ? { min: Math.min(...allHourly), max: Math.max(...allHourly) }
     : null;
-
-  // Similar teachers: same city, overlapping discipline, not this teacher.
-  // Sourced from a list-call filtered server-side; we then refine with
-  // the discipline overlap rule and rank verified-first locally.
-  const similarTeachers = teacher.citySlug
-    ? await getSimilarTeachers(teacher)
-    : [];
 
   const index = computeProfileIndexPolicy(teacher);
 
@@ -176,8 +209,3 @@ export function deriveModalities(teacher: TeacherProfile): {
   if (teacher.modality === "online") return { inPerson: false, online: true };
   return { inPerson: true, online: true };
 }
-
-// Re-export the discipline list for components that build cross-links
-// (e.g. "this teacher does not yet teach X — related discipline pages").
-// Disciplines stay client-side until the taxonomy API consumer lands.
-export { MOCK_DISCIPLINES };

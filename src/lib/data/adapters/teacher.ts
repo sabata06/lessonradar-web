@@ -45,6 +45,10 @@ export function adaptTeacher(
       parseDecimal(spec.hourly_rate_max) ?? baseHourly ?? min;
     return {
       disciplineSlug: spec.discipline_slug,
+      name: {
+        tr: spec.discipline_name_tr,
+        en: spec.discipline_name_en,
+      },
       hourlyMin: min,
       hourlyMax: max < min ? min : max,
     };
@@ -59,6 +63,18 @@ export function adaptTeacher(
     avatarUrl: api.profile_image_url ?? api.avatar_url ?? FALLBACK_AVATAR_URL,
     citySlug: api.city_slug ?? "",
     districtSlug: api.district_slug ?? undefined,
+    cityName: api.city
+      ? {
+          tr: api.city,
+          en: api.city,
+        }
+      : undefined,
+    districtName: api.district
+      ? {
+          tr: api.district,
+          en: api.district,
+        }
+      : undefined,
     modality: pickModality(api.lesson_modes),
     yearsOfExperience: api.years_of_experience ?? 0,
     disciplines,

@@ -2,15 +2,21 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
-import { TR_CITIES } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES } from "@/lib/data/mock/disciplines";
+import { fetchAllDisciplines, fetchCities } from "@/lib/data/api/marketplace";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 
 export async function Footer() {
   const t = await getTranslations();
   const year = new Date().getFullYear();
 
-  const priorityCities = TR_CITIES.filter((c) => c.isPriority);
-  const featuredDisciplines = MOCK_DISCIPLINES.filter((d) => d.isFeatured);
+  const [citiesEnvelope, disciplinesEnvelope] = await Promise.all([
+    fetchCities(),
+    fetchAllDisciplines(),
+  ]);
+  const priorityCities = citiesEnvelope.results.filter((c) => c.is_priority);
+  const featuredDisciplines = disciplinesEnvelope.results.filter(
+    (d) => d.is_featured,
+  );
 
   return (
     <footer className="mt-24 border-t border-border bg-card">
@@ -25,15 +31,18 @@ export async function Footer() {
         <FooterColumn title={t("footer.popular_cities")}>
           {priorityCities.map((c) => (
             <FooterLink key={c.slug} href={`/${c.slug}`}>
-              {c.nameTr}
+              {c.name_tr}
             </FooterLink>
           ))}
         </FooterColumn>
 
         <FooterColumn title={t("footer.popular_subjects")}>
           {featuredDisciplines.map((d) => (
-            <FooterLink key={d.slug} href={`/gaziantep/${d.slug}`}>
-              {d.name.tr}
+            <FooterLink
+              key={d.slug}
+              href={`/gaziantep/${toPseoDisciplinePathSlug(d.slug)}`}
+            >
+              {d.name_tr}
             </FooterLink>
           ))}
         </FooterColumn>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
 
 import { Container } from "@/components/layout/Container";
 import { Breadcrumb } from "@/components/discovery/Breadcrumb";
@@ -22,6 +23,7 @@ import { buildIntroParagraph, getPSEOLandingData } from "@/lib/data/pseo";
 import type { City, MarketplaceDiscipline } from "@/lib/types";
 import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 import {
   breadcrumbJsonLd,
   itemListTeachersJsonLd,
@@ -55,7 +57,11 @@ export async function generateStaticParams() {
   for (const locale of routing.locales) {
     for (const city of priorityCities) {
       for (const discipline of featuredDisciplines) {
-        params.push({ locale, city: city.slug, discipline: discipline.slug });
+        params.push({
+          locale,
+          city: city.slug,
+          discipline: toPseoDisciplinePathSlug(discipline.slug),
+        });
       }
     }
   }
@@ -73,7 +79,7 @@ export async function generateMetadata({
 
   const cityName = locale === "tr" ? data.city.nameTr : data.city.nameEn;
   const disciplineName = pickLocalized(data.discipline.name, locale as SupportedLocale);
-  const path = `/${city}/${discipline}`;
+  const path = `/${city}/${data.canonicalDisciplineSlug}`;
 
   const title =
     locale === "tr"
@@ -109,6 +115,14 @@ export default async function PSEOLandingPage({
   ]);
   if (!data) notFound();
 
+  const typedLocale = locale as Locale;
+  if (discipline !== data.canonicalDisciplineSlug) {
+    redirect({
+      href: `/${city}/${data.canonicalDisciplineSlug}`,
+      locale: typedLocale,
+    });
+  }
+
   const allCities: City[] = citiesEnvelope.results.map((c) => ({
     slug: c.slug,
     nameTr: c.name_tr,
@@ -118,7 +132,6 @@ export default async function PSEOLandingPage({
   const allDisciplines: MarketplaceDiscipline[] =
     allDisciplinesEnvelope.results.map(adaptDiscipline);
 
-  const typedLocale = locale as Locale;
   const nowIso = new Date().toISOString();
 
   const cityName = typedLocale === "tr" ? data.city.nameTr : data.city.nameEn;
@@ -128,7 +141,10 @@ export default async function PSEOLandingPage({
   const breadcrumbs = [
     { label: typedLocale === "tr" ? "Anasayfa" : "Home", path: "/" },
     { label: cityName, path: `/${city}` },
-    { label: disciplineName, path: `/${city}/${discipline}` },
+    {
+      label: disciplineName,
+      path: `/${city}/${data.canonicalDisciplineSlug}`,
+    },
   ];
 
   const showListing = data.teachers.length > 0;
@@ -165,7 +181,7 @@ export default async function PSEOLandingPage({
           <DistrictChips
             districts={data.districts}
             citySlug={city}
-            disciplineSlug={discipline}
+            disciplineSlug={data.canonicalDisciplineSlug}
             locale={typedLocale}
           />
         )}
@@ -187,7 +203,7 @@ export default async function PSEOLandingPage({
                 teacher={teacher}
                 locale={typedLocale}
                 nowIso={nowIso}
-                disciplineSlug={discipline}
+                disciplineSlug={data.taxonomyDisciplineSlug}
               />
             ))}
           </section>
@@ -197,7 +213,7 @@ export default async function PSEOLandingPage({
             cityName={cityName}
             disciplineName={disciplineName}
             citySlug={city}
-            disciplineSlug={discipline}
+            disciplineSlug={data.taxonomyDisciplineSlug}
           />
         )}
 
@@ -222,7 +238,7 @@ export default async function PSEOLandingPage({
             ? [
                 itemListTeachersJsonLd(
                   typedLocale,
-                  `/${city}/${discipline}`,
+                  `/${city}/${data.canonicalDisciplineSlug}`,
                   data.teachers,
                 ),
               ]

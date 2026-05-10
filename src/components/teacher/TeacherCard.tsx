@@ -7,9 +7,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { formatHourlyRange } from "@/lib/format";
 import type { SupportedLocale, TeacherProfile } from "@/lib/types";
-import { getCityBySlug, getDistrictBySlug } from "@/lib/data/mock/cities";
-import { getDisciplineBySlug } from "@/lib/data/mock/disciplines";
-import { pickLocalized } from "@/lib/types";
 
 import {
   PremiumBadge,
@@ -49,11 +46,10 @@ export function TeacherCard({
   const pricing =
     teacher.disciplines.find((d) => d.disciplineSlug === activeDisciplineSlug) ??
     teacher.disciplines[0];
-  const discipline = getDisciplineBySlug(activeDisciplineSlug);
-  const city = getCityBySlug(teacher.citySlug);
-  const district = teacher.districtSlug
-    ? getDistrictBySlug(teacher.citySlug, teacher.districtSlug)
-    : undefined;
+  const disciplineLabel = pickLocalizedOptionalName(pricing?.name, locale);
+  const cityLabel =
+    pickLocalizedOptionalName(teacher.cityName, locale) ?? teacher.citySlug;
+  const districtLabel = pickLocalizedOptionalName(teacher.districtName, locale);
 
   const profileHref = `/ogretmen/${teacher.slug}`;
   const requestHref = `/ders-talebi?discipline=${activeDisciplineSlug}&city=${teacher.citySlug}&teacher=${teacher.slug}`;
@@ -83,13 +79,9 @@ export function TeacherCard({
         priceLabel={
           pricing ? formatHourlyRange(pricing.hourlyMin, pricing.hourlyMax, locale) : "—"
         }
-        disciplineLabel={
-          discipline ? pickLocalized(discipline.name, locale) : ""
-        }
-        cityLabel={city ? (locale === "tr" ? city.nameTr : city.nameEn) : ""}
-        districtLabel={
-          district ? (locale === "tr" ? district.nameTr : district.nameEn) : undefined
-        }
+        disciplineLabel={disciplineLabel ?? ""}
+        cityLabel={cityLabel}
+        districtLabel={districtLabel}
         profileHref={profileHref}
         requestHref={requestHref}
         className={className}
@@ -140,9 +132,7 @@ export function TeacherCard({
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <HugeiconsIcon icon={MapsLocation01Icon} size={12} strokeWidth={2} />
-            {district
-              ? `${pickLocalizedCity(district, locale)} · ${pickLocalizedCity(city, locale)}`
-              : pickLocalizedCity(city, locale)}
+            {districtLabel ? `${districtLabel} · ${cityLabel}` : cityLabel}
           </span>
           <TrustRow trust={teacher.trust} locale={locale} nowIso={nowIso} />
         </div>
@@ -150,7 +140,7 @@ export function TeacherCard({
         <div className="flex items-end justify-between gap-3 border-t border-border pt-3">
           <div className="min-w-0">
             <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
-              {discipline ? pickLocalized(discipline.name, locale) : ""}
+              {disciplineLabel ?? ""}
             </p>
             <p className="truncate text-base font-semibold text-foreground">
               {pricing ? formatHourlyRange(pricing.hourlyMin, pricing.hourlyMax, locale) : "—"}
@@ -427,10 +417,10 @@ function getInitials(fullName: string): string {
 
 /* ------------------------------------------------------------------ */
 
-function pickLocalizedCity(
-  c: { nameTr: string; nameEn: string } | undefined,
+function pickLocalizedOptionalName(
+  c: { tr: string; en: string } | undefined,
   locale: SupportedLocale,
-): string {
-  if (!c) return "";
-  return locale === "tr" ? c.nameTr : c.nameEn;
+): string | undefined {
+  if (!c) return undefined;
+  return locale === "tr" ? c.tr : c.en;
 }

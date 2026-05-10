@@ -201,7 +201,9 @@ export interface ApiTeacherListFilters {
   subject?: string;
   level?: string;
   city?: string;
+  district?: string;
   mode?: string;
+  verified?: boolean | "1" | "true";
   min_price?: number | string;
   max_price?: number | string;
 }

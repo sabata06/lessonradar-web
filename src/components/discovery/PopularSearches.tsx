@@ -5,6 +5,7 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { Link } from "@/i18n/navigation";
 import type { City, MarketplaceDiscipline, SupportedLocale } from "@/lib/types";
 import { pickLocalized } from "@/lib/types";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 
 interface PopularSearchesProps {
   locale: SupportedLocale;
@@ -30,7 +31,7 @@ export async function PopularSearches({
   // Cap output: each city × first 4 featured disciplines.
   const links = priorityCities.flatMap((city) =>
     featuredDisciplines.slice(0, 4).map((d) => ({
-      href: `/${city.slug}/${d.slug}`,
+      href: `/${city.slug}/${toPseoDisciplinePathSlug(d.slug)}`,
       label: `${locale === "tr" ? city.nameTr : city.nameEn} ${pickLocalized(
         d.name,
         locale,

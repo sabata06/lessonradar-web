@@ -178,10 +178,16 @@ export function mockFetchTeacherList(
   if (filters.city) {
     list = list.filter((t) => t.citySlug === filters.city);
   }
+  if (filters.district) {
+    list = list.filter((t) => t.districtSlug === filters.district);
+  }
   if (filters.discipline) {
     list = list.filter((t) =>
       t.disciplines.some((d) => d.disciplineSlug === filters.discipline),
     );
+  }
+  if (filters.verified === true || filters.verified === "1" || filters.verified === "true") {
+    list = list.filter((t) => t.trust.identityVerified && t.trust.diplomaVerified);
   }
   if (filters.mode) {
     if (filters.mode === "online") {

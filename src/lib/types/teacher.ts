@@ -6,6 +6,10 @@ export type LessonModality = "in_person" | "online" | "hybrid";
 
 export interface TeacherDisciplineSummary {
   disciplineSlug: string;
+  name?: {
+    tr: string;
+    en: string;
+  };
   hourlyMin: number;
   hourlyMax: number;
 }
@@ -30,6 +34,14 @@ export interface TeacherProfile {
   avatarUrl: string;
   citySlug: string;
   districtSlug?: string;
+  cityName?: {
+    tr: string;
+    en: string;
+  };
+  districtName?: {
+    tr: string;
+    en: string;
+  };
   modality: LessonModality;
   yearsOfExperience: number;
   disciplines: TeacherDisciplineSummary[];

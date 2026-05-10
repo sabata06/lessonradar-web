@@ -4,8 +4,7 @@ import "server-only";
  * Server-only `searchTeachers` runner.
  *
  * Purely a fetch-and-rank helper — relies on the live discovery endpoint
- * for supply/contact filtering, then refines `districtSlug` and
- * `verifiedOnly` locally because the backend doesn't expose those (yet).
+ * for supply/contact, district, and verification filtering.
  *
  * Client islands should import types + URL helpers from
  * `./teacher-search-types` instead of this module so they don't pull
@@ -13,9 +12,7 @@ import "server-only";
  */
 import { fetchTeacherList } from "@/lib/data/api/marketplace";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
-import { getDisciplineBySlug } from "@/lib/data/mock/disciplines";
 import {
-  pickLocalized,
   type SupportedLocale,
   type TeacherProfile,
 } from "@/lib/types";
@@ -79,14 +76,10 @@ function computeQueryScore(
   ];
 
   for (const summary of teacher.disciplines) {
-    const d = getDisciplineBySlug(summary.disciplineSlug);
-    if (!d) continue;
-    fields.push({ weight: 5, text: fold(pickLocalized(d.name, locale)) });
-    if (d.searchAliases?.[locale]) {
-      fields.push({
-        weight: 3,
-        text: fold((d.searchAliases[locale] ?? []).join(" ")),
-      });
+    const localizedName =
+      locale === "tr" ? summary.name?.tr : summary.name?.en;
+    if (localizedName) {
+      fields.push({ weight: 5, text: fold(localizedName) });
     }
   }
 
@@ -112,7 +105,9 @@ function toApiFilters(filters: TeacherSearchFilters): ApiTeacherListFilters {
   const apiFilters: ApiTeacherListFilters = {};
   if (filters.q?.trim()) apiFilters.q = filters.q.trim();
   if (filters.citySlug) apiFilters.city = filters.citySlug;
+  if (filters.districtSlug) apiFilters.district = filters.districtSlug;
   if (filters.disciplineSlug) apiFilters.discipline = filters.disciplineSlug;
+  if (filters.verifiedOnly) apiFilters.verified = "1";
   if (filters.modality && filters.modality !== "any") {
     apiFilters.mode = filters.modality === "online" ? "online" : "yuzyuze";
   }
@@ -126,7 +121,9 @@ export async function searchTeachers(
   const list = await fetchTeacherList(toApiFilters(filters));
   const teachers = list.results.map((api) => adaptTeacher(api));
 
-  // Backend has no district filter yet — apply locally.
+  // Defensive client refinement keeps behavior correct against older
+  // backend deploys during the rollout; the current backend handles these
+  // filters server-side.
   const districtFiltered = filters.districtSlug
     ? teachers.filter((t) => t.districtSlug === filters.districtSlug)
     : teachers;
@@ -199,8 +196,7 @@ export async function searchTeachers(
   return {
     teachers: filtered.map((s) => s.teacher),
     appliedFilterCount: countAppliedFilters(filters),
-    // `count` is what the backend reported BEFORE the local district +
-    // verified refinement; that's the right "before-filter" anchor.
+    // `count` is the backend total for the server-side filtered result set.
     totalBeforeFilter: list.count,
   };
 }

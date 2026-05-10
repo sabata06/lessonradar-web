@@ -29,6 +29,7 @@ import type { IconSvgElement } from "@hugeicons/react";
 import { Link } from "@/i18n/navigation";
 import type { MarketplaceDiscipline, SupportedLocale } from "@/lib/types";
 import { pickLocalized } from "@/lib/types";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 import { cn } from "@/lib/utils";
 
 interface SubjectChipsProps {
@@ -176,7 +177,7 @@ export function SubjectChips({
           return (
             <li key={d.slug} className="snap-start shrink-0">
               <Link
-                href={`/${citySlug}/${d.slug}`}
+                href={`/${citySlug}/${toPseoDisciplinePathSlug(d.slug)}`}
                 className={cn(
                   // Card sized like Superprof: ~100px wide on mobile,
                   // ~112px on desktop. Fixed height keeps the row

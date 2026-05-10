@@ -24,6 +24,7 @@ import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { buildLocaleUrl } from "@/lib/seo/site";
+import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 import { pickLocalized, type SupportedLocale, type TeacherProfile } from "@/lib/types";
 
 interface RouteParams {
@@ -236,7 +237,7 @@ export default async function CityLandingPage({
           {disciplineCards.map(({ discipline, count }) => (
             <li key={discipline.slug}>
               <Link
-                href={`/${city}/${discipline.slug}`}
+                href={`/${city}/${toPseoDisciplinePathSlug(discipline.slug)}`}
                 className="group flex items-center justify-between rounded-2xl border border-border bg-card px-5 py-4 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elevated"
               >
                 <div>
