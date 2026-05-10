@@ -104,6 +104,9 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     if (error instanceof ApiError) {
+      if (error.status === 429) {
+        return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+      }
       // Surface the Django error code so the UI can localize it. Field-level
       // errors (e.g. password too weak) are passed back as `field_errors`.
       const detail = error.detail as

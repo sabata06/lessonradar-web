@@ -49,6 +49,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof ApiError) {
+      if (error.status === 429) {
+        return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+      }
       return NextResponse.json(
         { error: "validation_error" },
         { status: error.status >= 400 && error.status < 500 ? 400 : 502 },

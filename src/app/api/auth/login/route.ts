@@ -55,6 +55,9 @@ export async function POST(req: Request) {
       { email: body.email, password: body.password },
     );
   } catch (error) {
+    if (error instanceof ApiError && error.status === 429) {
+      return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+    }
     // Account enumeration prevention: collapse all auth failures to one shape.
     if (error instanceof ApiError && error.status >= 400 && error.status < 500) {
       const code =

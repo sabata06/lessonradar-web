@@ -51,6 +51,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof ApiError) {
+      if (error.status === 429) {
+        return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+      }
       // Backend currently only 400s on invalid email format. Surface a generic
       // validation error code; do not leak field-level detail beyond that.
       return NextResponse.json(
