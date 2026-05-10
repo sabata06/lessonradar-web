@@ -149,6 +149,176 @@ export async function getPSEOLandingData(
 }
 
 /**
+ * Price summary bucket — a single row in the pSEO price table.
+ * `min` / `max` / `median` are in TRY (₺/hour). `count` is the number of
+ * teachers contributing to the bucket. Rows with `count === 0` are dropped
+ * by the component, so consumers don't render empty rows.
+ *
+ * Median is computed over per-teacher midpoints `(hourlyMin + hourlyMax) / 2`
+ * for the SPECIFIC discipline (not the teacher's profile-wide rate). This
+ * matches the "what does this combo cost on average" question users + AI
+ * Overviews are asking, without over-claiming a single average that would
+ * be misleading on a small sample.
+ */
+export interface PriceBucket {
+  id: "all" | "online" | "in_person" | "verified";
+  min: number;
+  max: number;
+  median: number;
+  count: number;
+}
+
+export function computePriceBuckets(
+  teachers: TeacherProfile[],
+  taxonomyDisciplineSlug: string,
+): PriceBucket[] {
+  const inputs = teachers
+    .map((t) => {
+      const pricing = t.disciplines.find(
+        (d) => d.disciplineSlug === taxonomyDisciplineSlug,
+      );
+      if (!pricing || pricing.hourlyMin <= 0 || pricing.hourlyMax <= 0) {
+        return null;
+      }
+      return {
+        teacher: t,
+        hourlyMin: pricing.hourlyMin,
+        hourlyMax: pricing.hourlyMax,
+        midpoint: (pricing.hourlyMin + pricing.hourlyMax) / 2,
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+
+  const buckets: PriceBucket[] = [];
+  buckets.push(buildBucket("all", inputs));
+
+  const online = inputs.filter(
+    (x) => x.teacher.modality === "online" || x.teacher.modality === "hybrid",
+  );
+  if (online.length > 0) buckets.push(buildBucket("online", online));
+
+  const inPerson = inputs.filter(
+    (x) => x.teacher.modality === "in_person" || x.teacher.modality === "hybrid",
+  );
+  if (inPerson.length > 0) buckets.push(buildBucket("in_person", inPerson));
+
+  const verified = inputs.filter((x) => x.teacher.trust.isVerified);
+  if (verified.length > 0 && verified.length < inputs.length) {
+    buckets.push(buildBucket("verified", verified));
+  }
+
+  return buckets.filter((b) => b.count > 0);
+}
+
+function buildBucket(
+  id: PriceBucket["id"],
+  rows: Array<{ hourlyMin: number; hourlyMax: number; midpoint: number }>,
+): PriceBucket {
+  if (rows.length === 0) {
+    return { id, min: 0, max: 0, median: 0, count: 0 };
+  }
+  const min = Math.min(...rows.map((r) => r.hourlyMin));
+  const max = Math.max(...rows.map((r) => r.hourlyMax));
+  const sortedMidpoints = rows.map((r) => r.midpoint).sort((a, b) => a - b);
+  const median =
+    sortedMidpoints.length % 2 === 1
+      ? sortedMidpoints[(sortedMidpoints.length - 1) / 2]
+      : (sortedMidpoints[sortedMidpoints.length / 2 - 1] +
+          sortedMidpoints[sortedMidpoints.length / 2]) /
+        2;
+  return { id, min, max, median: Math.round(median), count: rows.length };
+}
+
+/**
+ * Discipline + city aware FAQ items for the pSEO page. Five evergreen
+ * questions interpolated with real stats where available; falls back to
+ * editorially safe defaults when stats are absent.
+ *
+ * `t` is a `getTranslations()`-scoped accessor with `pseo.faq.items`
+ * namespace already bound. Caller passes in the live data so this helper
+ * stays pure and testable.
+ */
+type FaqTranslator = (key: string, values?: Record<string, string | number>) => string;
+
+export interface PSEOFaqInput {
+  cityName: string;
+  disciplineName: string;
+  stats: PSEOLandingData["stats"];
+  locale: SupportedLocale;
+}
+
+export function buildPSEOFaqItems(
+  input: PSEOFaqInput,
+  t: FaqTranslator,
+): Array<{ question: string; answer: string }> {
+  const { cityName, disciplineName, stats, locale } = input;
+  const items: Array<{ question: string; answer: string }> = [];
+
+  const priceQuestion = t("price.q", {
+    city: cityName,
+    discipline: disciplineName,
+  });
+  if (
+    stats.minHourly !== null &&
+    stats.maxHourly !== null &&
+    stats.totalCount > 0
+  ) {
+    const median = Math.round((stats.minHourly + stats.maxHourly) / 2);
+    items.push({
+      question: priceQuestion,
+      answer: t("price.a_with_range", {
+        min: stats.minHourly,
+        max: stats.maxHourly,
+        median,
+      }),
+    });
+  } else {
+    items.push({
+      question: priceQuestion,
+      answer: t("price.a_no_data", { discipline: disciplineName }),
+    });
+  }
+
+  items.push({
+    question: t("verified.q"),
+    answer: t("verified.a"),
+  });
+
+  items.push({
+    question: t("online_vs_in_person.q"),
+    answer: t("online_vs_in_person.a"),
+  });
+
+  items.push({
+    question: t("first_lesson.q"),
+    answer: t("first_lesson.a"),
+  });
+
+  if (stats.medianResponseMinutes !== null) {
+    const mins = stats.medianResponseMinutes;
+    const responseLabel =
+      locale === "tr"
+        ? mins < 60
+          ? `${mins} dk`
+          : `${Math.round(mins / 60)} sa`
+        : mins < 60
+          ? `${mins} min`
+          : `${Math.round(mins / 60)}h`;
+    items.push({
+      question: t("response_time.q"),
+      answer: t("response_time.a_with_data", { response: responseLabel }),
+    });
+  } else {
+    items.push({
+      question: t("response_time.q"),
+      answer: t("response_time.a_no_data"),
+    });
+  }
+
+  return items;
+}
+
+/**
  * Locale-aware, deterministic intro paragraph generated from real data.
  * NOT AI-generated — it interpolates known facts so we can ship the page
  * before a human-written intro exists. Replace with editorial copy when

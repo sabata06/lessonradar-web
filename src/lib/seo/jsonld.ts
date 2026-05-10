@@ -38,6 +38,94 @@ export function breadcrumbJsonLd(locale: Locale, crumbs: BreadcrumbCrumb[]): Jso
   };
 }
 
+/**
+ * `Service` + nested `AggregateOffer` for pSEO city × discipline pages.
+ * Tells Google + AI Overviews: "this URL is the canonical service offering
+ * for {discipline} private tutoring in {city}, with N teacher offerings
+ * priced between X and Y TRY." Strong signal for shopping/price-related
+ * SERP features and AI citations.
+ *
+ * `lowPrice` / `highPrice` MUST come from real teacher data — never invent
+ * a range. `priceCurrency` is "TRY" for the launch market; revisit if/when
+ * we serve other currencies.
+ */
+export function pseoServiceOfferJsonLd(args: {
+  locale: Locale;
+  pagePath: string;
+  cityName: string;
+  disciplineName: string;
+  lowPrice: number;
+  highPrice: number;
+  offerCount: number;
+}): JsonLd {
+  const {
+    locale,
+    pagePath,
+    cityName,
+    disciplineName,
+    lowPrice,
+    highPrice,
+    offerCount,
+  } = args;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType:
+      locale === "tr" ? "Özel ders" : "Private tutoring",
+    name:
+      locale === "tr"
+        ? `${disciplineName} Özel Ders · ${cityName}`
+        : `${disciplineName} Private Tutoring · ${cityName}`,
+    category: disciplineName,
+    url: buildLocaleUrl(locale, pagePath),
+    areaServed: {
+      "@type": "City",
+      name: cityName,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: cityName,
+        addressCountry: "TR",
+      },
+    },
+    provider: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "TRY",
+      lowPrice,
+      highPrice,
+      offerCount,
+      availability: "https://schema.org/InStock",
+    },
+  };
+}
+
+/**
+ * `FAQPage` schema. Per project SEO Rules: "FAQ content can help users, but
+ * FAQ schema should be selective and policy-aware." Callers MUST only emit
+ * this for pages with index policy = `index` (real teacher supply, quality
+ * score >= 80). Emitting on weak pages = thin content penalty risk.
+ */
+export function faqPageJsonLd(
+  items: Array<{ question: string; answer: string }>,
+): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 export function itemListTeachersJsonLd(
   locale: Locale,
   pagePath: string,

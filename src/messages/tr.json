@@ -13,7 +13,8 @@
     "pricing": "Fiyat Rehberi",
     "blog": "Blog",
     "language": "Dil",
-    "menu": "Menü"
+    "menu": "Menü",
+    "home": "Anasayfa"
   },
   "cta": {
     "find_teacher": "Öğretmen Bul",
@@ -542,6 +543,50 @@
     },
     "policy_notice": "Bu profilde gösterilen bilgiler öğretmen tarafından sağlanır; kimlik ve diploma LessonRadar tarafından doğrulanır. Telefon ve e-posta yalnızca eşleşmeden sonra paylaşılır."
   },
+  "pseo": {
+    "price_table": {
+      "heading": "{city} {discipline} fiyatları",
+      "subtitle": "Bu sayfadaki {count} öğretmenin saat ücretinden hesaplandı.",
+      "col_segment": "Kategori",
+      "col_range": "Aralık",
+      "col_median": "Medyan",
+      "col_sample": "Öğretmen",
+      "mobile_count": "{count} öğretmen",
+      "segment_all": "Genel",
+      "segment_online": "Online ders",
+      "segment_in_person": "Yüz yüze ders",
+      "segment_verified": "Doğrulanmış öğretmen",
+      "disclaimer": "Veriler bu sayfada listelenen öğretmenlerin saat ücretlerinden derlenmiştir. Bireysel fiyatlar deneyim, ilçe ve dersin formatına göre değişir."
+    },
+    "faq": {
+      "heading": "Sıkça sorulan sorular",
+      "subtitle": "Veliler ve öğrenciler için pratik cevaplar.",
+      "items": {
+        "price": {
+          "q": "{city}'de {discipline} özel ders kaç para?",
+          "a_with_range": "Bu sayfadaki öğretmenlerin saat ücretleri {min}–{max} ₺ arasında, medyan {median} ₺/sa civarında. Fiyatlar öğretmenin deneyimine, dersin online veya yüz yüze olmasına ve haftalık ders saatine göre değişir.",
+          "a_no_data": "{discipline} özel ders saat ücretleri Türkiye genelinde 250–800 ₺ arasında değişir. Bu sayfada öğretmen olduğunda gerçek aralık burada görünür."
+        },
+        "verified": {
+          "q": "Doğrulanmış öğretmen ne demek?",
+          "a": "Doğrulanmış öğretmen, kimlik bilgileri ve diploma/sertifika sahipliği LessonRadar tarafından kontrol edilmiş öğretmen anlamına gelir. Profilde yeşil rozetle işaretlenirler. Doğrulama dışı profiller arama sonuçlarında varsayılan olarak gizlenir."
+        },
+        "online_vs_in_person": {
+          "q": "Online mı yüz yüze ders mi daha verimli?",
+          "a": "İkisinin de avantajları farklıdır. Online ders zaman/ulaşım tasarrufu sağlar, geniş öğretmen havuzu sunar ve özellikle sınav tekniği ile teorik konular için verimlidir. Yüz yüze ders genç öğrencilerde, uygulamalı konularda ve dikkat dağınıklığı yüksek olan öğrencilerde daha etkili olur. Öğretmenlerimizin çoğu her iki formatı da sunar."
+        },
+        "first_lesson": {
+          "q": "Ders nasıl başlar?",
+          "a": "Üç adımda: (1) ihtiyacını anlat — branş, seviye, hedef, ilçe; (2) sana uyan doğrulanmış öğretmenler iletişime geçer; (3) deneme dersi al, anlaştığın öğretmenle düzenli programa geç. Telefon doğrulaması ve KVKK onayı tek seferlik."
+        },
+        "response_time": {
+          "q": "Öğretmenler ne kadar sürede yanıt verir?",
+          "a_with_data": "Bu sayfadaki öğretmenlerin medyan yanıt süresi {response}. Lider öğretmenler genelde 30 dakika içinde yanıtlar; mesai dışı saatlerde ertesi gün dönüş yapılır.",
+          "a_no_data": "Çoğu öğretmen ders talebine 1–3 saat içinde yanıt verir; mesai dışı talepler ertesi gün karşılanır. Yanıt vermeyen profiller arama sonuçlarında zamanla geri sıralanır."
+        }
+      }
+    }
+  },
   "auth": {
     "login": {
       "meta_title": "Giriş yap",
@@ -795,10 +840,36 @@
     "privacy": "Gizlilik Politikası",
     "terms": "Kullanım Koşulları",
     "contact": "İletişim",
+    "discover": "Keşfet",
+    "subjects": "Dersler",
+    "legal": "Yasal",
     "for_teachers": "Öğretmenler için",
     "for_students": "Öğrenciler için",
     "popular_cities": "Popüler şehirler",
-    "popular_subjects": "Popüler branşlar"
+    "popular_subjects": "Popüler branşlar",
+    "all_cities": "Tüm şehirler ({count})",
+    "all_subjects": "Tüm dersler ({count})"
+  },
+  "directory": {
+    "cities": {
+      "breadcrumb": "Şehirler",
+      "h1": "Tüm şehirler",
+      "subtitle": "Türkiye genelinde {count} şehirde özel ders öğretmeni keşfet. Önce şehrini seç, sonra branşa ve ilçeye göre daralt.",
+      "priority_label": "Öne çıkan şehir",
+      "meta": {
+        "title": "Türkiye'deki tüm şehirlerde özel ders öğretmenleri",
+        "description": "Şehrini seç, doğrulanmış özel ders öğretmenlerini branşa ve ilçeye göre keşfet. 81 ilde LessonRadar."
+      }
+    },
+    "subjects": {
+      "breadcrumb": "Dersler",
+      "h1": "Tüm dersler",
+      "subtitle": "{count} farklı branşta özel ders öğretmeni. Akademik dersler, sınav hazırlık, diller, müzik, spor — hepsi tek bir kataloğda.",
+      "meta": {
+        "title": "Tüm dersler ve branşlar — özel ders kataloğu",
+        "description": "Matematik, fizik, İngilizce, piyano, YKS hazırlık ve daha fazlası. Branşa göre doğrulanmış özel ders öğretmeni bul."
+      }
+    }
   },
   "legal": {
     "breadcrumb_aria_label": "Sayfa yolu",

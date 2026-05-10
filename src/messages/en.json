@@ -13,7 +13,8 @@
     "pricing": "Pricing Guide",
     "blog": "Blog",
     "language": "Language",
-    "menu": "Menu"
+    "menu": "Menu",
+    "home": "Home"
   },
   "cta": {
     "find_teacher": "Find a Tutor",
@@ -541,6 +542,50 @@
     },
     "policy_notice": "Information shown here is supplied by the tutor; identity and diploma are verified by LessonRadar. Phone and email are only shared after a match."
   },
+  "pseo": {
+    "price_table": {
+      "heading": "{discipline} prices in {city}",
+      "subtitle": "Computed from the {count} tutors listed on this page.",
+      "col_segment": "Segment",
+      "col_range": "Range",
+      "col_median": "Median",
+      "col_sample": "Tutors",
+      "mobile_count": "{count} tutors",
+      "segment_all": "All tutors",
+      "segment_online": "Online lessons",
+      "segment_in_person": "In-person lessons",
+      "segment_verified": "Verified tutors",
+      "disclaimer": "Computed from the hourly rates of tutors listed on this page. Individual prices vary by experience, district, and lesson format."
+    },
+    "faq": {
+      "heading": "Frequently asked questions",
+      "subtitle": "Practical answers for parents and students.",
+      "items": {
+        "price": {
+          "q": "How much does {discipline} private tutoring cost in {city}?",
+          "a_with_range": "Tutors listed on this page charge ₺{min}–₺{max}/hour, with a median around ₺{median}/h. Prices vary by tutor experience, online vs in-person format, and weekly hours.",
+          "a_no_data": "{discipline} private tutoring typically ranges between ₺250–₺800/hour across Türkiye. Once tutors are listed on this page, the actual local range will appear here."
+        },
+        "verified": {
+          "q": "What does \"verified tutor\" mean?",
+          "a": "A verified tutor is one whose identity and diploma/certification have been checked by LessonRadar. They are marked with a green badge on the profile. Unverified profiles are hidden from search results by default."
+        },
+        "online_vs_in_person": {
+          "q": "Online or in-person — which works better?",
+          "a": "Both have their place. Online saves time and travel, gives you access to a wider tutor pool, and is especially efficient for exam technique and theoretical topics. In-person works better for younger students, hands-on subjects (lab work, instruments, sports), and learners who lose focus easily. Most of our tutors offer both formats."
+        },
+        "first_lesson": {
+          "q": "How does the first lesson start?",
+          "a": "Three steps: (1) tell us what you need — subject, level, goal, district; (2) verified tutors who match reach out to you; (3) take a trial lesson, then set up a regular schedule with the tutor you pick. Phone verification and KVKK consent are one-time."
+        },
+        "response_time": {
+          "q": "How quickly do tutors reply?",
+          "a_with_data": "Tutors on this page have a median response time of {response}. Top tutors usually reply within 30 minutes; off-hours requests are answered the next day.",
+          "a_no_data": "Most tutors reply to a lesson request within 1–3 hours; off-hours requests are answered the next day. Non-responsive profiles are de-ranked in search results over time."
+        }
+      }
+    }
+  },
   "auth": {
     "login": {
       "meta_title": "Sign in",
@@ -794,10 +839,36 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
     "contact": "Contact",
+    "discover": "Explore",
+    "subjects": "Subjects",
+    "legal": "Legal",
     "for_teachers": "For tutors",
     "for_students": "For students",
     "popular_cities": "Popular cities",
-    "popular_subjects": "Popular subjects"
+    "popular_subjects": "Popular subjects",
+    "all_cities": "All cities ({count})",
+    "all_subjects": "All subjects ({count})"
+  },
+  "directory": {
+    "cities": {
+      "breadcrumb": "Cities",
+      "h1": "All cities",
+      "subtitle": "Discover private tutors across {count} cities in Türkiye. Pick a city first, then narrow by subject and district.",
+      "priority_label": "Featured city",
+      "meta": {
+        "title": "Private tutors in every city across Türkiye",
+        "description": "Pick a city and discover verified private tutors by subject and district. LessonRadar in 81 provinces."
+      }
+    },
+    "subjects": {
+      "breadcrumb": "Subjects",
+      "h1": "All subjects",
+      "subtitle": "{count} subjects to choose from — academic lessons, exam prep, languages, music, sports. The full LessonRadar catalogue in one place.",
+      "meta": {
+        "title": "All subjects and disciplines — private tutoring catalogue",
+        "description": "Math, physics, English, piano, YKS prep and more. Find a verified private tutor by subject."
+      }
+    }
   },
   "legal": {
     "breadcrumb_aria_label": "Breadcrumb",

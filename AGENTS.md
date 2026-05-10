@@ -26,3 +26,7 @@ Web priorities:
 - pSEO pages must respect `seo_quality_score`, canonical, sitemap, and `index/noindex` rules.
 - Teacher-empty pages use lead collection mode and should not be indexed.
 - Keep pages mobile-first, fast, trust-heavy, and aligned with `DESIGN.md`.
+
+## Quality Mandate (project north star)
+
+See [../AGENTS.md](../AGENTS.md) → "Quality Mandate". Every web page must be **measurably better** than what `ozeldersalani.com` / `superprof.com.tr` / `armut.com` ship for the same query, on SEO + Performance + UI/UX. Generic AI-assembled layouts and untuned shadcn defaults are anti-patterns here. Reference [../ozel-ders-platformu-seo-yol-haritasi.md](../ozel-ders-platformu-seo-yol-haritasi.md), [../lessonradar-ui-ux-master-plan.md](../lessonradar-ui-ux-master-plan.md), and [DESIGN.md](DESIGN.md) before designing or shipping.

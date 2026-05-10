@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 
 import { Container } from "@/components/layout/Container";
@@ -10,6 +10,8 @@ import { DistrictChips } from "@/components/discovery/DistrictChips";
 import { EmptyLeadCollection } from "@/components/discovery/EmptyLeadCollection";
 import { RelatedLinks } from "@/components/discovery/RelatedLinks";
 import { LeadCTA } from "@/components/discovery/LeadCTA";
+import { PriceSummaryTable } from "@/components/discovery/PriceSummaryTable";
+import { PSEOFaq } from "@/components/discovery/PSEOFaq";
 import { TeacherCard } from "@/components/teacher/TeacherCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 
@@ -19,14 +21,21 @@ import {
   fetchCities,
 } from "@/lib/data/api/marketplace";
 import { adaptDiscipline } from "@/lib/data/adapters/taxonomy";
-import { buildIntroParagraph, getPSEOLandingData } from "@/lib/data/pseo";
+import {
+  buildIntroParagraph,
+  buildPSEOFaqItems,
+  computePriceBuckets,
+  getPSEOLandingData,
+} from "@/lib/data/pseo";
 import type { City, MarketplaceDiscipline } from "@/lib/types";
 import { locativeSuffix } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 import {
   breadcrumbJsonLd,
+  faqPageJsonLd,
   itemListTeachersJsonLd,
+  pseoServiceOfferJsonLd,
 } from "@/lib/seo/jsonld";
 import { pickLocalized, type SupportedLocale } from "@/lib/types";
 
@@ -138,6 +147,23 @@ export default async function PSEOLandingPage({
   const disciplineName = pickLocalized(data.discipline.name, typedLocale);
   const intro = buildIntroParagraph(data, typedLocale);
 
+  const priceBuckets = computePriceBuckets(
+    data.teachers,
+    data.taxonomyDisciplineSlug,
+  );
+
+  const tFaqItems = await getTranslations({
+    locale: typedLocale,
+    namespace: "pseo.faq.items",
+  });
+  const faqItems = buildPSEOFaqItems(
+    { cityName, disciplineName, stats: data.stats, locale: typedLocale },
+    tFaqItems as (key: string, values?: Record<string, string | number>) => string,
+  );
+
+  const isIndexable = data.indexPolicy === "index";
+  const allBucket = priceBuckets.find((b) => b.id === "all");
+
   const breadcrumbs = [
     { label: typedLocale === "tr" ? "Anasayfa" : "Home", path: "/" },
     { label: cityName, path: `/${city}` },
@@ -217,6 +243,17 @@ export default async function PSEOLandingPage({
           />
         )}
 
+        {priceBuckets.length > 0 && (
+          <PriceSummaryTable
+            buckets={priceBuckets}
+            cityName={cityName}
+            disciplineName={disciplineName}
+            locale={typedLocale}
+          />
+        )}
+
+        <PSEOFaq items={faqItems} />
+
         <RelatedLinks
           locale={typedLocale}
           city={data.city}
@@ -243,6 +280,20 @@ export default async function PSEOLandingPage({
                 ),
               ]
             : []),
+          ...(allBucket && allBucket.count > 0
+            ? [
+                pseoServiceOfferJsonLd({
+                  locale: typedLocale,
+                  pagePath: `/${city}/${data.canonicalDisciplineSlug}`,
+                  cityName,
+                  disciplineName,
+                  lowPrice: allBucket.min,
+                  highPrice: allBucket.max,
+                  offerCount: allBucket.count,
+                }),
+              ]
+            : []),
+          ...(isIndexable && faqItems.length > 0 ? [faqPageJsonLd(faqItems)] : []),
         ]}
       />
     </>
