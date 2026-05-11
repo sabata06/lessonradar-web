@@ -17,6 +17,7 @@ import {
   BrandCombobox,
   type ComboboxOption,
 } from "@/components/ui/brand-combobox";
+import { compressImage } from "@/lib/image/compress";
 import { useTeacherApplicationDraft } from "@/hooks/useTeacherApplicationDraft";
 import type {
   ApplicationApiPayload,
@@ -1133,8 +1134,15 @@ function StepPhoto({
     if (localPreview) URL.revokeObjectURL(localPreview);
     setLocalPreview(URL.createObjectURL(file));
 
+    // Resize + re-encode on the client BEFORE upload. Phone cameras hand
+    // us 4–8 MB; without this, slow connections stall the wizard and the
+    // server pays Pillow CPU it doesn't need (it caps at 1024² anyway).
+    // `compressImage` returns the original file on any failure so the
+    // server-side validator can still surface a real error.
+    const optimized = await compressImage(file);
+
     const formData = new FormData();
-    formData.append("photo", file);
+    formData.append("photo", optimized);
 
     try {
       const res = await fetch(`/api/teacher-application/${uuid}/photo`, {
