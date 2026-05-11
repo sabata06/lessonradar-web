@@ -305,7 +305,8 @@
         "s4": "Kendin ve dersin",
         "s5": "Şehir ve format",
         "s6": "Fiyat ve iletişim",
-        "s7": "Önizleme ve onay",
+        "s7": "Profil fotoğrafı",
+        "s8": "Önizleme ve onay",
         "s1_title": "Kendini ve ana branşını anlat",
         "s1_desc": "Ad soyadın profilinde görünür; ana branşın arama sayfalarındaki konumunu belirler.",
         "s2_title": "Hangi seviyeleri ve sınavları çalışıyorsun?",
@@ -318,8 +319,10 @@
         "s5_desc": "Şehir + isteğe bağlı ilçe + ders formatı. Format öğrencinin filtre tercihiyle eşleşmeni etkiler.",
         "s6_title": "Fiyat ve iletişim bilgisi",
         "s6_desc": "Saat aralığını sen belirle; gerçek fiyat şeffaflığı LessonRadar'ın markasını taşır. Telefon yalnızca onaylı eşleşmelerde paylaşılır.",
-        "s7_title": "Önizleme ve onay",
-        "s7_desc": "Aşağıdaki özet senin profilin olarak görünür. Düzeltmek istediğin bir şey varsa geri dönüp güncelleyebilirsin."
+        "s7_title": "Profil fotoğrafını ekle",
+        "s7_desc": "Net, yüzünün göründüğü vesikalık tarzı kare bir fotoğraf yükle. Güven sinyali — fotoğraflı profiller 4× daha fazla mesaj alıyor.",
+        "s8_title": "Önizleme ve onay",
+        "s8_desc": "Aşağıdaki özet senin profilin olarak görünür. Düzeltmek istediğin bir şey varsa geri dönüp güncelleyebilirsin."
       },
       "fields": {
         "full_name_label": "Ad ve soyadın",
@@ -356,6 +359,7 @@
         "phone_label": "Telefon",
         "phone_hint": "Yalnızca eşleşen + onaylı öğrencilerle paylaşılır.",
         "email_label": "E-posta",
+        "email_hint": "Hesap e-postan otomatik dolduruldu. İstersen farklı bir adres kullanabilirsin.",
         "levels_label": "Seviyeler",
         "levels": {
           "ilkokul": "İlkokul",
@@ -367,6 +371,26 @@
         "exams_label": "Sınav türleri (opsiyonel)",
         "exams_hint": "Çalıştığın sınavları seç — LGS, TYT, AYT, YKS gibi."
       },
+      "photo": {
+        "dropzone_label": "Fotoğrafı buraya sürükle ya da seçmek için tıkla",
+        "dropzone_hint": "JPG, PNG veya WebP · en az 256×256 · en fazla 8 MB · kare olarak kırpılır",
+        "uploading": "Yükleniyor…",
+        "replace": "Fotoğrafı değiştir",
+        "remove": "Kaldır",
+        "preview_alt": "Profil fotoğrafı önizlemesi",
+        "tips_title": "Net bir fotoğraf için ipuçları",
+        "tip_face": "Yüzün karenin merkezinde, omuzlarına kadar görünsün.",
+        "tip_light": "Arkadan ışık alan loş kareler yerine düz, dağınık ışık.",
+        "tip_solo": "Sadece sen olmalısın — grup fotoğrafları kırpıldığında karışıyor.",
+        "errors": {
+          "required": "Profil fotoğrafı zorunlu.",
+          "too_large": "Dosya 8 MB'ı geçemez.",
+          "wrong_type": "Sadece JPG, PNG veya WebP.",
+          "too_small": "Resim çok küçük — en az 256×256 olmalı.",
+          "invalid": "Dosya geçerli bir resim değil.",
+          "network": "Yükleme başarısız oldu. Bağlantını kontrol et."
+        }
+      },
       "preview": {
         "full_name": "Ad Soyad",
         "primary": "Ana branş",
@@ -376,6 +400,9 @@
         "hourly": "Saat ücreti",
         "phone": "Telefon",
         "email": "E-posta",
+        "photo": "Profil fotoğrafı",
+        "photo_set": "Eklendi",
+        "photo_missing": "Eklenmedi",
         "review_note_title": "Ekibimiz başvurunu inceler",
         "review_note_body": "Onay sonrası profilin yayınlanır. Gerekirse ek belge isteyebilir veya küçük düzeltmeler için sana yazabiliriz.",
         "consents": "Onaylar",

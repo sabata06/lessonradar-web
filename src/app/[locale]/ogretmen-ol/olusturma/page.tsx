@@ -87,7 +87,7 @@ export default async function TeacherApplicationWizardPage({
   const locale = rawLocale as Locale;
   setRequestLocale(locale);
 
-  await requireAuth({ next: "/ogretmen-ol/olusturma" });
+  const sessionUser = await requireAuth({ next: "/ogretmen-ol/olusturma" });
   await getCsrfToken();
 
   const token = await getAccessToken();
@@ -182,6 +182,7 @@ export default async function TeacherApplicationWizardPage({
         initial={application}
         cities={citiesEnvelope.results}
         disciplines={disciplinesEnvelope.results}
+        accountEmail={sessionUser.email}
         consentVersions={{
           kvkk: "2026-05-08",
           terms: "2026-05-08",

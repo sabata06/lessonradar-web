@@ -305,7 +305,8 @@
         "s4": "About you & lesson",
         "s5": "City & format",
         "s6": "Pricing & contact",
-        "s7": "Preview & submit",
+        "s7": "Profile photo",
+        "s8": "Preview & submit",
         "s1_title": "Tell us about you and your main subject",
         "s1_desc": "Your name appears on your profile; the main subject anchors your placement in search.",
         "s2_title": "Which levels and exams do you cover?",
@@ -318,8 +319,10 @@
         "s5_desc": "City + optional district + lesson format. Format affects whether students filtering for it find you.",
         "s6_title": "Pricing and contact",
         "s6_desc": "You set the range; price transparency is part of LessonRadar's brand. Your phone is only shared on approved matches.",
-        "s7_title": "Preview and submit",
-        "s7_desc": "The summary below is how your profile will look. You can step back and fix anything before submitting."
+        "s7_title": "Add your profile photo",
+        "s7_desc": "Upload a clear, square headshot. Trust signal — profiles with a photo get 4× more messages.",
+        "s8_title": "Preview and submit",
+        "s8_desc": "The summary below is how your profile will look. You can step back and fix anything before submitting."
       },
       "fields": {
         "full_name_label": "Your full name",
@@ -356,6 +359,7 @@
         "phone_label": "Phone",
         "phone_hint": "Only shared with approved + matched students.",
         "email_label": "Email",
+        "email_hint": "Prefilled from your account. Use a different address if you prefer.",
         "levels_label": "Levels",
         "levels": {
           "ilkokul": "Primary",
@@ -367,6 +371,26 @@
         "exams_label": "Exam types (optional)",
         "exams_hint": "Pick the exams you prepare students for — LGS, TYT, AYT, YKS, etc."
       },
+      "photo": {
+        "dropzone_label": "Drop a photo here, or click to choose",
+        "dropzone_hint": "JPG, PNG or WebP · min 256×256 · max 8 MB · cropped to a square",
+        "uploading": "Uploading…",
+        "replace": "Replace photo",
+        "remove": "Remove",
+        "preview_alt": "Profile photo preview",
+        "tips_title": "Tips for a clean photo",
+        "tip_face": "Center your face in the frame, head and shoulders visible.",
+        "tip_light": "Use flat, diffuse light — avoid harsh backlighting.",
+        "tip_solo": "Only you — group photos get awkward when cropped square.",
+        "errors": {
+          "required": "Profile photo is required.",
+          "too_large": "File exceeds 8 MB.",
+          "wrong_type": "Use JPG, PNG or WebP only.",
+          "too_small": "Image too small — at least 256×256.",
+          "invalid": "File isn't a valid image.",
+          "network": "Upload failed. Check your connection."
+        }
+      },
       "preview": {
         "full_name": "Full name",
         "primary": "Main subject",
@@ -376,6 +400,9 @@
         "hourly": "Hourly rate",
         "phone": "Phone",
         "email": "Email",
+        "photo": "Profile photo",
+        "photo_set": "Added",
+        "photo_missing": "Not added",
         "review_note_title": "Our team reviews your application",
         "review_note_body": "Your profile goes live after approval. If we need more info we'll email you with a small change request.",
         "consents": "Consents",

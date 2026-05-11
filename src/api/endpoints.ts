@@ -58,6 +58,8 @@ export const ENDPOINTS = {
     `/api/teacher-applications/${encodeURIComponent(uuid)}/`,
   TEACHER_APPLICATION_SUBMIT: (uuid: string) =>
     `/api/teacher-applications/${encodeURIComponent(uuid)}/submit/`,
+  TEACHER_APPLICATION_PHOTO: (uuid: string) =>
+    `/api/teacher-applications/${encodeURIComponent(uuid)}/photo/`,
 } as const;
 
 export type EndpointKey = keyof typeof ENDPOINTS;

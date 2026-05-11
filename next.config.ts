@@ -19,8 +19,15 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      // Backend-served avatars (uploaded teacher / customer photos).
+      // Backend-served avatars (legacy path while media was on Hetzner local
+      // FS; kept until any pre-R2 ImageField rows are migrated).
       { protocol: "https", hostname: "api.lessonradar.com" },
+      // Cloudflare R2 public bucket. Every `pub-<hash>.r2.dev` host shares the
+      // same suffix, so the wildcard covers any bucket Mehmet attaches without
+      // redeploying. When we put a custom CDN domain (e.g. cdn.lessonradar.com)
+      // in front of R2, add that exact host below — the wildcard does NOT
+      // match custom domains.
+      { protocol: "https", hostname: "*.r2.dev" },
       // Google OAuth avatars — assigned to `profile_image_url` /
       // `avatar_url` for users who registered via Google Sign-In and
       // haven't uploaded their own photo. Google rotates the lh1–lh6

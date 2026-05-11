@@ -112,6 +112,7 @@ Rounded but not playful.
 - Search bar is a focal point on landing pages — large height, `rounded-2xl`, never compressed.
 - Sliders (price filter): teal track and thumb.
 - Forms group with `react-hook-form` + `zod`. Error styles use `--destructive` only on submit, not on every keystroke.
+- **No native `<select>` anywhere — ever.** Browser-default dropdowns ignore our palette, type ramp, focus ring, and rounded geometry; they also break the searchable + grouped + Turkish-fold behaviour we ship in filters. Use `BrandCombobox` (`src/components/ui/brand-combobox.tsx`) for single-select with search. For sort menus or short fixed lists where search is unnecessary, use the shadcn `Select` primitive (`src/components/ui/select.tsx`) — it shares our tokens and focus ring. Same rule for date and color pickers: no `<input type="date">` / `type="color">` — wrap our calendar primitive or build a brand picker.
 
 ### Mobile Navigation
 - Drawers/Sheets via radix `Sheet`, side-anchored on mobile. Filter menus and locale switcher live here.
