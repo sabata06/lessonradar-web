@@ -22,11 +22,16 @@ const nextConfig: NextConfig = {
       // Backend-served avatars (legacy path while media was on Hetzner local
       // FS; kept until any pre-R2 ImageField rows are migrated).
       { protocol: "https", hostname: "api.lessonradar.com" },
-      // Cloudflare R2 public bucket. Every `pub-<hash>.r2.dev` host shares the
-      // same suffix, so the wildcard covers any bucket Mehmet attaches without
-      // redeploying. When we put a custom CDN domain (e.g. cdn.lessonradar.com)
-      // in front of R2, add that exact host below — the wildcard does NOT
-      // match custom domains.
+      // Cloudflare R2 — production media host. `cdn.lessonradar.com` is the
+      // CNAME bound to bucket `lessonradar-uploads` (cutover 2026-05-11).
+      // This is the URL `R2_PUBLIC_URL` on backend resolves to, so every
+      // freshly stored ImageField returns a URL on this host.
+      { protocol: "https", hostname: "cdn.lessonradar.com" },
+      // Legacy `pub-<hash>.r2.dev` host. Kept whitelisted because old DB rows
+      // written before the custom-domain cutover may still hand back r2.dev
+      // URLs in cached payloads / mock data. Safe to remove after a full
+      // backend redeploy + DB scan confirms no stored URL references the
+      // raw r2.dev host anymore.
       { protocol: "https", hostname: "*.r2.dev" },
       // Google OAuth avatars — assigned to `profile_image_url` /
       // `avatar_url` for users who registered via Google Sign-In and
