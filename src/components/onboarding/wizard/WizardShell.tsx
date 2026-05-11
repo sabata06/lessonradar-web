@@ -1096,16 +1096,26 @@ function StepPhoto({
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   // Local blob URL of the file the user just picked. Shown instead of the
-  // R2/CDN URL so (a) preview is instantaneous (no round-trip wait) and
-  // (b) it sidesteps the TR-ISP `*.r2.dev` SNI reset until custom domain
-  // cutover lands. Revoked on replace + unmount to avoid memory leaks.
+  // server URL so the preview is instantaneous. The previous version of
+  // this code paired the state with a `useEffect(..., [localPreview])`
+  // cleanup AND an explicit `URL.revokeObjectURL` inside `handleFiles`;
+  // the two paths raced under React's commit ordering and occasionally
+  // revoked the *just-set* blob URL right after wiring it to <img src>,
+  // leaving a broken icon despite the upload itself succeeding (incident
+  // 2026-05-12, Mehmet's resumed draft). The ref-based lifecycle below
+  // is the only writer that revokes — there is no other path — so the
+  // blob URL handed to <img> is guaranteed to outlive the render.
   const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const blobUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     return () => {
-      if (localPreview) URL.revokeObjectURL(localPreview);
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
+      }
     };
-  }, [localPreview]);
+  }, []);
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -1130,9 +1140,19 @@ function StepPhoto({
     setUploadState("uploading");
 
     // Spin up the local preview right away — gives the user instant
-    // feedback that the file was accepted, even before the upload completes.
-    if (localPreview) URL.revokeObjectURL(localPreview);
-    setLocalPreview(URL.createObjectURL(file));
+    // feedback that the file was accepted, even before the upload
+    // completes. The blob URL lifecycle is owned by `blobUrlRef`: we
+    // revoke the previous one (if any) *before* minting and storing the
+    // new one, so the value `setLocalPreview` receives is guaranteed
+    // alive for at least the next render. No useEffect with a
+    // `[localPreview]` dep — that double-revoked under React's commit
+    // ordering and produced the dead-blob bug.
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+    }
+    const nextBlobUrl = URL.createObjectURL(file);
+    blobUrlRef.current = nextBlobUrl;
+    setLocalPreview(nextBlobUrl);
 
     // Resize + re-encode on the client BEFORE upload. Phone cameras hand
     // us 4–8 MB; without this, slow connections stall the wizard and the
