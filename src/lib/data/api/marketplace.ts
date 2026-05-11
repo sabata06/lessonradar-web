@@ -55,12 +55,16 @@ export async function fetchTeacherList(
   try {
     return await fetchTeacherListLive(filters, options);
   } catch (error) {
-    // Treat 400 (e.g. unknown discipline / invalid filter combination)
-    // as an empty result. The web's pSEO catalog can address slugs the
+    // Treat 4xx (e.g. unknown discipline / invalid filter combination)
+    // AND 5xx / network errors (origin restart, Cloudflare 502) as an
+    // empty result. The web's pSEO catalog can address slugs the
     // backend taxonomy hasn't onboarded yet — those pages should fall
     // through to lead-collection mode (noindex, quality_score < 50)
-    // instead of crashing the build.
-    if (isApiClientError(error)) return EMPTY_LIST_ENVELOPE;
+    // instead of crashing the build. A transient backend 502 during a
+    // Vercel build used to abort all 100+ static pages (incident
+    // 2026-05-11); ISR refreshes the cached payloads automatically
+    // once the origin recovers.
+    if (isApiUnreachable(error)) return EMPTY_LIST_ENVELOPE;
     throw error;
   }
 }
@@ -143,6 +147,17 @@ export async function fetchTeacherDetailBySlug(
     );
   } catch (error) {
     if (isApiNotFound(error)) return null;
+    // Build-time resilience: a transient 502 from Cloudflare/origin
+    // shouldn't abort the entire export. Returning null routes the
+    // caller to `notFound()` for that single slug; ISR will fetch the
+    // real payload on the next request once backend recovers.
+    if (isApiUnreachable(error)) {
+      console.warn(
+        `[fetchTeacherDetailBySlug] backend unreachable for slug=${slug}, returning null`,
+        error,
+      );
+      return null;
+    }
     throw error;
   }
 }
