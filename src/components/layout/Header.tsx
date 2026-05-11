@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { HideForTeachers } from "@/components/auth/HideForTeachers";
 
 import { Container } from "./Container";
 import { HeaderAuth } from "./HeaderAuth";
@@ -19,7 +20,9 @@ export async function Header() {
           <Logo />
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
             <NavItem href="/ara">{t("nav.discover")}</NavItem>
-            <NavItem href="/ogretmen-ol">{t("nav.become_teacher")}</NavItem>
+            <HideForTeachers>
+              <NavItem href="/ogretmen-ol">{t("nav.become_teacher")}</NavItem>
+            </HideForTeachers>
           </nav>
         </div>
 

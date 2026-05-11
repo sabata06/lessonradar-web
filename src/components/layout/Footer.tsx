@@ -5,6 +5,7 @@ import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { Link } from "@/i18n/navigation";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
+import { HideForTeachers } from "@/components/auth/HideForTeachers";
 import { fetchAllDisciplines, fetchCities } from "@/lib/data/api/marketplace";
 import { toPseoDisciplinePathSlug } from "@/lib/seo/pseo-slugs";
 
@@ -121,16 +122,29 @@ interface FooterGroup {
   moreLabel?: string;
 }
 
+function renderFooterLink(l: FooterLinkItem) {
+  // The "Öğretmen Ol" link only makes sense for non-teachers; teacher
+  // visitors get it scrubbed after auth hydration (Superprof pattern).
+  if (l.key === "become") {
+    return (
+      <HideForTeachers key={l.key}>
+        <FooterLink href={l.href}>{l.label}</FooterLink>
+      </HideForTeachers>
+    );
+  }
+  return (
+    <FooterLink key={l.key} href={l.href}>
+      {l.label}
+    </FooterLink>
+  );
+}
+
 function FooterColumn({ group }: { group: FooterGroup }) {
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
       <ul className="space-y-1">
-        {group.links.map((l) => (
-          <FooterLink key={l.key} href={l.href}>
-            {l.label}
-          </FooterLink>
-        ))}
+        {group.links.map(renderFooterLink)}
         {group.moreHref && group.moreLabel ? (
           <FooterMoreLink href={group.moreHref}>{group.moreLabel}</FooterMoreLink>
         ) : null}
@@ -152,11 +166,7 @@ function FooterAccordion({ group }: { group: FooterGroup }) {
         />
       </summary>
       <ul className="pb-3">
-        {group.links.map((l) => (
-          <FooterLink key={l.key} href={l.href}>
-            {l.label}
-          </FooterLink>
-        ))}
+        {group.links.map(renderFooterLink)}
         {group.moreHref && group.moreLabel ? (
           <FooterMoreLink href={group.moreHref}>{group.moreLabel}</FooterMoreLink>
         ) : null}

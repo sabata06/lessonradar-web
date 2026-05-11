@@ -269,6 +269,29 @@
       "cta": "Başvuruya başla",
       "cta_helper": "Hesabın yoksa önce kısa bir kayıt isteriz; sonra wizard'a yönlendirilirsin."
     },
+    "auth_aware": {
+      "status_link": "Durumu gör",
+      "draft_pill": "Taslak",
+      "draft_title": "Başvurun taslakta",
+      "draft_body": "Kaldığın yerden devam edebilirsin. Adımlar otomatik kaydedildiği için hiçbir şey kaybolmaz.",
+      "draft_cta": "Devam et",
+      "review_pill": "İnceleniyor",
+      "review_title": "Başvurun bizde",
+      "review_body": "Ekibimiz başvurunu inceliyor. Sonuç çıkınca sana e-posta atacağız. Bu süreçte profil ön izlemesini durum sayfasından görebilirsin.",
+      "review_cta": "Durumu gör",
+      "needs_changes_pill": "Düzeltme isteniyor",
+      "needs_changes_title": "Başvurun için küçük düzeltmeler gerekiyor",
+      "needs_changes_body": "Aşağıdaki notları okuyup ilgili adımları güncelle, ardından tekrar gönder.",
+      "needs_changes_cta": "Düzeltmeye geç",
+      "rejected_pill": "Reddedildi",
+      "rejected_title": "Başvurun bu sefer onaylanamadı",
+      "rejected_body": "7 günlük süre dolduğunda yeni başvuru oluşturabilirsin. Sorularını destek ekibine iletebilirsin.",
+      "rejected_cta": "Detayları gör",
+      "approved_title": "Sen zaten LessonRadar öğretmenisin",
+      "approved_body": "Profilin yayında. Müsaitliğini ve fiyatlarını panelinden güncel tut, gelen taleplere hızlı yanıt vererek listede üst sıralara çık.",
+      "approved_cta_panel": "Panele git",
+      "approved_cta_profile": "Profilimi gör"
+    },
     "policy_notice": "Onaylanmış doğrulama ve listeleme süreci ekibimizin incelemesine bağlıdır. Bu sayfa bir iş ilişkisi vaadi değildir."
   },
   "teacherApplication": {

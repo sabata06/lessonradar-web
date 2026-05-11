@@ -269,6 +269,29 @@
       "cta": "Start application",
       "cta_helper": "If you don't have an account yet, you'll be asked to register first, then redirected back here."
     },
+    "auth_aware": {
+      "status_link": "View status",
+      "draft_pill": "Draft",
+      "draft_title": "Your application is a draft",
+      "draft_body": "Pick up where you left off — every step is auto-saved, nothing is lost.",
+      "draft_cta": "Continue",
+      "review_pill": "Under review",
+      "review_title": "Your application is with us",
+      "review_body": "Our team is reviewing your application. We'll email you the outcome — you can also check status anytime from the status page.",
+      "review_cta": "View status",
+      "needs_changes_pill": "Needs changes",
+      "needs_changes_title": "We need a few changes",
+      "needs_changes_body": "Read the reviewer notes below, update the relevant steps, and resubmit.",
+      "needs_changes_cta": "Edit application",
+      "rejected_pill": "Rejected",
+      "rejected_title": "Your application wasn't approved this time",
+      "rejected_body": "You can apply again after the 7-day cooldown. Reach out to support if you have questions.",
+      "rejected_cta": "View details",
+      "approved_title": "You're already a LessonRadar tutor",
+      "approved_body": "Your profile is live. Keep availability and pricing fresh in your dashboard, and reply quickly to incoming requests to rank higher in listings.",
+      "approved_cta_panel": "Open dashboard",
+      "approved_cta_profile": "View my profile"
+    },
     "policy_notice": "Verification and listing depend on our team's review. This page is not an offer of employment."
   },
   "teacherApplication": {

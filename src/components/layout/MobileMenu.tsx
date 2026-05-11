@@ -77,9 +77,11 @@ export function MobileMenu() {
           <MobileNavItem href="/ders-talebi" onClick={close}>
             {t("nav.request")}
           </MobileNavItem>
-          <MobileNavItem href="/ogretmen-ol" onClick={close}>
-            {t("nav.become_teacher")}
-          </MobileNavItem>
+          {isHydrated && user?.role !== "teacher" && (
+            <MobileNavItem href="/ogretmen-ol" onClick={close}>
+              {t("nav.become_teacher")}
+            </MobileNavItem>
+          )}
           <MobileNavItem href="/fiyatlar" onClick={close}>
             {t("nav.pricing")}
           </MobileNavItem>
