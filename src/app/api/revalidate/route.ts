@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -29,6 +29,7 @@ export const dynamic = "force-dynamic";
  */
 const SECRET = process.env.REVALIDATE_SECRET;
 const MAX_PATHS = 40;
+const MAX_TAGS = 40;
 
 export async function POST(req: Request): Promise<Response> {
   if (!SECRET) {
@@ -38,7 +39,7 @@ export async function POST(req: Request): Promise<Response> {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 
-  let body: { paths?: unknown };
+  let body: { paths?: unknown; tags?: unknown };
   try {
     body = (await req.json()) as { paths?: unknown };
   } catch {
@@ -46,12 +47,19 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const rawPaths = Array.isArray(body.paths) ? body.paths : [];
-  if (rawPaths.length === 0 || rawPaths.length > MAX_PATHS) {
-    return NextResponse.json({ error: "invalid_paths" }, { status: 400 });
+  const rawTags = Array.isArray(body.tags) ? body.tags : [];
+  if (
+    (rawPaths.length === 0 && rawTags.length === 0) ||
+    rawPaths.length > MAX_PATHS ||
+    rawTags.length > MAX_TAGS
+  ) {
+    return NextResponse.json({ error: "invalid_targets" }, { status: 400 });
   }
 
   const revalidated: string[] = [];
+  const revalidatedTags: string[] = [];
   const skipped: { path: string; reason: string }[] = [];
+  const skippedTags: { tag: string; reason: string }[] = [];
 
   for (const raw of rawPaths) {
     if (typeof raw !== "string") {
@@ -74,5 +82,27 @@ export async function POST(req: Request): Promise<Response> {
     }
   }
 
-  return NextResponse.json({ revalidated, skipped });
+  for (const raw of rawTags) {
+    if (typeof raw !== "string") {
+      skippedTags.push({ tag: String(raw), reason: "not_string" });
+      continue;
+    }
+    if (raw.length === 0 || raw.length > 256 || raw.includes("..")) {
+      skippedTags.push({ tag: raw, reason: "unsafe" });
+      continue;
+    }
+    try {
+      revalidateTag(raw, { expire: 0 });
+      revalidatedTags.push(raw);
+    } catch (err) {
+      skippedTags.push({ tag: raw, reason: String(err) });
+    }
+  }
+
+  return NextResponse.json({
+    revalidated,
+    revalidatedTags,
+    skipped,
+    skippedTags,
+  });
 }
