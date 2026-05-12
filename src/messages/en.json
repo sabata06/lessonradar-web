@@ -182,7 +182,22 @@
     "errors": {
       "phone_invalid": "Enter a valid TR mobile number (5XX XXX XX XX).",
       "kvkk_required": "Tick the KVKK consent to continue.",
-      "budget_range_invalid": "Max budget cannot be lower than min budget."
+      "budget_range_invalid": "Max budget cannot be lower than min budget.",
+      "unauthorized": "You need to sign in to submit a request.",
+      "email_unverified": "Verify your email address before submitting a request.",
+      "forbidden": "You don't have permission to perform this action.",
+      "phone_velocity": "A request from this phone number was already sent in the last 24 hours. Please try again later.",
+      "invalid_slug": "The selected subject or city is invalid. Please pick again.",
+      "invalid_target_teacher": "The selected tutor is not available for this subject or city.",
+      "network": "Couldn't submit due to a network problem. Please try again."
+    },
+    "gate": {
+      "email_unverified": {
+        "title": "Verify your email first",
+        "body": "To submit a request we need to verify <email></email>. Once you enter the 6-digit code we sent, you'll return to the lesson request form.",
+        "cta": "Verify my email",
+        "footnote": "Takes 30 seconds. Your request is paused right here."
+      }
     },
     "aside": {
       "title": "What happens after you submit?",
@@ -195,13 +210,20 @@
     "success": {
       "meta_title": "Request received",
       "title": "Your request is in.",
-      "subtitle": "Verified tutors in your city are seeing it now. First offers usually land in your SMS within an hour.",
+      "subtitle": "Matching verified tutors are seeing it now. First offers usually land in your SMS within an hour.",
+      "subtitle_direct": "Your request was sent to {teacher}. Other verified tutors may also be picked as backups.",
+      "summary": {
+        "recipient_count_label": "Matched tutors",
+        "notified_count_label": "Notified now",
+        "contact_phone_label": "Phone (masked)"
+      },
       "step1_title": "SMS notifications",
       "step1_description": "We text you each time a new offer comes in.",
-      "step2_title": "Track in one place",
-      "step2_description": "Use the free mobile app to compare offers side-by-side.",
+      "step_delayed_title": "More tutors in 90 minutes",
+      "step_delayed_description": "Premium tutors saw your request immediately. We forward to additional tutors automatically after 90 minutes — broader pool, more options.",
       "app_title": "Track offers from one screen",
       "app_description": "Instant notifications, in-app messaging, and side-by-side comparison live in the mobile app.",
+      "cta_panel": "Go to panel",
       "back_home": "Back to homepage"
     }
   },
@@ -837,7 +859,22 @@
       "action_request_cta": "Request a lesson",
       "action_search_title": "Browse tutors",
       "action_search_description": "Discover verified tutors in your city.",
-      "action_search_cta": "See tutors"
+      "action_search_cta": "See tutors",
+      "leads": {
+        "title": "My requests",
+        "subtitle": "Lesson requests you've sent and the responses they've received.",
+        "empty_title": "No requests yet",
+        "empty_subtitle": "Send your first request — matched verified tutors will reach you within minutes.",
+        "empty_cta": "Create request",
+        "error_generic": "Couldn't load your requests right now. Try refreshing.",
+        "direct_to": "Routed to {teacher}",
+        "new_request_cta": "New request",
+        "stat": {
+          "recipients": "Matched",
+          "responded": "Replied",
+          "status": "Status"
+        }
+      }
     },
     "teacher": {
       "meta_title": "Teacher Panel",

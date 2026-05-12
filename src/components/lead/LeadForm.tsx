@@ -32,8 +32,10 @@ import {
   MODALITIES,
   type LeadRequestInput,
   type LeadRequestPayload,
+  type LeadSubmitErrorCode,
 } from "@/lib/lead/schema";
 import { submitLeadRequest } from "@/lib/lead/submit";
+import { storeLeadSubmission } from "@/lib/lead/handoff";
 import type {
   City,
   District,
@@ -134,7 +136,6 @@ export function LeadForm({
       preferredSchedule: "",
       notes: "",
       contactPhone: "",
-      contactEmail: "",
       consentKvkk: false as unknown as true,
     },
   });
@@ -152,9 +153,33 @@ export function LeadForm({
   const priorityCities = cities.filter((c) => c.isPriority);
   const otherCities = cities.filter((c) => !c.isPriority);
 
+  const errorMessageFor = (code: LeadSubmitErrorCode): string => {
+    switch (code) {
+      case "unauthorized":
+        return t("errors.unauthorized");
+      case "email_unverified":
+        return t("errors.email_unverified");
+      case "forbidden":
+        return t("errors.forbidden");
+      case "phone_velocity":
+        return t("errors.phone_velocity");
+      case "phone_invalid":
+        return t("errors.phone_invalid");
+      case "kvkk_required":
+        return t("errors.kvkk_required");
+      case "invalid_slug":
+        return t("errors.invalid_slug");
+      case "invalid_target_teacher":
+        return t("errors.invalid_target_teacher");
+      case "network_error":
+        return t("errors.network");
+      default:
+        return t("error_generic");
+    }
+  };
+
   const onSubmit = handleSubmit(async (raw) => {
     setServerError(null);
-    // raw is LeadRequestInput → run through schema once more to get parsed payload
     const parsed = leadRequestSchema.safeParse(raw);
     if (!parsed.success) {
       setServerError(t("error_generic"));
@@ -164,11 +189,31 @@ export function LeadForm({
 
     const result = await submitLeadRequest(payload);
     if (!result.ok) {
-      setServerError(t("error_generic"));
+      if (result.error === "unauthorized") {
+        const next = `/ders-talebi${
+          window.location.search ? window.location.search : ""
+        }`;
+        router.push(`/giris?next=${encodeURIComponent(next)}`);
+        return;
+      }
+      if (result.error === "email_unverified") {
+        const next = `/ders-talebi${
+          window.location.search ? window.location.search : ""
+        }`;
+        router.push(`/eposta-dogrula?next=${encodeURIComponent(next)}`);
+        return;
+      }
+      setServerError(errorMessageFor(result.error));
       return;
     }
+    storeLeadSubmission({
+      lead: result.lead,
+      notifiedCount: result.notifiedCount,
+    });
     startTransition(() => {
-      router.push(`/ders-talebi/tesekkurler?id=${encodeURIComponent(result.id)}`);
+      router.push(
+        `/ders-talebi/tesekkurler?id=${encodeURIComponent(result.lead.uuid)}`,
+      );
     });
   });
 
@@ -450,20 +495,6 @@ export function LeadForm({
             placeholder={t("fields.phone.placeholder")}
             className="h-12 rounded-xl"
             {...register("contactPhone")}
-          />
-        </FieldRow>
-
-        <FieldRow
-          label={t("fields.email.label")}
-          optional
-          error={errors.contactEmail?.message}
-        >
-          <Input
-            type="email"
-            autoComplete="email"
-            placeholder={t("fields.email.placeholder")}
-            className="h-12 rounded-xl"
-            {...register("contactEmail")}
           />
         </FieldRow>
 

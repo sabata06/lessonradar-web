@@ -12,14 +12,15 @@ import {
 
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
+import { CustomerLeadsSection } from "@/components/panel/CustomerLeadsSection";
 import { Link } from "@/i18n/navigation";
-import { routing, type Locale } from "@/i18n/routing";
+import { type Locale } from "@/i18n/routing";
 import { requireAuth } from "@/lib/auth/guards";
+import { fetchCustomerLeads } from "@/lib/lead/customer-leads";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+// Auth-gated + per-user lead data; cannot be statically prerendered.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -53,6 +54,7 @@ export default async function CustomerPanelPage({ params }: PageProps) {
 
   const t = await getTranslations("panel.customer");
   const tCommon = await getTranslations("panel.common");
+  const leads = await fetchCustomerLeads();
 
   const greetingName = user.firstName?.trim() || user.email.split("@")[0];
 
@@ -70,6 +72,8 @@ export default async function CustomerPanelPage({ params }: PageProps) {
             {t("subtitle")}
           </p>
         </header>
+
+        <CustomerLeadsSection data={leads} locale={locale} />
 
         <section aria-labelledby="features-heading" className="space-y-4">
           <h2

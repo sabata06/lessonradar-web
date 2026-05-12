@@ -1,9 +1,11 @@
 import { z } from "zod";
 
 /**
- * Source of truth for lead request validation. Both the client form and the
- * Route Handler (/api/lead) reuse this so client UX errors mirror server-
- * side rejections exactly.
+ * Source of truth for lead request validation.
+ *
+ * B4 contract (see `docs/B4_LEAD_BACKEND_CONTRACT.md`): the backend takes
+ * `contact_email` from `request.user.email`, so the form no longer collects
+ * email. Phone stays required and is normalized to `+90…`.
  */
 
 export const STUDENT_LEVELS = [
@@ -20,12 +22,14 @@ export const STUDENT_LEVELS = [
 
 export const MODALITIES = ["in_person", "online", "either"] as const;
 
+/** Active KVKK consent text version. Bump when the consent copy changes. */
+export const KVKK_CONSENT_VERSION = "2026-05";
+
 /** TR cep telefon formatları:  +905XXXXXXXXX, 05XXXXXXXXX, 5XXXXXXXXX, ya da boşluklu varyantlar */
 const TR_PHONE_REGEX = /^(\+?90|0)?\s*5\d{2}\s*\d{3}\s*\d{2}\s*\d{2}$/;
 
 export function normalizeTrPhone(raw: string): string | null {
   const digits = raw.replace(/\D/g, "");
-  // strip leading 90 or 0 to get the 10-digit core
   let core = digits;
   if (core.startsWith("90") && core.length === 12) core = core.slice(2);
   else if (core.startsWith("0") && core.length === 11) core = core.slice(1);
@@ -63,11 +67,6 @@ export const leadRequestSchema = z
         }
         return norm;
       }),
-    contactEmail: z
-      .string()
-      .email()
-      .optional()
-      .or(z.literal("").transform(() => undefined)),
     consentKvkk: z.literal(true, {
       message: "kvkk_required",
     }),
@@ -80,16 +79,107 @@ export const leadRequestSchema = z
 export type LeadRequestInput = z.input<typeof leadRequestSchema>;
 export type LeadRequestPayload = z.output<typeof leadRequestSchema>;
 
+/**
+ * Snake-case API payload sent to Django. Matches the contract in
+ * `docs/B4_LEAD_BACKEND_CONTRACT.md`.
+ */
+export interface LeadCreateApiPayload {
+  discipline_slug: string;
+  city_slug: string;
+  district_slug?: string;
+  teacher_slug?: string;
+  level: (typeof STUDENT_LEVELS)[number];
+  modality: (typeof MODALITIES)[number];
+  budget_min?: string;
+  budget_max?: string;
+  preferred_schedule?: string;
+  notes?: string;
+  contact_phone: string;
+  consent_kvkk: true;
+  consent_kvkk_version: string;
+  source: "web";
+}
+
+export function toApiPayload(p: LeadRequestPayload): LeadCreateApiPayload {
+  return {
+    discipline_slug: p.disciplineSlug,
+    city_slug: p.citySlug,
+    district_slug: p.districtSlug || undefined,
+    teacher_slug: p.teacherSlug || undefined,
+    level: p.level,
+    modality: p.modality,
+    budget_min: p.budgetMin !== undefined ? String(p.budgetMin) : undefined,
+    budget_max: p.budgetMax !== undefined ? String(p.budgetMax) : undefined,
+    preferred_schedule: p.preferredSchedule || undefined,
+    notes: p.notes || undefined,
+    contact_phone: p.contactPhone,
+    consent_kvkk: true,
+    consent_kvkk_version: KVKK_CONSENT_VERSION,
+    source: "web",
+  };
+}
+
+/** Backend lead row (subset surfaced to client). */
+export interface LeadApiRow {
+  uuid: string;
+  status: string;
+  discipline_slug: string;
+  discipline_name?: string;
+  city_slug: string;
+  city_name?: string;
+  district_slug?: string | null;
+  district_name?: string | null;
+  target_teacher?: { slug: string; full_name: string } | null;
+  level?: string;
+  modality?: string;
+  budget_min?: string | null;
+  budget_max?: string | null;
+  preferred_schedule?: string | null;
+  notes?: string | null;
+  contact_phone_masked?: string;
+  contact_email?: string;
+  recipient_count: number;
+  responded_count: number;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface LeadCreateApiResponse {
+  lead: LeadApiRow;
+  notified_count: number;
+}
+
+/**
+ * Response shape returned by the web BFF `/api/leads` POST. Error codes are
+ * normalized so the client form can render the right state without parsing
+ * Django's raw error payloads.
+ */
+export type LeadSubmitErrorCode =
+  | "validation_failed"
+  | "unauthorized"
+  | "email_unverified"
+  | "forbidden"
+  | "invalid_slug"
+  | "kvkk_required"
+  | "phone_invalid"
+  | "phone_velocity"
+  | "invalid_target_teacher"
+  | "upstream_error"
+  | "network_error"
+  | "unknown_error";
+
 export interface LeadSubmitResponseOk {
   ok: true;
-  id: string;
-  receivedAt: string;
+  lead: LeadApiRow;
+  notifiedCount: number;
 }
 
 export interface LeadSubmitResponseError {
   ok: false;
-  error: string;
+  error: LeadSubmitErrorCode;
+  message?: string;
   fieldErrors?: Record<string, string[]>;
+  status?: number;
 }
 
 export type LeadSubmitResponse = LeadSubmitResponseOk | LeadSubmitResponseError;

@@ -46,10 +46,14 @@ export const ENDPOINTS = {
     `/api/marketplace/teachers/by-slug/${encodeURIComponent(slug)}/`,
   MARKETPLACE_CITIES: "/api/marketplace/cities/",
 
-  // ── Anonymous lead capture (B4 — backend pending) ───────────────────────
+  // ── Lead capture (B4 LIVE — authenticated verified-customer only) ───────
   LEAD_CREATE: "/api/marketplace/leads/",
-  LEAD_PHONE_OTP_REQUEST: "/api/marketplace/leads/phone-otp/request/",
-  LEAD_PHONE_OTP_VERIFY: "/api/marketplace/leads/phone-otp/verify/",
+  LEAD_CUSTOMER_MINE: "/api/customer/leads/mine/",
+  LEAD_TEACHER_INBOX: "/api/teacher/leads/inbox/",
+  LEAD_TEACHER_RESPOND: (recipientUuid: string) =>
+    `/api/teacher/leads/${encodeURIComponent(recipientUuid)}/respond/`,
+  LEAD_TEACHER_DECLINE: (recipientUuid: string) =>
+    `/api/teacher/leads/${encodeURIComponent(recipientUuid)}/decline/`,
 
   // ── Teacher application (B5a LIVE) ──────────────────────────────────────
   TEACHER_APPLICATION_START: "/api/teacher-applications/",

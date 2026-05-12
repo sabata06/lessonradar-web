@@ -3,17 +3,18 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 
 import { Container } from "@/components/layout/Container";
 import { LeadForm } from "@/components/lead/LeadForm";
+import { LeadEmailVerificationGate } from "@/components/lead/LeadEmailVerificationGate";
 import { Breadcrumb } from "@/components/discovery/Breadcrumb";
 
-import { routing, type Locale } from "@/i18n/routing";
+import { type Locale } from "@/i18n/routing";
 import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
 import { getTeacherBySlug } from "@/lib/data/mock/teachers";
+import { requireAuth } from "@/lib/auth/guards";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+// Auth gate forces server-side cookie read; this page can't be prerendered.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -37,11 +38,19 @@ interface SearchParams {
   district?: string;
   /**
    * Optional teacher slug — when present, the lead form pre-fills the
-   * intended recipient and shows a "scoped to this tutor" banner. The
-   * slug also rides into the payload so the backend can fan out to that
-   * teacher first before broadcasting to the rest of the city.
+   * intended recipient and shows a "scoped to this tutor" banner.
    */
   teacher?: string;
+}
+
+function buildNextParam(sp: SearchParams): string {
+  const search = new URLSearchParams();
+  if (sp.discipline) search.set("discipline", sp.discipline);
+  if (sp.city) search.set("city", sp.city);
+  if (sp.district) search.set("district", sp.district);
+  if (sp.teacher) search.set("teacher", sp.teacher);
+  const qs = search.toString();
+  return qs ? `/ders-talebi?${qs}` : "/ders-talebi";
 }
 
 export default async function LeadRequestPage({
@@ -57,7 +66,15 @@ export default async function LeadRequestPage({
   const t = await getTranslations("lead");
   const typedLocale = locale as Locale;
 
-  // Validate query-param defaults — refuse anything that doesn't match a real slug
+  const nextPath = buildNextParam(sp);
+
+  // Lead creation is authenticated-customer only. Anon visitors bounce to
+  // /giris?next=...; teachers/admins bounce home via roleHomepage.
+  const user = await requireAuth({
+    role: ["customer", "admin"],
+    next: nextPath,
+  });
+
   const validDisciplineSlug = MOCK_DISCIPLINES.find((d) => d.slug === sp.discipline)?.slug;
   const validCitySlug = TR_CITIES.find((c) => c.slug === sp.city)?.slug;
   const validDistrictSlug =
@@ -78,7 +95,6 @@ export default async function LeadRequestPage({
       </Container>
 
       <Container className="grid gap-10 pb-16 lg:grid-cols-[1fr_22rem] lg:items-start lg:pb-20">
-        {/* Form */}
         <div className="order-2 lg:order-1">
           <header className="space-y-3 pb-6">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand">
@@ -91,23 +107,31 @@ export default async function LeadRequestPage({
               {t("subtitle")}
             </p>
           </header>
-          <LeadForm
-            locale={typedLocale}
-            domains={MOCK_DOMAINS}
-            disciplines={MOCK_DISCIPLINES}
-            cities={TR_CITIES}
-            districts={TR_DISTRICTS}
-            defaults={{
-              disciplineSlug: validDisciplineSlug,
-              citySlug: validCitySlug,
-              districtSlug: validDistrictSlug,
-              teacherSlug: targetTeacher?.slug,
-            }}
-            targetTeacherName={targetTeacher?.fullName}
-          />
+
+          {user.isEmailVerified ? (
+            <LeadForm
+              locale={typedLocale}
+              domains={MOCK_DOMAINS}
+              disciplines={MOCK_DISCIPLINES}
+              cities={TR_CITIES}
+              districts={TR_DISTRICTS}
+              defaults={{
+                disciplineSlug: validDisciplineSlug,
+                citySlug: validCitySlug,
+                districtSlug: validDistrictSlug,
+                teacherSlug: targetTeacher?.slug,
+              }}
+              targetTeacherName={targetTeacher?.fullName}
+            />
+          ) : (
+            <LeadEmailVerificationGate
+              locale={typedLocale}
+              email={user.email}
+              nextPath={nextPath}
+            />
+          )}
         </div>
 
-        {/* Trust sidebar */}
         <aside className="order-1 lg:order-2 lg:sticky lg:top-24">
           <div className="space-y-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
             <h2 className="text-base font-semibold text-foreground">{t("aside.title")}</h2>

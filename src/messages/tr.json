@@ -182,7 +182,22 @@
     "errors": {
       "phone_invalid": "Geçerli bir TR cep numarası gir (5XX XXX XX XX).",
       "kvkk_required": "Devam etmek için KVKK onayını işaretle.",
-      "budget_range_invalid": "Maksimum bütçe minimumdan küçük olamaz."
+      "budget_range_invalid": "Maksimum bütçe minimumdan küçük olamaz.",
+      "unauthorized": "Talep göndermek için giriş yapman gerekiyor.",
+      "email_unverified": "Talep göndermek için önce e-posta adresini doğrula.",
+      "forbidden": "Bu işlemi yapmak için yetkin yok.",
+      "phone_velocity": "Bu telefon numarasından son 24 saat içinde zaten bir talep gönderildi. Lütfen sonra tekrar dene.",
+      "invalid_slug": "Seçtiğin branş veya şehir geçersiz. Listeden tekrar seç.",
+      "invalid_target_teacher": "Seçilen öğretmen bu branş veya şehir için müsait değil.",
+      "network": "Bağlantı sorunu nedeniyle talep gönderilemedi. Lütfen tekrar dene."
+    },
+    "gate": {
+      "email_unverified": {
+        "title": "Önce e-posta adresini doğrula",
+        "body": "Talep göndermek için <email></email> adresini doğrulamamız gerekiyor. Sana gönderdiğimiz 6 haneli kodu girince ders talebi formuna geri döneceksin.",
+        "cta": "E-postamı doğrula",
+        "footnote": "Doğrulama 30 saniye sürer. Talebin geçici olarak burada bekler."
+      }
     },
     "aside": {
       "title": "Talep gönderince ne olur?",
@@ -195,13 +210,20 @@
     "success": {
       "meta_title": "Talebin alındı",
       "title": "Talebin alındı.",
-      "subtitle": "Şehrindeki doğrulanmış öğretmenler talebini şu an görüyor. Ortalama 1 saat içinde ilk teklifler SMS ile sana ulaşır.",
+      "subtitle": "Eşleşen doğrulanmış öğretmenler talebini şu an görüyor. Ortalama 1 saat içinde ilk teklifler SMS ile sana ulaşır.",
+      "subtitle_direct": "Talebin {teacher} öğretmene iletildi. Yedek olarak diğer doğrulanmış öğretmenler de seçilebilir.",
+      "summary": {
+        "recipient_count_label": "Eşleşen öğretmen",
+        "notified_count_label": "Şimdi bildirim aldı",
+        "contact_phone_label": "Telefon (maskeli)"
+      },
       "step1_title": "SMS ile bildirim",
       "step1_description": "Yeni teklif geldikçe telefonuna kısa mesaj gönderiyoruz.",
-      "step2_title": "Tek noktadan takip",
-      "step2_description": "Tüm teklifleri karşılaştırmak için ücretsiz mobil uygulamayı kullanabilirsin.",
+      "step_delayed_title": "90 dakika sonra ek öğretmenler",
+      "step_delayed_description": "Premium öğretmenler şimdi gördü. Ek öğretmenlere 90 dakika sonra otomatik iletiyoruz; talebin daha geniş bir öğretmen havuzuna ulaşır.",
       "app_title": "Teklifleri tek ekrandan takip et",
       "app_description": "Mobil uygulamada anında bildirim, in-app mesajlaşma ve karşılaştırma araçları seni bekliyor.",
+      "cta_panel": "Panele git",
       "back_home": "Ana sayfaya dön"
     }
   },
@@ -837,7 +859,22 @@
       "action_request_cta": "Talep oluştur",
       "action_search_title": "Öğretmen ara",
       "action_search_description": "Şehrindeki doğrulanmış öğretmenleri keşfet.",
-      "action_search_cta": "Öğretmenleri gör"
+      "action_search_cta": "Öğretmenleri gör",
+      "leads": {
+        "title": "Taleplerim",
+        "subtitle": "Oluşturduğun ders talepleri ve gelen yanıt sayıları.",
+        "empty_title": "Henüz talebin yok",
+        "empty_subtitle": "İlk talebini oluştur; eşleşen doğrulanmış öğretmenler dakikalar içinde sana ulaşsın.",
+        "empty_cta": "Talep oluştur",
+        "error_generic": "Talep listesi şu an yüklenemedi. Lütfen sayfayı yenile.",
+        "direct_to": "{teacher} öğretmene yönlendirildi",
+        "new_request_cta": "Yeni talep oluştur",
+        "stat": {
+          "recipients": "Eşleşen",
+          "responded": "Yanıt",
+          "status": "Durum"
+        }
+      }
     },
     "teacher": {
       "meta_title": "Öğretmen Panelim",
