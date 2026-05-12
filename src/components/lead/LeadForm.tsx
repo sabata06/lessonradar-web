@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -152,7 +152,6 @@ export function LeadForm({
   });
 
   const watchedCity = watch("citySlug");
-  const districtsForCity = districts.filter((d) => d.citySlug === watchedCity);
 
   // Reset district when city changes — otherwise the stale slug would
   // submit and the backend would reject. Skip the very first effect run so
@@ -170,43 +169,53 @@ export function LeadForm({
    * Discipline options for the combobox. When `allowedDisciplineSlugs` is
    * provided (target-teacher case), restrict to that allowlist so the
    * customer can't pick a branch the teacher doesn't teach — backend would
-   * reject with `invalid_target_teacher`, but UI-level gating prevents the
-   * dead-end submit and improves perceived speed.
+   * reject with `invalid_target_teacher` and UI-level gating avoids the
+   * dead-end submit.
+   *
+   * All option arrays must be memoized: cmdk/Combobox treats option-array
+   * identity as a signal, and feeding a new array reference every render
+   * combined with field-aware effects can produce render→setValue→render
+   * loops that freeze the page.
    */
-  const allowSet = allowedDisciplineSlugs && allowedDisciplineSlugs.length > 0
-    ? new Set(allowedDisciplineSlugs)
-    : null;
+  const allowSet = useMemo(
+    () =>
+      allowedDisciplineSlugs && allowedDisciplineSlugs.length > 0
+        ? new Set(allowedDisciplineSlugs)
+        : null,
+    [allowedDisciplineSlugs],
+  );
 
-  const filteredDisciplines = allowSet
-    ? disciplines.filter((d) => allowSet.has(d.slug))
-    : disciplines;
+  const disciplineOptions: ComboboxOption[] = useMemo(() => {
+    const filtered = allowSet
+      ? disciplines.filter((d) => allowSet.has(d.slug))
+      : disciplines;
+    return domains
+      .map((domain) => ({
+        domain,
+        items: filtered.filter((d) => d.domainSlug === domain.slug),
+      }))
+      .filter((g) => g.items.length > 0)
+      .flatMap(({ domain, items }) =>
+        items.map((d) => ({
+          value: d.slug,
+          label: pickLocalized(d.name, locale),
+          group: pickLocalized(domain.name, locale),
+        })),
+      );
+  }, [allowSet, disciplines, domains, locale]);
 
-  const disciplineOptions: ComboboxOption[] = domains
-    .map((domain) => ({
-      domain,
-      items: filteredDisciplines.filter((d) => d.domainSlug === domain.slug),
-    }))
-    .filter((g) => g.items.length > 0)
-    .flatMap(({ domain, items }) =>
-      items.map((d) => ({
-        value: d.slug,
-        label: pickLocalized(d.name, locale),
-        group: pickLocalized(domain.name, locale),
-      })),
-    );
-
+  // When the teacher has a single specialty, the parent page already pins
+  // `defaults.disciplineSlug` to that value — so the form arrives correctly
+  // pre-filled. We render the field as disabled + show a hint, no client
+  // effect required. (An auto-fill useEffect here triggers a render-loop
+  // because react-hook-form's setValue re-renders, which rebuilds the
+  // option array, which re-runs the effect — page froze on the
+  // `?teacher=...` deep link.)
   const isDisciplineLocked = allowSet !== null && disciplineOptions.length === 1;
 
-  // Auto-fill the only allowed discipline so the customer doesn't have to
-  // click a disabled control with a single option staring back at them.
-  useEffect(() => {
-    if (!isDisciplineLocked) return;
-    const only = disciplineOptions[0]?.value;
-    if (only) setValue("disciplineSlug", only, { shouldValidate: true });
-  }, [isDisciplineLocked, disciplineOptions, setValue]);
-
-  const cityOptions: ComboboxOption[] = (() => {
-    const priorityHeader = locale === "tr" ? "Öncelikli şehirler" : "Priority cities";
+  const cityOptions: ComboboxOption[] = useMemo(() => {
+    const priorityHeader =
+      locale === "tr" ? "Öncelikli şehirler" : "Priority cities";
     const allHeader = locale === "tr" ? "Tüm şehirler" : "All cities";
     const priority = cities.filter((c) => c.isPriority);
     const rest = cities.filter((c) => !c.isPriority);
@@ -222,12 +231,21 @@ export function LeadForm({
         group: allHeader,
       })),
     ];
-  })();
+  }, [cities, locale]);
 
-  const districtOptions: ComboboxOption[] = districtsForCity.map((d) => ({
-    value: d.slug,
-    label: locale === "tr" ? d.nameTr : d.nameEn,
-  }));
+  const districtsForCity = useMemo(
+    () => districts.filter((d) => d.citySlug === watchedCity),
+    [districts, watchedCity],
+  );
+
+  const districtOptions: ComboboxOption[] = useMemo(
+    () =>
+      districtsForCity.map((d) => ({
+        value: d.slug,
+        label: locale === "tr" ? d.nameTr : d.nameEn,
+      })),
+    [districtsForCity, locale],
+  );
 
   const errorMessageFor = (code: LeadSubmitErrorCode): string => {
     switch (code) {
@@ -470,42 +488,55 @@ export function LeadForm({
       {/* Section 3 — optional details */}
       <FieldGroup
         title={t("sections.details.title")}
-        description={t("sections.details.description")}
+        description={
+          targetTeacherName
+            ? t("sections.details.description_direct")
+            : t("sections.details.description")
+        }
       >
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FieldRow label={t("fields.budget_min.label")} optional>
-            <Input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              max={100000}
-              step={50}
-              placeholder={t("fields.budget_min.placeholder")}
-              className="h-12 rounded-xl"
-              {...register("budgetMin", { valueAsNumber: true })}
-            />
-          </FieldRow>
-          <FieldRow
-            label={t("fields.budget_max.label")}
-            optional
-            error={
-              errors.budgetMax?.message === "budget_range_invalid"
-                ? t("errors.budget_range_invalid")
-                : errors.budgetMax?.message
-            }
-          >
-            <Input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              max={100000}
-              step={50}
-              placeholder={t("fields.budget_max.placeholder")}
-              className="h-12 rounded-xl"
-              {...register("budgetMax", { valueAsNumber: true })}
-            />
-          </FieldRow>
-        </div>
+        {/*
+          Budget is collected only for general (non-direct) leads. When the
+          customer is requesting from a specific teacher they've already
+          seen the teacher's price on the profile, so asking for a budget
+          range is awkward and implies bargaining. For direct leads we let
+          schedule + notes carry the optional context.
+        */}
+        {targetTeacherName ? null : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FieldRow label={t("fields.budget_min.label")} optional>
+              <Input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={100000}
+                step={50}
+                placeholder={t("fields.budget_min.placeholder")}
+                className="h-12 rounded-xl"
+                {...register("budgetMin", { valueAsNumber: true })}
+              />
+            </FieldRow>
+            <FieldRow
+              label={t("fields.budget_max.label")}
+              optional
+              error={
+                errors.budgetMax?.message === "budget_range_invalid"
+                  ? t("errors.budget_range_invalid")
+                  : errors.budgetMax?.message
+              }
+            >
+              <Input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={100000}
+                step={50}
+                placeholder={t("fields.budget_max.placeholder")}
+                className="h-12 rounded-xl"
+                {...register("budgetMax", { valueAsNumber: true })}
+              />
+            </FieldRow>
+          </div>
+        )}
 
         <FieldRow label={t("fields.schedule.label")} optional>
           <Input

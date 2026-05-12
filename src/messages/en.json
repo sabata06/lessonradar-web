@@ -123,7 +123,8 @@
       },
       "details": {
         "title": "Details (optional)",
-        "description": "Budget, schedule, notes — leave blank if not sure."
+        "description": "Budget, schedule, notes — leave blank if not sure.",
+        "description_direct": "Tell us your preferred schedule and any extra context. Pricing follows the rate listed on the tutor's profile."
       },
       "contact": {
         "title": "How can we reach you?",

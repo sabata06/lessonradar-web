@@ -123,7 +123,8 @@
       },
       "details": {
         "title": "Detaylar (opsiyonel)",
-        "description": "Bütçe, program ve ek notlar — boş bırakabilirsin."
+        "description": "Bütçe, program ve ek notlar — boş bırakabilirsin.",
+        "description_direct": "Tercih ettiğin gün/saatleri ve eklemek istediğin notları yazabilirsin. Ücretlendirme öğretmenin profilindeki fiyat üzerinden ilerler."
       },
       "contact": {
         "title": "Sana nasıl ulaşalım?",

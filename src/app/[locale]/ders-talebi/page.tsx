@@ -10,10 +10,19 @@ import { LeadEmailVerificationGate } from "@/components/lead/LeadEmailVerificati
 import { Breadcrumb } from "@/components/discovery/Breadcrumb";
 
 import { type Locale } from "@/i18n/routing";
-import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
-import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
-import { fetchTeacherDetailBySlug } from "@/lib/data/api/marketplace";
+import {
+  fetchAllDisciplines,
+  fetchCities,
+  fetchTaxonomyRoot,
+  fetchTeacherDetailBySlug,
+} from "@/lib/data/api/marketplace";
 import { adaptTeacher } from "@/lib/data/adapters/teacher";
+import { adaptDiscipline, adaptDomain } from "@/lib/data/adapters/taxonomy";
+import type { City, District } from "@/lib/types/location";
+import type {
+  MarketplaceDiscipline,
+  MarketplaceDomain,
+} from "@/lib/types/discipline";
 import { requireAuth } from "@/lib/auth/guards";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
@@ -79,34 +88,58 @@ export default async function LeadRequestPage({
     next: nextPath,
   });
 
-  // Fetch the target teacher (when provided) from the real backend, not from
-  // mock data — mocks only run when LR_USE_MOCK=1. We need the teacher's
-  // actual specialties to gate the discipline picker so the customer can't
-  // submit a branch the teacher doesn't teach (backend would reject with
-  // `invalid_target_teacher` per docs/B4_LEAD_BACKEND_CONTRACT.md).
-  const apiTeacher = sp.teacher
-    ? await fetchTeacherDetailBySlug(sp.teacher)
-    : null;
+  // Load real backend taxonomy + cities (ISR-cached 24h via fetchers).
+  // Teacher detail is conditional, fetched in parallel when present.
+  const [taxonomyRoot, allDisciplinesEnvelope, citiesEnvelope, apiTeacher] =
+    await Promise.all([
+      fetchTaxonomyRoot(),
+      fetchAllDisciplines(),
+      fetchCities(),
+      sp.teacher ? fetchTeacherDetailBySlug(sp.teacher) : Promise.resolve(null),
+    ]);
+
+  const domains: MarketplaceDomain[] = taxonomyRoot.domains.map(adaptDomain);
+  const disciplines: MarketplaceDiscipline[] =
+    allDisciplinesEnvelope.results.map(adaptDiscipline);
+
+  const cities: City[] = citiesEnvelope.results.map((c) => ({
+    slug: c.slug,
+    nameTr: c.name_tr,
+    nameEn: c.name_en,
+    isPriority: c.is_priority,
+  }));
+  const districts: District[] = citiesEnvelope.results.flatMap((c) =>
+    c.districts.map((d) => ({
+      slug: d.slug,
+      citySlug: c.slug,
+      nameTr: d.name_tr,
+      nameEn: d.name_en,
+    })),
+  );
+
   const targetTeacher = apiTeacher ? adaptTeacher(apiTeacher) : null;
   const teacherSlugRequested = Boolean(sp.teacher);
   const teacherNotFound = teacherSlugRequested && !targetTeacher;
 
+  const knownDisciplineSlugs = new Set(disciplines.map((d) => d.slug));
   const allowedDisciplineSlugs = targetTeacher
     ? targetTeacher.disciplines
         .map((d) => d.disciplineSlug)
-        .filter((slug) => MOCK_DISCIPLINES.some((md) => md.slug === slug))
+        .filter((slug) => knownDisciplineSlugs.has(slug))
     : undefined;
 
-  const validCitySlug = TR_CITIES.find((c) => c.slug === sp.city)?.slug;
+  const validCitySlug = cities.find((c) => c.slug === sp.city)?.slug;
   const validDistrictSlug =
     validCitySlug && sp.district
-      ? TR_DISTRICTS.find((d) => d.citySlug === validCitySlug && d.slug === sp.district)?.slug
+      ? districts.find(
+          (d) => d.citySlug === validCitySlug && d.slug === sp.district,
+        )?.slug
       : undefined;
 
   // Discipline default: when scoped to a teacher, honour the URL hint only
-  // if it's within the allowlist; otherwise let the form auto-fill (single
-  // allowed) or stay empty (multi). When no teacher scope, fall back to the
-  // URL slug if it's in our catalog.
+  // if it's within the allowlist; otherwise auto-fill (single allowed) or
+  // stay empty (multi). When no teacher scope, fall back to the URL slug
+  // if it's in the live catalog.
   let validDisciplineSlug: string | undefined;
   if (allowedDisciplineSlugs && allowedDisciplineSlugs.length > 0) {
     if (sp.discipline && allowedDisciplineSlugs.includes(sp.discipline)) {
@@ -114,8 +147,8 @@ export default async function LeadRequestPage({
     } else if (allowedDisciplineSlugs.length === 1) {
       validDisciplineSlug = allowedDisciplineSlugs[0];
     }
-  } else {
-    validDisciplineSlug = MOCK_DISCIPLINES.find((d) => d.slug === sp.discipline)?.slug;
+  } else if (sp.discipline && knownDisciplineSlugs.has(sp.discipline)) {
+    validDisciplineSlug = sp.discipline;
   }
 
   return (
@@ -161,10 +194,10 @@ export default async function LeadRequestPage({
           {user.isEmailVerified ? (
             <LeadForm
               locale={typedLocale}
-              domains={MOCK_DOMAINS}
-              disciplines={MOCK_DISCIPLINES}
-              cities={TR_CITIES}
-              districts={TR_DISTRICTS}
+              domains={domains}
+              disciplines={disciplines}
+              cities={cities}
+              districts={districts}
               defaults={{
                 disciplineSlug: validDisciplineSlug,
                 citySlug: validCitySlug,
