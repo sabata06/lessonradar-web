@@ -111,6 +111,7 @@
     "submit_loading": "Submitting…",
     "submit_footnote": "Free · No app required · Your phone is shared only with matching tutors.",
     "error_generic": "Couldn't submit your request. Please try again.",
+    "teacher_not_found_warning": "The tutor you picked isn't active in our directory right now. You can still post the request — matched verified tutors will reach you.",
     "sections": {
       "what": {
         "title": "What do you want to learn?",
@@ -132,7 +133,11 @@
     "fields": {
       "discipline": {
         "label": "Subject",
-        "placeholder": "Pick a subject"
+        "placeholder": "Pick a subject",
+        "search_placeholder": "Search subjects…",
+        "empty": "No matching subject for this tutor.",
+        "scoped_hint": "Only the subjects this tutor teaches are listed.",
+        "locked_hint": "This tutor's only subject — selected for you."
       },
       "level": {
         "label": "Level",
@@ -143,12 +148,17 @@
       },
       "city": {
         "label": "City",
-        "placeholder": "Pick a city"
+        "placeholder": "Pick a city",
+        "search_placeholder": "Search cities…",
+        "empty": "No matching city."
       },
       "district": {
         "label": "District",
         "placeholder": "Pick a district",
-        "disabled_placeholder": "Pick a city first"
+        "disabled_placeholder": "Pick a city first",
+        "search_placeholder": "Search districts…",
+        "empty": "No districts listed for this city.",
+        "all_label": "Any district"
       },
       "budget_min": {
         "label": "Min. budget (₺/hour)",

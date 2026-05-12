@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { AlertCircleIcon } from "@hugeicons/core-free-icons";
+
 import { Container } from "@/components/layout/Container";
 import { LeadForm } from "@/components/lead/LeadForm";
 import { LeadEmailVerificationGate } from "@/components/lead/LeadEmailVerificationGate";
@@ -9,7 +12,8 @@ import { Breadcrumb } from "@/components/discovery/Breadcrumb";
 import { type Locale } from "@/i18n/routing";
 import { TR_CITIES, TR_DISTRICTS } from "@/lib/data/mock/cities";
 import { MOCK_DISCIPLINES, MOCK_DOMAINS } from "@/lib/data/mock/disciplines";
-import { getTeacherBySlug } from "@/lib/data/mock/teachers";
+import { fetchTeacherDetailBySlug } from "@/lib/data/api/marketplace";
+import { adaptTeacher } from "@/lib/data/adapters/teacher";
 import { requireAuth } from "@/lib/auth/guards";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
@@ -75,13 +79,44 @@ export default async function LeadRequestPage({
     next: nextPath,
   });
 
-  const validDisciplineSlug = MOCK_DISCIPLINES.find((d) => d.slug === sp.discipline)?.slug;
+  // Fetch the target teacher (when provided) from the real backend, not from
+  // mock data — mocks only run when LR_USE_MOCK=1. We need the teacher's
+  // actual specialties to gate the discipline picker so the customer can't
+  // submit a branch the teacher doesn't teach (backend would reject with
+  // `invalid_target_teacher` per docs/B4_LEAD_BACKEND_CONTRACT.md).
+  const apiTeacher = sp.teacher
+    ? await fetchTeacherDetailBySlug(sp.teacher)
+    : null;
+  const targetTeacher = apiTeacher ? adaptTeacher(apiTeacher) : null;
+  const teacherSlugRequested = Boolean(sp.teacher);
+  const teacherNotFound = teacherSlugRequested && !targetTeacher;
+
+  const allowedDisciplineSlugs = targetTeacher
+    ? targetTeacher.disciplines
+        .map((d) => d.disciplineSlug)
+        .filter((slug) => MOCK_DISCIPLINES.some((md) => md.slug === slug))
+    : undefined;
+
   const validCitySlug = TR_CITIES.find((c) => c.slug === sp.city)?.slug;
   const validDistrictSlug =
     validCitySlug && sp.district
       ? TR_DISTRICTS.find((d) => d.citySlug === validCitySlug && d.slug === sp.district)?.slug
       : undefined;
-  const targetTeacher = sp.teacher ? getTeacherBySlug(sp.teacher) : undefined;
+
+  // Discipline default: when scoped to a teacher, honour the URL hint only
+  // if it's within the allowlist; otherwise let the form auto-fill (single
+  // allowed) or stay empty (multi). When no teacher scope, fall back to the
+  // URL slug if it's in our catalog.
+  let validDisciplineSlug: string | undefined;
+  if (allowedDisciplineSlugs && allowedDisciplineSlugs.length > 0) {
+    if (sp.discipline && allowedDisciplineSlugs.includes(sp.discipline)) {
+      validDisciplineSlug = sp.discipline;
+    } else if (allowedDisciplineSlugs.length === 1) {
+      validDisciplineSlug = allowedDisciplineSlugs[0];
+    }
+  } else {
+    validDisciplineSlug = MOCK_DISCIPLINES.find((d) => d.slug === sp.discipline)?.slug;
+  }
 
   return (
     <>
@@ -108,6 +143,21 @@ export default async function LeadRequestPage({
             </p>
           </header>
 
+          {teacherNotFound ? (
+            <div
+              role="alert"
+              className="mb-4 flex items-start gap-3 rounded-2xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-foreground"
+            >
+              <HugeiconsIcon
+                icon={AlertCircleIcon}
+                size={18}
+                strokeWidth={2}
+                className="mt-0.5 shrink-0 text-warning-foreground"
+              />
+              <p>{t("teacher_not_found_warning")}</p>
+            </div>
+          ) : null}
+
           {user.isEmailVerified ? (
             <LeadForm
               locale={typedLocale}
@@ -122,6 +172,7 @@ export default async function LeadRequestPage({
                 teacherSlug: targetTeacher?.slug,
               }}
               targetTeacherName={targetTeacher?.fullName}
+              allowedDisciplineSlugs={allowedDisciplineSlugs}
             />
           ) : (
             <LeadEmailVerificationGate

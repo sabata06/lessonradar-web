@@ -111,6 +111,7 @@
     "submit_loading": "Gönderiliyor…",
     "submit_footnote": "Ücretsiz · App gerekmez · Telefon numaran sadece eşleşen öğretmenlerle paylaşılır.",
     "error_generic": "Talep gönderilemedi. Lütfen tekrar dene.",
+    "teacher_not_found_warning": "Seçtiğin öğretmen şu an listemizde aktif değil. Talebini genel olarak iletebilirsin; eşleşen doğrulanmış öğretmenler sana ulaşır.",
     "sections": {
       "what": {
         "title": "Ne öğrenmek istiyorsun?",
@@ -132,7 +133,11 @@
     "fields": {
       "discipline": {
         "label": "Branş",
-        "placeholder": "Branş seç"
+        "placeholder": "Branş seç",
+        "search_placeholder": "Branş ara…",
+        "empty": "Bu öğretmen için eşleşen branş yok.",
+        "scoped_hint": "Bu öğretmenin verdiği branşlar listede.",
+        "locked_hint": "Bu öğretmenin tek branşı — otomatik seçildi."
       },
       "level": {
         "label": "Seviye",
@@ -143,12 +148,17 @@
       },
       "city": {
         "label": "Şehir",
-        "placeholder": "Şehir seç"
+        "placeholder": "Şehir seç",
+        "search_placeholder": "Şehir ara…",
+        "empty": "Eşleşen şehir bulunamadı."
       },
       "district": {
         "label": "İlçe",
         "placeholder": "İlçe seç",
-        "disabled_placeholder": "Önce şehir seç"
+        "disabled_placeholder": "Önce şehir seç",
+        "search_placeholder": "İlçe ara…",
+        "empty": "Bu şehirde listemizde ilçe yok.",
+        "all_label": "Fark etmez"
       },
       "budget_min": {
         "label": "Min. bütçe (₺/saat)",

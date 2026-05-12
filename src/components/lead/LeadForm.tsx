@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -19,12 +19,14 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  BrandCombobox,
+  type ComboboxOption,
+} from "@/components/ui/brand-combobox";
 
 import {
   leadRequestSchema,
@@ -63,6 +65,13 @@ interface LeadFormProps {
    * The slug itself rides along as a hidden field via `defaults.teacherSlug`.
    */
   targetTeacherName?: string;
+  /**
+   * When a target teacher is set, restrict the discipline picker to the
+   * teacher's actual specialties. Empty / undefined → full catalog.
+   * Backend would reject `invalid_target_teacher` otherwise — gating in
+   * the UI prevents the dead-end submit.
+   */
+  allowedDisciplineSlugs?: string[];
 }
 
 const LEVEL_LABELS_TR: Record<(typeof STUDENT_LEVELS)[number], string> = {
@@ -109,6 +118,7 @@ export function LeadForm({
   districts,
   defaults,
   targetTeacherName,
+  allowedDisciplineSlugs,
 }: LeadFormProps) {
   const t = useTranslations("lead");
   const router = useRouter();
@@ -120,6 +130,7 @@ export function LeadForm({
     control,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LeadRequestInput>({
     resolver: zodResolver(leadRequestSchema),
@@ -143,15 +154,80 @@ export function LeadForm({
   const watchedCity = watch("citySlug");
   const districtsForCity = districts.filter((d) => d.citySlug === watchedCity);
 
-  const groupedDisciplines = domains
+  // Reset district when city changes — otherwise the stale slug would
+  // submit and the backend would reject. Skip the very first effect run so
+  // the URL-provided default district survives the initial render.
+  const cityInitRef = useRef(true);
+  useEffect(() => {
+    if (cityInitRef.current) {
+      cityInitRef.current = false;
+      return;
+    }
+    setValue("districtSlug", undefined, { shouldValidate: false });
+  }, [watchedCity, setValue]);
+
+  /**
+   * Discipline options for the combobox. When `allowedDisciplineSlugs` is
+   * provided (target-teacher case), restrict to that allowlist so the
+   * customer can't pick a branch the teacher doesn't teach — backend would
+   * reject with `invalid_target_teacher`, but UI-level gating prevents the
+   * dead-end submit and improves perceived speed.
+   */
+  const allowSet = allowedDisciplineSlugs && allowedDisciplineSlugs.length > 0
+    ? new Set(allowedDisciplineSlugs)
+    : null;
+
+  const filteredDisciplines = allowSet
+    ? disciplines.filter((d) => allowSet.has(d.slug))
+    : disciplines;
+
+  const disciplineOptions: ComboboxOption[] = domains
     .map((domain) => ({
       domain,
-      items: disciplines.filter((d) => d.domainSlug === domain.slug),
+      items: filteredDisciplines.filter((d) => d.domainSlug === domain.slug),
     }))
-    .filter((g) => g.items.length > 0);
+    .filter((g) => g.items.length > 0)
+    .flatMap(({ domain, items }) =>
+      items.map((d) => ({
+        value: d.slug,
+        label: pickLocalized(d.name, locale),
+        group: pickLocalized(domain.name, locale),
+      })),
+    );
 
-  const priorityCities = cities.filter((c) => c.isPriority);
-  const otherCities = cities.filter((c) => !c.isPriority);
+  const isDisciplineLocked = allowSet !== null && disciplineOptions.length === 1;
+
+  // Auto-fill the only allowed discipline so the customer doesn't have to
+  // click a disabled control with a single option staring back at them.
+  useEffect(() => {
+    if (!isDisciplineLocked) return;
+    const only = disciplineOptions[0]?.value;
+    if (only) setValue("disciplineSlug", only, { shouldValidate: true });
+  }, [isDisciplineLocked, disciplineOptions, setValue]);
+
+  const cityOptions: ComboboxOption[] = (() => {
+    const priorityHeader = locale === "tr" ? "Öncelikli şehirler" : "Priority cities";
+    const allHeader = locale === "tr" ? "Tüm şehirler" : "All cities";
+    const priority = cities.filter((c) => c.isPriority);
+    const rest = cities.filter((c) => !c.isPriority);
+    return [
+      ...priority.map((c) => ({
+        value: c.slug,
+        label: locale === "tr" ? c.nameTr : c.nameEn,
+        group: priorityHeader,
+      })),
+      ...rest.map((c) => ({
+        value: c.slug,
+        label: locale === "tr" ? c.nameTr : c.nameEn,
+        group: allHeader,
+      })),
+    ];
+  })();
+
+  const districtOptions: ComboboxOption[] = districtsForCity.map((d) => ({
+    value: d.slug,
+    label: locale === "tr" ? d.nameTr : d.nameEn,
+  }));
 
   const errorMessageFor = (code: LeadSubmitErrorCode): string => {
     switch (code) {
@@ -251,30 +327,32 @@ export function LeadForm({
         title={t("sections.what.title")}
         description={t("sections.what.description")}
       >
-        <FieldRow label={t("fields.discipline.label")} error={errors.disciplineSlug?.message}>
+        <FieldRow
+          label={t("fields.discipline.label")}
+          error={errors.disciplineSlug?.message}
+          hint={
+            allowSet
+              ? isDisciplineLocked
+                ? t("fields.discipline.locked_hint")
+                : t("fields.discipline.scoped_hint")
+              : undefined
+          }
+        >
           <Controller
             control={control}
             name="disciplineSlug"
             render={({ field }) => (
-              <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                <SelectTrigger className="h-12 w-full rounded-xl">
-                  <SelectValue placeholder={t("fields.discipline.placeholder")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-[60vh]">
-                  {groupedDisciplines.map(({ domain, items }) => (
-                    <SelectGroup key={domain.slug}>
-                      <SelectLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        {pickLocalized(domain.name, locale)}
-                      </SelectLabel>
-                      {items.map((d) => (
-                        <SelectItem key={d.slug} value={d.slug}>
-                          {pickLocalized(d.name, locale)}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BrandCombobox
+                value={field.value ?? ""}
+                onChange={(v) => field.onChange(v)}
+                options={disciplineOptions}
+                placeholder={t("fields.discipline.placeholder")}
+                searchPlaceholder={t("fields.discipline.search_placeholder")}
+                emptyText={t("fields.discipline.empty")}
+                ariaLabel={t("fields.discipline.label")}
+                disabled={isDisciplineLocked}
+                triggerClassName="h-12 rounded-xl"
+              />
             )}
           />
         </FieldRow>
@@ -344,35 +422,16 @@ export function LeadForm({
               control={control}
               name="citySlug"
               render={({ field }) => (
-                <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                  <SelectTrigger className="h-12 w-full rounded-xl">
-                    <SelectValue placeholder={t("fields.city.placeholder")} />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-[60vh]">
-                    {priorityCities.length > 0 && (
-                      <SelectGroup>
-                        <SelectLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                          {locale === "tr" ? "Öncelikli şehirler" : "Priority cities"}
-                        </SelectLabel>
-                        {priorityCities.map((c) => (
-                          <SelectItem key={c.slug} value={c.slug}>
-                            {locale === "tr" ? c.nameTr : c.nameEn}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    )}
-                    <SelectGroup>
-                      <SelectLabel className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        {locale === "tr" ? "Tüm şehirler" : "All cities"}
-                      </SelectLabel>
-                      {otherCities.map((c) => (
-                        <SelectItem key={c.slug} value={c.slug}>
-                          {locale === "tr" ? c.nameTr : c.nameEn}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <BrandCombobox
+                  value={field.value ?? ""}
+                  onChange={(v) => field.onChange(v)}
+                  options={cityOptions}
+                  placeholder={t("fields.city.placeholder")}
+                  searchPlaceholder={t("fields.city.search_placeholder")}
+                  emptyText={t("fields.city.empty")}
+                  ariaLabel={t("fields.city.label")}
+                  triggerClassName="h-12 rounded-xl"
+                />
               )}
             />
           </FieldRow>
@@ -386,28 +445,22 @@ export function LeadForm({
               control={control}
               name="districtSlug"
               render={({ field }) => (
-                <Select
+                <BrandCombobox
                   value={field.value ?? ""}
-                  onValueChange={(v) => field.onChange(v || undefined)}
+                  onChange={(v) => field.onChange(v || undefined)}
+                  options={districtOptions}
+                  placeholder={
+                    districtsForCity.length === 0
+                      ? t("fields.district.disabled_placeholder")
+                      : t("fields.district.placeholder")
+                  }
+                  searchPlaceholder={t("fields.district.search_placeholder")}
+                  emptyText={t("fields.district.empty")}
+                  allLabel={t("fields.district.all_label")}
+                  ariaLabel={t("fields.district.label")}
                   disabled={districtsForCity.length === 0}
-                >
-                  <SelectTrigger className="h-12 w-full rounded-xl">
-                    <SelectValue
-                      placeholder={
-                        districtsForCity.length === 0
-                          ? t("fields.district.disabled_placeholder")
-                          : t("fields.district.placeholder")
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {districtsForCity.map((d) => (
-                      <SelectItem key={d.slug} value={d.slug}>
-                        {locale === "tr" ? d.nameTr : d.nameEn}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  triggerClassName="h-12 rounded-xl"
+                />
               )}
             />
           </FieldRow>
