@@ -880,10 +880,105 @@
         "error_generic": "Talep listesi şu an yüklenemedi. Lütfen sayfayı yenile.",
         "direct_to": "{teacher} öğretmene yönlendirildi",
         "new_request_cta": "Yeni talep oluştur",
+        "view_detail": "Talep detayını gör",
+        "has_responses": "Yeni teklif var",
         "stat": {
           "recipients": "Eşleşen",
           "responded": "Yanıt",
           "status": "Durum"
+        },
+        "status": {
+          "received": "Alındı",
+          "fanned_out": "İletildi",
+          "responded": "Yanıt geldi",
+          "converted": "Tamamlandı",
+          "closed": "Kapandı",
+          "cancelled": "İptal",
+          "spam": "Spam"
+        },
+        "level": {
+          "primary": "İlkokul",
+          "middle": "Ortaokul",
+          "high": "Lise",
+          "lgs": "LGS",
+          "yks": "YKS",
+          "kpss": "KPSS",
+          "university": "Üniversite",
+          "adult": "Yetişkin",
+          "other": "Diğer"
+        },
+        "modality": {
+          "in_person": "Yüz yüze",
+          "online": "Online",
+          "either": "Online veya yüz yüze"
+        },
+        "detail": {
+          "meta_title": "Talep detayı",
+          "meta_description": "Talebine gelen öğretmen tekliflerini gör, karşılaştır ve gerekirse iptal et.",
+          "back_to_panel": "Panele dön",
+          "title": "{discipline} ders talebi",
+          "created_on": "{date} tarihinde oluşturuldu",
+          "direct_pill": "Direkt {teacher}'a",
+          "cancelled_title": "Bu talep iptal edildi",
+          "cancelled_body": "Bu talebe yeni teklif gelmeyecek. Aynı koşullarla yeni bir talep oluşturabilirsin.",
+          "cancelled_body_with_date": "Bu talep {date} tarihinde iptal edildi. Yeni teklif alımı kapatıldı.",
+          "cancel_reason_prefix": "İptal nedeni:",
+          "network_error_title": "Talep şu an yüklenemiyor",
+          "network_error_body": "Sunucuya ulaşamadık. Bağlantını kontrol edip biraz sonra tekrar dener misin?",
+          "stat": {
+            "recipients": "Eşleşen öğretmen",
+            "responded": "Gelen teklif",
+            "level": "Seviye"
+          },
+          "fact": {
+            "location": "Konum",
+            "modality": "Ders türü",
+            "budget": "Bütçe aralığı",
+            "schedule": "Tercih edilen zaman",
+            "notes": "Notlar",
+            "phone": "İletişim",
+            "phone_hint": "Öğretmenler tam numarayı görmüyor."
+          },
+          "offers": {
+            "title": "Sana ulaşan öğretmenler",
+            "count_intro": "{count, plural, =1 {1 öğretmen sana yazdı.} other {{count} öğretmen sana yazdı.}}",
+            "empty_waiting_title": "Henüz teklif yok",
+            "empty_waiting_subtitle": "Eşleşen öğretmenlere talebin ulaştı. Premium öğretmenlerden anında, ücretsiz öğretmenlerden 90 dakika içinde teklif gelir.",
+            "empty_waiting_body": "Cevaplar geldikçe burada listelenecek. Sana bildirim göndereceğiz.",
+            "empty_cancelled_title": "Teklif görüntülenmiyor",
+            "empty_cancelled_subtitle": "Bu talep iptal edildiği için teklifler kapatıldı.",
+            "empty_cancelled_body": "Yeniden teklif almak istersen aynı koşullarla yeni bir talep oluşturabilirsin."
+          },
+          "offer": {
+            "message_label": "Öğretmenin mesajı",
+            "responded_at": "{date} tarihinde yanıtladı",
+            "view_profile": "Profili görüntüle"
+          },
+          "cancel": {
+            "title": "Bu talebi iptal et",
+            "subtitle": "Öğretmen buldun ya da planların değişti. İptal sonrası bu talebe yeni teklif gelmez; bekleyen teklifler de durur.",
+            "trigger": "Talebi iptal et",
+            "dialog": {
+              "title": "Talebi iptal etmek istediğine emin misin?",
+              "description": "İptal kalıcıdır. İstersen sonradan aynı bilgilerle yeni bir talep oluşturabilirsin.",
+              "reason_label": "İptal nedeni (isteğe bağlı)",
+              "reason_placeholder": "Örn. Bir öğretmenle anlaştık.",
+              "reason_hint": "Bu metin sadece bizim kayıtlarımızda kalır.",
+              "cancel": "Vazgeç",
+              "confirm": "Evet, iptal et",
+              "confirming": "İptal ediliyor…"
+            },
+            "error": {
+              "unauthorized": "Oturumun sona ermiş görünüyor. Tekrar giriş yapıp dener misin?",
+              "forbidden": "Bu işlem için yetkin yok.",
+              "not_found": "Bu talep bulunamadı. Listeye dönüp yeniden açar mısın?",
+              "not_cancellable": "Bu talep artık iptal edilemez. Eğer hata olduğunu düşünüyorsan destek ekibine yaz.",
+              "validation_failed": "Talep iptali doğrulanamadı.",
+              "network_error": "Sunucuya ulaşamadık. Bağlantını kontrol edip tekrar dener misin?",
+              "upstream_error": "Sunucu şu an yanıt veremiyor. Birazdan tekrar dene.",
+              "unknown": "Beklenmedik bir sorun oluştu."
+            }
+          }
         }
       }
     },

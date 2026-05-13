@@ -4,11 +4,14 @@ import {
   InboxIcon,
   MessageAdd01Icon,
   ArrowRight01Icon,
+  TickDouble01Icon,
 } from "@hugeicons/core-free-icons";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 import type { CustomerLeadsResponse } from "@/lib/lead/customer-leads";
+import type { LeadApiRow } from "@/lib/lead/schema";
 
 interface Props {
   data: CustomerLeadsResponse | null;
@@ -84,47 +87,18 @@ export async function CustomerLeadsSection({ data, locale }: Props) {
       <SectionHeader title={t("title")} subtitle={t("subtitle")} />
       <ul className="space-y-3">
         {data.results.map((lead) => (
-          <li
-            key={lead.uuid}
-            className="rounded-xl border border-border bg-background p-4"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="min-w-0 space-y-1">
-                <p className="text-sm font-semibold text-foreground">
-                  {lead.discipline_name ?? lead.discipline_slug}
-                  {lead.city_name ? (
-                    <span className="text-muted-foreground"> · {lead.city_name}</span>
-                  ) : null}
-                  {lead.district_name ? (
-                    <span className="text-muted-foreground"> · {lead.district_name}</span>
-                  ) : null}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {formatDate(lead.created_at, locale)}
-                  {lead.target_teacher ? (
-                    <>
-                      {" · "}
-                      {t("direct_to", { teacher: lead.target_teacher.full_name })}
-                    </>
-                  ) : null}
-                </p>
-              </div>
-              <StatusPill status={lead.status} locale={locale} />
-            </div>
-            <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
-              <Stat
-                label={t("stat.recipients")}
-                value={String(lead.recipient_count)}
-              />
-              <Stat
-                label={t("stat.responded")}
-                value={String(lead.responded_count)}
-              />
-              <Stat
-                label={t("stat.status")}
-                value={translateStatus(lead.status, locale)}
-              />
-            </dl>
+          <li key={lead.uuid}>
+            <LeadRow
+              lead={lead}
+              locale={locale}
+              viewLabel={t("view_detail")}
+              responsesLabel={t("has_responses")}
+              statLabels={{
+                recipients: t("stat.recipients"),
+                responded: t("stat.responded"),
+                status: t("stat.status"),
+              }}
+            />
           </li>
         ))}
       </ul>
@@ -139,6 +113,102 @@ export async function CustomerLeadsSection({ data, locale }: Props) {
         </Button>
       </div>
     </section>
+  );
+}
+
+interface LeadRowProps {
+  lead: LeadApiRow;
+  locale: "tr" | "en";
+  viewLabel: string;
+  responsesLabel: string;
+  statLabels: {
+    recipients: string;
+    responded: string;
+    status: string;
+  };
+}
+
+/**
+ * Single lead row. The whole row links to `/panel/talepler/<uuid>` so the
+ * tap target is large on mobile; `responded_count > 0` adds a subtle teal
+ * accent rail (brand soft) — never amber, since this is not a conversion CTA.
+ */
+function LeadRow({
+  lead,
+  locale,
+  viewLabel,
+  responsesLabel,
+  statLabels,
+}: LeadRowProps) {
+  const hasResponses = lead.responded_count > 0;
+  return (
+    <Link
+      href={`/panel/talepler/${lead.uuid}`}
+      className={cn(
+        "relative block overflow-hidden rounded-xl border bg-background p-4 transition",
+        "hover:border-primary/40 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
+        hasResponses
+          ? "border-brand/30 ring-1 ring-brand/10"
+          : "border-border",
+      )}
+      aria-label={viewLabel}
+    >
+      {hasResponses ? (
+        <span aria-hidden className="absolute inset-y-0 left-0 w-0.5 bg-brand/50" />
+      ) : null}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <p className="text-sm font-semibold text-foreground">
+            {lead.discipline_name ?? lead.discipline_slug}
+            {lead.city_name ? (
+              <span className="text-muted-foreground"> · {lead.city_name}</span>
+            ) : null}
+            {lead.district_name ? (
+              <span className="text-muted-foreground"> · {lead.district_name}</span>
+            ) : null}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {formatDate(lead.created_at, locale)}
+            {lead.target_teacher ? (
+              <>
+                {" · "}
+                <span className="text-foreground/80">
+                  {lead.target_teacher.full_name}
+                </span>
+              </>
+            ) : null}
+          </p>
+          {hasResponses ? (
+            <p className="inline-flex items-center gap-1 text-xs font-semibold text-success">
+              <HugeiconsIcon
+                icon={TickDouble01Icon}
+                size={12}
+                strokeWidth={2}
+              />
+              {responsesLabel}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex items-center gap-2">
+          <StatusPill status={lead.status} locale={locale} />
+          <span className="text-muted-foreground transition group-hover:text-foreground">
+            <HugeiconsIcon icon={ArrowRight01Icon} size={16} strokeWidth={2} />
+          </span>
+        </div>
+      </div>
+      <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
+        <Stat label={statLabels.recipients} value={String(lead.recipient_count)} />
+        <Stat
+          label={statLabels.responded}
+          value={String(lead.responded_count)}
+          emphasize={hasResponses}
+        />
+        <Stat
+          label={statLabels.status}
+          value={translateStatus(lead.status, locale)}
+        />
+      </dl>
+    </Link>
   );
 }
 
@@ -162,13 +232,33 @@ function SectionHeader({
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({
+  label,
+  value,
+  emphasize,
+}: {
+  label: string;
+  value: string;
+  emphasize?: boolean;
+}) {
   return (
-    <div className="rounded-lg bg-muted/40 px-2.5 py-1.5">
+    <div
+      className={cn(
+        "rounded-lg px-2.5 py-1.5",
+        emphasize ? "bg-success-soft/40" : "bg-muted/40",
+      )}
+    >
       <dt className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </dt>
-      <dd className="mt-0.5 text-sm font-semibold text-foreground">{value}</dd>
+      <dd
+        className={cn(
+          "mt-0.5 text-sm font-semibold",
+          emphasize ? "text-success" : "text-foreground",
+        )}
+      >
+        {value}
+      </dd>
     </div>
   );
 }

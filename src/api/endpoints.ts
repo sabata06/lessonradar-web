@@ -49,6 +49,11 @@ export const ENDPOINTS = {
   // ── Lead capture (B4 LIVE — authenticated verified-customer only) ───────
   LEAD_CREATE: "/api/marketplace/leads/",
   LEAD_CUSTOMER_MINE: "/api/customer/leads/mine/",
+  // ── Customer lead detail + cancel (B6 LIVE 2026-05-14) ──────────────────
+  LEAD_CUSTOMER_DETAIL: (uuid: string) =>
+    `/api/customer/leads/${encodeURIComponent(uuid)}/`,
+  LEAD_CUSTOMER_CANCEL: (uuid: string) =>
+    `/api/customer/leads/${encodeURIComponent(uuid)}/cancel/`,
   LEAD_TEACHER_INBOX: "/api/teacher/leads/inbox/",
   LEAD_TEACHER_RESPOND: (recipientUuid: string) =>
     `/api/teacher/leads/${encodeURIComponent(recipientUuid)}/respond/`,

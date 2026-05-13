@@ -880,10 +880,105 @@
         "error_generic": "Couldn't load your requests right now. Try refreshing.",
         "direct_to": "Routed to {teacher}",
         "new_request_cta": "New request",
+        "view_detail": "View request detail",
+        "has_responses": "New offer",
         "stat": {
           "recipients": "Matched",
           "responded": "Replied",
           "status": "Status"
+        },
+        "status": {
+          "received": "Received",
+          "fanned_out": "Sent out",
+          "responded": "Replied",
+          "converted": "Completed",
+          "closed": "Closed",
+          "cancelled": "Cancelled",
+          "spam": "Spam"
+        },
+        "level": {
+          "primary": "Primary",
+          "middle": "Middle school",
+          "high": "High school",
+          "lgs": "LGS",
+          "yks": "YKS",
+          "kpss": "KPSS",
+          "university": "University",
+          "adult": "Adult",
+          "other": "Other"
+        },
+        "modality": {
+          "in_person": "In person",
+          "online": "Online",
+          "either": "Online or in person"
+        },
+        "detail": {
+          "meta_title": "Request detail",
+          "meta_description": "See and compare the tutor offers on your request, and cancel if needed.",
+          "back_to_panel": "Back to panel",
+          "title": "{discipline} lesson request",
+          "created_on": "Created on {date}",
+          "direct_pill": "Direct to {teacher}",
+          "cancelled_title": "This request was cancelled",
+          "cancelled_body": "No new offers will arrive. You can create a fresh request with the same criteria.",
+          "cancelled_body_with_date": "This request was cancelled on {date}. New offers are no longer accepted.",
+          "cancel_reason_prefix": "Reason:",
+          "network_error_title": "Couldn't load this request",
+          "network_error_body": "We couldn't reach the server. Check your connection and try again.",
+          "stat": {
+            "recipients": "Matched tutors",
+            "responded": "Offers received",
+            "level": "Level"
+          },
+          "fact": {
+            "location": "Location",
+            "modality": "Lesson mode",
+            "budget": "Budget range",
+            "schedule": "Preferred time",
+            "notes": "Notes",
+            "phone": "Contact",
+            "phone_hint": "Tutors don't see your full number."
+          },
+          "offers": {
+            "title": "Tutors who replied",
+            "count_intro": "{count, plural, =1 {1 tutor has replied.} other {{count} tutors have replied.}}",
+            "empty_waiting_title": "No offers yet",
+            "empty_waiting_subtitle": "Your request reached matched tutors. Premium tutors reply immediately; free tutors get notified within 90 minutes.",
+            "empty_waiting_body": "Replies will appear here as they come in. We'll notify you.",
+            "empty_cancelled_title": "Offers are hidden",
+            "empty_cancelled_subtitle": "This request was cancelled, so offers are closed.",
+            "empty_cancelled_body": "Want to receive offers again? Create a new request with the same criteria."
+          },
+          "offer": {
+            "message_label": "Tutor's message",
+            "responded_at": "Replied on {date}",
+            "view_profile": "View profile"
+          },
+          "cancel": {
+            "title": "Cancel this request",
+            "subtitle": "Found a tutor or plans changed? Cancelling stops new offers and pauses pending replies.",
+            "trigger": "Cancel request",
+            "dialog": {
+              "title": "Sure you want to cancel?",
+              "description": "Cancellation is permanent. You can always create a fresh request later with the same details.",
+              "reason_label": "Cancellation reason (optional)",
+              "reason_placeholder": "e.g. Found a tutor offline.",
+              "reason_hint": "Only visible to us.",
+              "cancel": "Keep it",
+              "confirm": "Yes, cancel",
+              "confirming": "Cancelling…"
+            },
+            "error": {
+              "unauthorized": "Your session looks expired. Please sign in again and retry.",
+              "forbidden": "You don't have permission to do that.",
+              "not_found": "We can't find this request. Try reopening it from the list.",
+              "not_cancellable": "This request can no longer be cancelled. If you think this is wrong, please contact support.",
+              "validation_failed": "We couldn't validate the cancel request.",
+              "network_error": "We couldn't reach the server. Check your connection and retry.",
+              "upstream_error": "The server can't respond right now. Try again shortly.",
+              "unknown": "Something went wrong."
+            }
+          }
         }
       }
     },
