@@ -1133,6 +1133,7 @@
           "in_app": "Uygulama içi mesaj",
           "phone_reveal": "Telefonla görüşmek istiyor",
           "whatsapp_reveal": "WhatsApp tercihi",
+          "any": "Fark etmez",
           "hint": "Öğrenci bu kanalı tercih ediyor"
         },
         "facts": {

@@ -1133,6 +1133,7 @@
           "in_app": "In-app messages only",
           "phone_reveal": "Wants phone reveal",
           "whatsapp_reveal": "Prefers WhatsApp",
+          "any": "No preference",
           "hint": "Customer prefers this channel"
         },
         "facts": {
