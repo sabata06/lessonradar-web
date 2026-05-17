@@ -254,6 +254,28 @@ export function LeadForm({
     [districtsForCity, locale],
   );
 
+  /**
+   * Maps stable validation codes from the zod schema to localized copy.
+   * Unknown messages (zod default English like "Too small: expected string...")
+   * fall through to a generic key so we never surface raw English to TR users.
+   */
+  const fieldErrorMessage = (msg: string | undefined): string | undefined => {
+    if (!msg) return undefined;
+    const KNOWN: Record<string, string> = {
+      discipline_required: "errors.discipline_required",
+      city_required: "errors.city_required",
+      level_required: "errors.level_required",
+      modality_required: "errors.modality_required",
+      phone_required: "errors.phone_required",
+      phone_invalid: "errors.phone_invalid",
+      contact_preference_required: "errors.contact_preference_required",
+      kvkk_required: "errors.kvkk_required",
+      budget_range_invalid: "errors.budget_range_invalid",
+    };
+    const key = KNOWN[msg];
+    return key ? t(key) : t("errors.field_invalid");
+  };
+
   const errorMessageFor = (code: LeadSubmitErrorCode): string => {
     switch (code) {
       case "unauthorized":
@@ -356,7 +378,7 @@ export function LeadForm({
       >
         <FieldRow
           label={t("fields.discipline.label")}
-          error={errors.disciplineSlug?.message}
+          error={fieldErrorMessage(errors.disciplineSlug?.message)}
           hint={
             allowSet
               ? isDisciplineLocked
@@ -384,7 +406,7 @@ export function LeadForm({
           />
         </FieldRow>
 
-        <FieldRow label={t("fields.level.label")} error={errors.level?.message}>
+        <FieldRow label={t("fields.level.label")} error={fieldErrorMessage(errors.level?.message)}>
           <Controller
             control={control}
             name="level"
@@ -405,7 +427,7 @@ export function LeadForm({
           />
         </FieldRow>
 
-        <FieldRow label={t("fields.modality.label")} error={errors.modality?.message}>
+        <FieldRow label={t("fields.modality.label")} error={fieldErrorMessage(errors.modality?.message)}>
           <Controller
             control={control}
             name="modality"
@@ -444,7 +466,7 @@ export function LeadForm({
         description={t("sections.where.description")}
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <FieldRow label={t("fields.city.label")} error={errors.citySlug?.message}>
+          <FieldRow label={t("fields.city.label")} error={fieldErrorMessage(errors.citySlug?.message)}>
             <Controller
               control={control}
               name="citySlug"
@@ -466,7 +488,7 @@ export function LeadForm({
           <FieldRow
             label={t("fields.district.label")}
             optional
-            error={errors.districtSlug?.message}
+            error={fieldErrorMessage(errors.districtSlug?.message)}
           >
             <Controller
               control={control}
@@ -527,11 +549,7 @@ export function LeadForm({
             <FieldRow
               label={t("fields.budget_max.label")}
               optional
-              error={
-                errors.budgetMax?.message === "budget_range_invalid"
-                  ? t("errors.budget_range_invalid")
-                  : errors.budgetMax?.message
-              }
+              error={fieldErrorMessage(errors.budgetMax?.message)}
             >
               <Input
                 type="number"
@@ -574,11 +592,7 @@ export function LeadForm({
       >
         <FieldRow
           label={t("fields.contact_preference.label")}
-          error={
-            errors.customerContactPreference?.message === "contact_preference_required"
-              ? t("errors.contact_preference_required")
-              : errors.customerContactPreference?.message
-          }
+          error={fieldErrorMessage(errors.customerContactPreference?.message)}
           hint={t("fields.contact_preference.hint")}
         >
           <Controller
@@ -609,11 +623,7 @@ export function LeadForm({
 
         <FieldRow
           label={t("fields.phone.label")}
-          error={
-            errors.contactPhone?.message === "phone_invalid"
-              ? t("errors.phone_invalid")
-              : errors.contactPhone?.message
-          }
+          error={fieldErrorMessage(errors.contactPhone?.message)}
           hint={t("fields.phone.hint")}
         >
           <Input
@@ -626,13 +636,7 @@ export function LeadForm({
           />
         </FieldRow>
 
-        <FieldRow
-          error={
-            errors.consentKvkk?.message === "kvkk_required"
-              ? t("errors.kvkk_required")
-              : errors.consentKvkk?.message
-          }
-        >
+        <FieldRow error={fieldErrorMessage(errors.consentKvkk?.message)}>
           <Controller
             control={control}
             name="consentKvkk"

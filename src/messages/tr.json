@@ -214,9 +214,15 @@
       "label": "<privacy>KVKK Aydınlatma Metni</privacy> ve gizlilik politikasını okudum, kişisel verilerimin işlenmesine onay veriyorum."
     },
     "errors": {
+      "discipline_required": "Lütfen bir branş seç.",
+      "city_required": "Lütfen şehir seç.",
+      "level_required": "Lütfen seviye seç.",
+      "modality_required": "Lütfen ders tipini seç.",
+      "phone_required": "Telefon numaranı yaz.",
       "phone_invalid": "Geçerli bir TR cep numarası gir (5XX XXX XX XX).",
       "kvkk_required": "Devam etmek için KVKK onayını işaretle.",
       "budget_range_invalid": "Maksimum bütçe minimumdan küçük olamaz.",
+      "field_invalid": "Bu alanı kontrol et.",
       "unauthorized": "Talep göndermek için giriş yapman gerekiyor.",
       "email_unverified": "Talep göndermek için önce e-posta adresini doğrula.",
       "forbidden": "Bu işlemi yapmak için yetkin yok.",

@@ -57,12 +57,15 @@ export function normalizeTrPhone(raw: string): string | null {
 
 export const leadRequestSchema = z
   .object({
-    disciplineSlug: z.string().min(1),
-    level: z.enum(STUDENT_LEVELS),
-    citySlug: z.string().min(1),
+    // Stable error codes (not user-facing copy): LeadForm maps these to i18n
+    // keys via `fieldErrorMessage`. Never expose raw zod default messages to
+    // users — they render in English regardless of locale.
+    disciplineSlug: z.string().min(1, "discipline_required"),
+    level: z.enum(STUDENT_LEVELS, { message: "level_required" }),
+    citySlug: z.string().min(1, "city_required"),
     districtSlug: z.string().optional(),
     teacherSlug: z.string().optional(),
-    modality: z.enum(MODALITIES),
+    modality: z.enum(MODALITIES, { message: "modality_required" }),
     budgetMin: z
       .union([z.number().int().min(0).max(100000), z.nan()])
       .optional()
@@ -75,7 +78,7 @@ export const leadRequestSchema = z
     notes: z.string().max(1000).optional(),
     contactPhone: z
       .string()
-      .min(10)
+      .min(10, "phone_required")
       .regex(TR_PHONE_REGEX, "phone_invalid")
       .transform((v, ctx) => {
         const norm = normalizeTrPhone(v);

@@ -214,9 +214,15 @@
       "label": "I have read the <privacy>KVKK & Privacy Policy</privacy> and consent to the processing of my personal data."
     },
     "errors": {
+      "discipline_required": "Please choose a subject.",
+      "city_required": "Please choose a city.",
+      "level_required": "Please choose a level.",
+      "modality_required": "Please choose the lesson type.",
+      "phone_required": "Enter your phone number.",
       "phone_invalid": "Enter a valid TR mobile number (5XX XXX XX XX).",
       "kvkk_required": "Tick the KVKK consent to continue.",
       "budget_range_invalid": "Max budget cannot be lower than min budget.",
+      "field_invalid": "Please check this field.",
       "unauthorized": "You need to sign in to submit a request.",
       "email_unverified": "Verify your email address before submitting a request.",
       "forbidden": "You don't have permission to perform this action.",
