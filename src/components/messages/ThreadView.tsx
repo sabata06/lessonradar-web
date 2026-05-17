@@ -225,6 +225,13 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
         </span>
       </header>
 
+      {/*
+        Messages container — WhatsApp/iMessage convention: chat content pins
+        to the bottom of the viewport so the first message visually anchors
+        where the user expects it. We use an inner flex column with
+        `justify-end` + `min-h-full` so few-message threads sit just above
+        the composer instead of floating at the top.
+      */}
       <div
         ref={scrollRef}
         className="max-h-[60vh] min-h-[24rem] overflow-y-auto rounded-2xl border border-border bg-card p-4 sm:p-5"
@@ -234,7 +241,7 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
             {labels.empty}
           </div>
         ) : (
-          <ul className="space-y-3">
+          <ul className="flex min-h-full flex-col justify-end gap-3">
             {messages.map((m) => (
               <MessageBubble
                 key={m.uuid}
@@ -249,44 +256,60 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-2">
-        <Textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value.slice(0, BODY_MAX))}
-          placeholder={threadClosed ? labels.placeholderClosed : labels.placeholder}
-          rows={3}
-          maxLength={BODY_MAX}
-          disabled={threadClosed || submitting}
-          className="rounded-xl"
-        />
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-[11px] text-muted-foreground" aria-live="polite">
-            {labels.charCount.replace("{used}", String(body.length)).replace(
-              "{max}",
-              String(BODY_MAX),
-            )}
-          </span>
-          <Button
+        {/*
+          Composer — WhatsApp/iMessage chat input convention: textarea grows
+          inline, round send icon button anchored right. The button flips
+          between disabled-muted and active-action-color based on trimmed
+          body length, giving a passive→active affordance that's instantly
+          readable. The amber action color stays "sacred" per DESIGN.md —
+          this IS a conversion CTA (committing the message).
+        */}
+        <div className="flex items-end gap-2">
+          <Textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value.slice(0, BODY_MAX))}
+            placeholder={threadClosed ? labels.placeholderClosed : labels.placeholder}
+            rows={1}
+            maxLength={BODY_MAX}
+            disabled={threadClosed || submitting}
+            onKeyDown={(e) => {
+              // Enter to send, Shift+Enter for newline — standard chat input.
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (
+                  !threadClosed &&
+                  !submitting &&
+                  body.trim().length > 0
+                ) {
+                  handleSubmit(e as unknown as React.FormEvent);
+                }
+              }
+            }}
+            className="min-h-[44px] flex-1 resize-none rounded-full border-border px-4 py-2.5 text-sm leading-snug"
+          />
+          <button
             type="submit"
             disabled={threadClosed || submitting || body.trim().length === 0}
-            className="min-w-[8rem] bg-action text-action-foreground shadow-action hover:bg-action-hover"
+            aria-label={labels.send}
+            className={cn(
+              "grid size-11 shrink-0 place-items-center rounded-full transition-colors",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/60",
+              threadClosed || submitting || body.trim().length === 0
+                ? "bg-muted text-muted-foreground"
+                : "bg-action text-action-foreground shadow-action hover:bg-action-hover",
+            )}
           >
             {submitting ? (
-              <span className="inline-flex items-center gap-2">
-                <HugeiconsIcon
-                  icon={Loading02Icon}
-                  size={14}
-                  strokeWidth={2.5}
-                  className="animate-spin"
-                />
-                {labels.sending}
-              </span>
+              <HugeiconsIcon
+                icon={Loading02Icon}
+                size={18}
+                strokeWidth={2.5}
+                className="animate-spin"
+              />
             ) : (
-              <span className="inline-flex items-center gap-2">
-                <HugeiconsIcon icon={Sent02Icon} size={14} strokeWidth={2} />
-                {labels.send}
-              </span>
+              <HugeiconsIcon icon={Sent02Icon} size={18} strokeWidth={2} />
             )}
-          </Button>
+          </button>
         </div>
         {sendError ? (
           <div
