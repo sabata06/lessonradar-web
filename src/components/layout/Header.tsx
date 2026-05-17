@@ -6,6 +6,7 @@ import { HideForTeachers } from "@/components/auth/HideForTeachers";
 
 import { Container } from "./Container";
 import { HeaderAuth } from "./HeaderAuth";
+import { HeaderMessagesLink } from "./HeaderMessagesLink";
 import { Logo } from "./Logo";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { MobileMenu } from "./MobileMenu";
@@ -30,6 +31,8 @@ export async function Header() {
           <div className="hidden lg:block">
             <LocaleSwitcher />
           </div>
+
+          <HeaderMessagesLink />
 
           <HeaderAuth />
 

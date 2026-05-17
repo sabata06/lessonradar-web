@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  BubbleChatIcon,
   Logout03Icon,
   Menu02Icon,
   Mortarboard01Icon,
@@ -131,6 +132,9 @@ export function MobileMenu() {
                   {tAuth("menu_dashboard")}
                 </MobileMenuItem>
               )}
+              <MobileMenuItem href="/mesajlar" icon={BubbleChatIcon} onClick={close}>
+                {t("nav.messages")}
+              </MobileMenuItem>
               <MobileMenuItem href="/ayarlar" icon={Settings02Icon} onClick={close}>
                 {tAuth("menu_settings")}
               </MobileMenuItem>
