@@ -14,12 +14,20 @@ import { Link, usePathname } from "@/i18n/navigation";
  *   - /ders-talebi          → already on the lead form, no CTA-on-CTA
  *   - /ogretmen/*           → profile page renders its own teacher-scoped CTA
  *   - /ogretmen-ol          → tutor-facing, the student lead CTA is contextually wrong
+ *   - /panel*               → customer's own panel + lead detail + B8 thread view —
+ *                              user is managing existing requests/messages, "yeni
+ *                              talep oluştur" CTA pulls them out of the task
+ *   - /panel-ogretmen*      → teacher panel, lead CTA is for customers only
+ *   - /ayarlar              → settings, off-task surface
  *   - auth flows            → user is mid-task; "request a lesson" distracts
  */
 const HIDDEN_PATHS = [
   "/ders-talebi",
   "/ogretmen",
   "/ogretmen-ol",
+  "/panel",
+  "/panel-ogretmen",
+  "/ayarlar",
   "/giris",
   "/kayit",
   "/sifremi-unuttum",
