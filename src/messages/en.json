@@ -1090,7 +1090,226 @@
         "earnings_description": "Earnings summary for completed lessons, with payout receipts."
       },
       "support_prefix": "Questions or feedback:",
-      "support_email": "support@lessonradar.com"
+      "support_email": "support@lessonradar.com",
+      "inbox": {
+        "meta_title": "Incoming lesson requests",
+        "meta_description": "Review matching lesson requests, reply, and continue the conversation.",
+        "title": "Incoming lesson requests",
+        "subtitle": "See matching requests, reply quickly, or pass.",
+        "back_to_panel": "Back to panel",
+        "empty": {
+          "approved_title": "No requests yet",
+          "approved_subtitle": "Your profile is active in the marketplace. New matching requests will land here and we'll notify you.",
+          "approved_profile_cta": "View my profile",
+          "network_error_title": "Couldn't load requests",
+          "network_error_body": "We couldn't reach the server. Check your connection and try again."
+        },
+        "quota": {
+          "premium_label": "Premium · Unlimited replies",
+          "used_label": "{used}/{limit} replies this month",
+          "remaining_label": "Remaining: {remaining}",
+          "warning_low": "Only {remaining} replies left this month.",
+          "blocked_title": "Reply quota reached",
+          "blocked_subtitle": "Upgrade to Premium for unlimited replies.",
+          "upgrade_cta": "Go Premium",
+          "period_label": "Renews: {period}"
+        },
+        "kind": {
+          "premium_immediate": "Instant",
+          "free_delayed": "Delayed",
+          "direct": "Direct to you",
+          "direct_target": "Direct to you",
+          "direct_backup": "Backup pick"
+        },
+        "status": {
+          "pending": "Pending",
+          "notified": "Notified",
+          "responded": "Replied",
+          "declined": "Declined",
+          "expired": "Expired"
+        },
+        "contact_preference": {
+          "in_app": "In-app messages only",
+          "phone_reveal": "Wants phone reveal",
+          "whatsapp_reveal": "Prefers WhatsApp",
+          "hint": "Customer prefers this channel"
+        },
+        "facts": {
+          "location": "Location",
+          "level": "Level",
+          "modality": "Lesson type",
+          "budget": "Budget",
+          "budget_range_pattern": "{min} – {max} / hour",
+          "schedule": "Preferred time",
+          "notes": "Notes",
+          "phone": "Phone (masked)"
+        },
+        "level": {
+          "primary": "Primary school",
+          "middle": "Middle school",
+          "lgs": "LGS prep",
+          "high": "High school",
+          "yks": "YKS prep",
+          "university": "University",
+          "kpss": "KPSS prep",
+          "adult": "Adult / hobby",
+          "other": "Other"
+        },
+        "modality": {
+          "in_person": "In person",
+          "online": "Online",
+          "either": "Either"
+        },
+        "lock_reason": {
+          "not_visible_yet": "This request isn't visible yet.",
+          "already_responded": "You've replied to this request.",
+          "already_declined": "You've declined this request.",
+          "lead_cancelled": "This request was cancelled.",
+          "lead_completed": "This request is closed.",
+          "quota_exceeded": "Your reply quota is exhausted.",
+          "lead_expired": "This request expired.",
+          "recipient_inactive": "This request is no longer active."
+        },
+        "action": {
+          "respond": "Reply",
+          "decline": "Decline",
+          "view_detail": "View detail",
+          "view_thread": "Continue conversation",
+          "disabled_quota_exhausted": "Reply quota exhausted"
+        },
+        "status_banner": {
+          "responded_title": "You replied to this",
+          "responded_subtitle": "Continue messaging",
+          "declined_title": "You declined this",
+          "expired_title": "Expired"
+        },
+        "time": {
+          "ago_minutes": "{n} min ago",
+          "ago_hours": "{n} hr ago",
+          "ago_days": "{n}d ago"
+        }
+      },
+      "lead": {
+        "meta_title": "Lesson request detail",
+        "meta_description": "Review a single lesson request, reply, and start the conversation.",
+        "back_to_inbox": "All requests",
+        "title": "{discipline} request",
+        "network_error_title": "Couldn't load this request",
+        "network_error_body": "We couldn't reach the server. Check your connection and try again.",
+        "stat": {
+          "timing_label": "Notified",
+          "timing_value_pending": "Pending",
+          "level": "Level",
+          "modality": "Lesson type"
+        }
+      },
+      "respond": {
+        "title": "Write your reply",
+        "subtitle": "Your message will reach the family who submitted this request.",
+        "open_cta": "Reply",
+        "sheet_title": "Write your reply",
+        "label": "Your message",
+        "placeholder": "Hi — let's talk about scheduling…",
+        "hint": "Avoid sharing contact info in the message; mutual reveal only opens with student consent.",
+        "char_count": "{used}/{max} characters",
+        "submit": "Send reply",
+        "submitting": "Sending…",
+        "success_toast": "Your reply was sent. You can continue messaging.",
+        "errors": {
+          "unauthorized": "Your session expired. Please sign in again.",
+          "forbidden": "You don't have permission to do that.",
+          "email_unverified": "Verify your email before replying.",
+          "not_found": "Request not found. Reopen it from the list.",
+          "empty_body": "You can't send an empty message.",
+          "body_too_long": "Message limited to 4000 characters.",
+          "quota_exceeded": "You've used all your replies this month. Upgrade to Premium for unlimited replies.",
+          "lead_cancelled": "This request was cancelled.",
+          "lead_completed": "This request is closed.",
+          "lead_expired": "This request expired.",
+          "already_responded": "You've already replied.",
+          "already_declined": "You've declined this.",
+          "not_visible_yet": "Wait time hasn't elapsed yet.",
+          "recipient_inactive": "This request is no longer active.",
+          "throttle_respond": "You're acting too fast. Try again shortly.",
+          "validation_failed": "Reply couldn't be validated.",
+          "upstream_error": "The server can't respond right now.",
+          "network_error": "Connection issue — couldn't send."
+        }
+      },
+      "decline": {
+        "trigger": "Decline",
+        "title": "Decline this request?",
+        "description": "This is permanent. The request will close and messaging won't open.",
+        "reason_label": "Reason (optional)",
+        "reason_placeholder": "e.g. Schedule conflict.",
+        "reason_hint": "Only visible to us.",
+        "cancel": "Cancel",
+        "confirm": "Yes, decline",
+        "confirming": "Declining…",
+        "errors": {
+          "unauthorized": "Your session expired.",
+          "forbidden": "You don't have permission to do that.",
+          "not_found": "Request not found.",
+          "already_declined": "You've already declined this.",
+          "already_responded": "You can't decline after replying.",
+          "lead_cancelled": "This request was cancelled.",
+          "lead_completed": "This request is closed.",
+          "lead_expired": "This request expired.",
+          "recipient_inactive": "This request is no longer active.",
+          "validation_failed": "Couldn't validate.",
+          "upstream_error": "The server can't respond right now.",
+          "network_error": "Couldn't decline due to a network issue."
+        }
+      },
+      "thread": {
+        "meta_title": "Messaging",
+        "meta_description": "Secure in-platform messaging with the student you replied to.",
+        "back_to_lead": "Back to request",
+        "header_title_with": "Chat with {customer}",
+        "connection_state": {
+          "in_app": "In-app",
+          "revealed": "Phone open",
+          "closed": "Closed"
+        },
+        "placeholder": "Type your message…",
+        "placeholder_closed": "This conversation is closed.",
+        "send": "Send",
+        "sending": "Sending…",
+        "char_count": "{used}/{max} characters",
+        "empty": "No messages yet.",
+        "you": "You",
+        "seen": "Seen",
+        "network_error_title": "Couldn't load messages",
+        "network_error_body": "We couldn't reach the server. Check your connection and try again.",
+        "moderation": {
+          "title": "This message contains contact info",
+          "description": "If you move off-platform we can't guarantee KVKK protection or refund support. Send anyway?",
+          "flag_phone": "Phone number detected",
+          "flag_iban": "IBAN detected",
+          "flag_email": "Email detected",
+          "cancel": "Cancel",
+          "confirm": "Send anyway",
+          "confirming": "Sending…"
+        },
+        "errors": {
+          "empty_body": "You can't send an empty message.",
+          "body_too_long": "Message limited to 4000 characters.",
+          "thread_closed": "This conversation is closed.",
+          "lead_cancelled": "Request was cancelled, so messages can't be sent.",
+          "throttle_message_send": "You're sending too fast. Slow down and try again shortly.",
+          "unauthorized": "Your session expired.",
+          "forbidden": "You don't have access to this conversation.",
+          "not_found": "Conversation not found.",
+          "network_error": "Couldn't reach the server.",
+          "upstream_error": "The server can't respond right now.",
+          "validation_failed": "Couldn't validate the message."
+        }
+      },
+      "declined_banner": {
+        "title": "You declined this request",
+        "body": "No further action is possible on this lead. If the same student submits a new request, it will appear in your list.",
+        "with_reason": "Your decline reason: {reason}"
+      }
     },
     "settings": {
       "meta_title": "Settings",

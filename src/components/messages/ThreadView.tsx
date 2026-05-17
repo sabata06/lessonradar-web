@@ -72,18 +72,45 @@ interface Props {
   leadUuid: string;
   recipientUuid: string;
   labels: Labels;
+  /**
+   * Which side of the conversation the current user is on. Drives bubble
+   * alignment (mine right, other left), seen-receipt comparison (against the
+   * other participant's last_read_at), and participants display name lookup.
+   * Defaults to "customer" for backward compatibility with the original
+   * customer thread mount.
+   */
+  viewerRole?: "customer" | "teacher";
+  /**
+   * Where the "back" link sends the user — customer flow points at the lead
+   * detail page, teacher flow points at the teacher inbox detail page. The
+   * default keeps existing customer-side callers working without explicit
+   * prop opt-in.
+   */
+  backHref?: string;
 }
 
 /**
  * Thread view — server-prefetched messages, then 10s polling. Send + read +
  * moderation flow all run client-side against the BFF.
  *
+ * Role-aware (B7+B8): backend resolves participant role from the auth token,
+ * so the same endpoints serve customer and teacher. The component takes a
+ * `viewerRole` prop so it can flip "mine vs other" bubble alignment and read
+ * the correct last-read timestamp without changing wire format.
+ *
  * Polling cadence is intentionally simple: a single `setInterval`, paused
  * while the document is hidden so background tabs don't burn requests.
  * Send is optimistic-free in V1: we wait for the server message back and then
  * append, so the canonical id + timestamp stay authoritative.
  */
-export function ThreadView({ initial, leadUuid, labels }: Props) {
+export function ThreadView({
+  initial,
+  leadUuid,
+  labels,
+  viewerRole = "customer",
+  backHref,
+}: Props) {
+  const resolvedBackHref = backHref ?? `/panel/talepler/${leadUuid}`;
   const [messages, setMessages] = useState<MessageRow[]>(initial.messages);
   const [readReceipts, setReadReceipts] = useState<ThreadReadReceipts>(
     initial.read_receipts,
@@ -196,20 +223,38 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
     setPendingBody("");
   }
 
-  const otherDisplay = initial.thread.participants.teacher.display_name;
+  // Pick the other participant's display name based on viewer role — the
+  // backend serializes both participants symmetrically.
+  const otherDisplay =
+    viewerRole === "teacher"
+      ? initial.thread.participants.customer.display_name
+      : initial.thread.participants.teacher.display_name;
   const stateLabel =
     initial.thread.connection_state === "revealed"
       ? labels.connectionState.revealed
       : initial.thread.connection_state === "closed"
         ? labels.connectionState.closed
         : labels.connectionState.in_app;
-  const teacherLastRead = readReceipts.teacher_last_read_at;
+  // Seen-indicator on MY bubbles fires when the OTHER side has read past
+  // them. The customer's bubble checks teacher_last_read_at; the teacher's
+  // bubble checks customer_last_read_at.
+  const otherLastRead =
+    viewerRole === "teacher"
+      ? readReceipts.customer_last_read_at
+      : readReceipts.teacher_last_read_at;
+
+  // Tokenize the header label so the same template works for either role —
+  // page-side passes the resolved name; we substitute both {teacher} and
+  // {customer} tokens to be permissive.
+  const headerTitle = labels.headerTitleWith
+    .replace("{teacher}", otherDisplay)
+    .replace("{customer}", otherDisplay);
 
   return (
     <div className="space-y-5">
       {/* Back link to the lead detail page. Calm Editorial — text-link not button. */}
       <Link
-        href={`/panel/talepler/${leadUuid}`}
+        href={resolvedBackHref}
         className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground"
       >
         <HugeiconsIcon icon={ArrowLeft01Icon} size={14} strokeWidth={2.2} />
@@ -218,7 +263,7 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
 
       <header className="flex items-baseline justify-between gap-3 border-b border-border pb-3">
         <h1 className="text-lg font-semibold text-foreground">
-          {labels.headerTitleWith.replace("{teacher}", otherDisplay)}
+          {headerTitle}
         </h1>
         <span className="rounded-full bg-muted/60 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
           {stateLabel}
@@ -246,9 +291,10 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
               <MessageBubble
                 key={m.uuid}
                 msg={m}
+                viewerRole={viewerRole}
                 youLabel={labels.you}
                 seenLabel={labels.seen}
-                teacherLastRead={teacherLastRead}
+                otherLastRead={otherLastRead}
               />
             ))}
           </ul>
@@ -335,19 +381,21 @@ export function ThreadView({ initial, leadUuid, labels }: Props) {
 
 function MessageBubble({
   msg,
+  viewerRole,
   youLabel,
   seenLabel,
-  teacherLastRead,
+  otherLastRead,
 }: {
   msg: MessageRow;
+  viewerRole: "customer" | "teacher";
   youLabel: string;
   seenLabel: string;
-  teacherLastRead: string | null;
+  otherLastRead: string | null;
 }) {
-  const mine = msg.sender_role === "customer";
+  const mine = msg.sender_role === viewerRole;
   const isSystem = msg.sender_role === "system";
   const seenByOther =
-    mine && teacherLastRead !== null && teacherLastRead >= msg.created_at;
+    mine && otherLastRead !== null && otherLastRead >= msg.created_at;
 
   if (isSystem) {
     return (

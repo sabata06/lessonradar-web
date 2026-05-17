@@ -60,7 +60,12 @@ export async function POST(
       { status: 401 },
     );
   }
-  if (session.user.role !== "customer" && session.user.role !== "admin") {
+  // B7+B8 — teacher participation matches customer participation.
+  if (
+    session.user.role !== "customer" &&
+    session.user.role !== "teacher" &&
+    session.user.role !== "admin"
+  ) {
     return NextResponse.json<MarkReadResponse>(
       { ok: false, error: "forbidden" },
       { status: 403 },

@@ -31,7 +31,14 @@ export async function GET(
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  if (session.user.role !== "customer" && session.user.role !== "admin") {
+  // B7+B8 — teacher participation matches customer participation. Backend
+  // enforces actual participant-on-thread access; this gate is just the
+  // role-class precondition.
+  if (
+    session.user.role !== "customer" &&
+    session.user.role !== "teacher" &&
+    session.user.role !== "admin"
+  ) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 

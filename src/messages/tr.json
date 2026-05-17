@@ -1090,7 +1090,226 @@
         "earnings_description": "Tamamlanan derslerin kazanç özeti, ödeme makbuzları."
       },
       "support_prefix": "Sorun ya da öneri için:",
-      "support_email": "destek@lessonradar.com"
+      "support_email": "destek@lessonradar.com",
+      "inbox": {
+        "meta_title": "Gelen ders talepleri",
+        "meta_description": "Sana eşleşen ders taleplerini gör, yanıt yaz, mesajlaşmaya devam et.",
+        "title": "Gelen ders talepleri",
+        "subtitle": "Eşleştiğin talepleri gör, hızlı yanıt yaz ya da geç.",
+        "back_to_panel": "Panele dön",
+        "empty": {
+          "approved_title": "Henüz sana ulaşan talep yok",
+          "approved_subtitle": "Profilin marketplace'te aktif. Eşleşen yeni talepler buraya düşecek ve sana bildirim gönderirizdir.",
+          "approved_profile_cta": "Profilimi gör",
+          "network_error_title": "Talepler şu an yüklenemiyor",
+          "network_error_body": "Sunucuya ulaşamadık. Bağlantını kontrol edip biraz sonra tekrar dener misin?"
+        },
+        "quota": {
+          "premium_label": "Premium · Sınırsız yanıt hakkın var",
+          "used_label": "Bu ay {used}/{limit} yanıt kullandın",
+          "remaining_label": "Kalan: {remaining}",
+          "warning_low": "Sadece {remaining} yanıt hakkın kaldı bu ay.",
+          "blocked_title": "Bu ay yanıt hakkın doldu",
+          "blocked_subtitle": "Premium'a geçerek sınırsız yanıt verebilirsin.",
+          "upgrade_cta": "Premium'a geç",
+          "period_label": "Yenilenir: {period}"
+        },
+        "kind": {
+          "premium_immediate": "Anında",
+          "free_delayed": "Gecikmeli",
+          "direct": "Direkt sana",
+          "direct_target": "Direkt sana",
+          "direct_backup": "Yedek atama"
+        },
+        "status": {
+          "pending": "Bekliyor",
+          "notified": "Bildirildi",
+          "responded": "Yanıt verdin",
+          "declined": "Reddedildi",
+          "expired": "Süresi doldu"
+        },
+        "contact_preference": {
+          "in_app": "Uygulama içi mesaj",
+          "phone_reveal": "Telefonla görüşmek istiyor",
+          "whatsapp_reveal": "WhatsApp tercihi",
+          "hint": "Öğrenci bu kanalı tercih ediyor"
+        },
+        "facts": {
+          "location": "Konum",
+          "level": "Seviye",
+          "modality": "Ders türü",
+          "budget": "Bütçe",
+          "budget_range_pattern": "{min} – {max} / saat",
+          "schedule": "Tercih edilen zaman",
+          "notes": "Notlar",
+          "phone": "Telefon (maskeli)"
+        },
+        "level": {
+          "primary": "İlkokul",
+          "middle": "Ortaokul",
+          "lgs": "LGS hazırlık",
+          "high": "Lise",
+          "yks": "YKS hazırlık",
+          "university": "Üniversite",
+          "kpss": "KPSS hazırlık",
+          "adult": "Yetişkin / hobi",
+          "other": "Diğer"
+        },
+        "modality": {
+          "in_person": "Yüz yüze",
+          "online": "Çevrimiçi",
+          "either": "Fark etmez"
+        },
+        "lock_reason": {
+          "not_visible_yet": "Bu talep için görüntüleme zamanı henüz gelmedi.",
+          "already_responded": "Bu talebe yanıt verdin.",
+          "already_declined": "Bu talebi reddettin.",
+          "lead_cancelled": "Bu talep iptal edildi.",
+          "lead_completed": "Bu talep kapandı.",
+          "quota_exceeded": "Bu ayki yanıt hakkın doldu.",
+          "lead_expired": "Bu talebin süresi doldu.",
+          "recipient_inactive": "Bu talep artık aktif değil."
+        },
+        "action": {
+          "respond": "Yanıtla",
+          "decline": "Reddet",
+          "view_detail": "Talep detayı",
+          "view_thread": "Mesajlaşmaya devam et",
+          "disabled_quota_exhausted": "Bu ay yanıt hakkın doldu"
+        },
+        "status_banner": {
+          "responded_title": "Bu talebe yanıt verdin",
+          "responded_subtitle": "Mesajlaşmaya devam et",
+          "declined_title": "Bu talebi reddettin",
+          "expired_title": "Süresi doldu"
+        },
+        "time": {
+          "ago_minutes": "{n} dk önce",
+          "ago_hours": "{n} sa önce",
+          "ago_days": "{n} gün önce"
+        }
+      },
+      "lead": {
+        "meta_title": "Ders talebi detayı",
+        "meta_description": "Tek bir ders talebini incele, yanıt yaz ve mesajlaşmaya başla.",
+        "back_to_inbox": "Tüm talepler",
+        "title": "{discipline} talebi",
+        "network_error_title": "Talep şu an yüklenemiyor",
+        "network_error_body": "Sunucuya ulaşamadık. Bağlantını kontrol edip biraz sonra tekrar dener misin?",
+        "stat": {
+          "timing_label": "Bildirim zamanı",
+          "timing_value_pending": "Bekliyor",
+          "level": "Seviye",
+          "modality": "Ders türü"
+        }
+      },
+      "respond": {
+        "title": "Yanıt yaz",
+        "subtitle": "Mesajın talebi gönderen aileye iletilir.",
+        "open_cta": "Yanıt yaz",
+        "sheet_title": "Yanıt yaz",
+        "label": "Mesajın",
+        "placeholder": "Merhaba, ders programı hakkında konuşalım…",
+        "hint": "Telefon ve hesap bilgilerini paylaşmak yerine site içi kanalları kullan; mutual reveal sadece öğrenci onayıyla açılır.",
+        "char_count": "{used}/{max} karakter",
+        "submit": "Yanıtı gönder",
+        "submitting": "Gönderiliyor…",
+        "success_toast": "Yanıtın iletildi. Mesajlaşmaya devam edebilirsin.",
+        "errors": {
+          "unauthorized": "Oturumun sona ermiş. Tekrar giriş yap.",
+          "forbidden": "Bu işlemi yapmaya yetkin yok.",
+          "email_unverified": "Yanıt yazmak için önce e-posta adresini doğrula.",
+          "not_found": "Bu talep bulunamadı. Listeden tekrar açar mısın?",
+          "empty_body": "Boş mesaj gönderemezsin.",
+          "body_too_long": "Mesaj 4000 karakteri geçemez.",
+          "quota_exceeded": "Bu ayki yanıt hakkın doldu. Premium'a geçerek sınırsız yanıt verebilirsin.",
+          "lead_cancelled": "Bu talep iptal edildi; yanıt gönderilemez.",
+          "lead_completed": "Bu talep kapandı.",
+          "lead_expired": "Bu talebin süresi doldu.",
+          "already_responded": "Bu talebe zaten yanıt verdin.",
+          "already_declined": "Bu talebi reddetmiştin.",
+          "not_visible_yet": "Bu talep için bekleme süresi dolmadı.",
+          "recipient_inactive": "Bu talep artık aktif değil.",
+          "throttle_respond": "Çok hızlı işlem yapıyorsun. Biraz sonra tekrar dene.",
+          "validation_failed": "Yanıt doğrulanamadı.",
+          "upstream_error": "Sunucu şu an yanıt veremiyor.",
+          "network_error": "Bağlantı sorunu nedeniyle gönderilemedi."
+        }
+      },
+      "decline": {
+        "trigger": "Reddet",
+        "title": "Bu talebi reddet?",
+        "description": "Bu işlem geri alınamaz. Talep kapanır ve mesajlaşma açılmaz.",
+        "reason_label": "Sebep (isteğe bağlı)",
+        "reason_placeholder": "Örn. Müsaitlik çakışıyor.",
+        "reason_hint": "Bu metin sadece bizim kayıtlarımızda kalır.",
+        "cancel": "Vazgeç",
+        "confirm": "Evet, reddet",
+        "confirming": "Reddediliyor…",
+        "errors": {
+          "unauthorized": "Oturumun sona ermiş.",
+          "forbidden": "Bu işlemi yapmaya yetkin yok.",
+          "not_found": "Bu talep bulunamadı.",
+          "already_declined": "Bu talebi zaten reddetmiştin.",
+          "already_responded": "Bu talebe yanıt verdiğin için reddedemezsin.",
+          "lead_cancelled": "Bu talep iptal edildi.",
+          "lead_completed": "Bu talep kapandı.",
+          "lead_expired": "Bu talebin süresi doldu.",
+          "recipient_inactive": "Bu talep artık aktif değil.",
+          "validation_failed": "İşlem doğrulanamadı.",
+          "upstream_error": "Sunucu şu an yanıt veremiyor.",
+          "network_error": "Bağlantı sorunu nedeniyle reddedilemedi."
+        }
+      },
+      "thread": {
+        "meta_title": "Mesajlaşma",
+        "meta_description": "Yanıt verdiğin öğrenciyle güvenli site içi mesajlaşma.",
+        "back_to_lead": "Talep detayına dön",
+        "header_title_with": "{customer} ile mesajlaşma",
+        "connection_state": {
+          "in_app": "Uygulama içi",
+          "revealed": "Telefon açık",
+          "closed": "Kapatıldı"
+        },
+        "placeholder": "Mesajını yaz…",
+        "placeholder_closed": "Bu konuşma kapatıldı.",
+        "send": "Gönder",
+        "sending": "Gönderiliyor…",
+        "char_count": "{used}/{max} karakter",
+        "empty": "Henüz mesaj yok.",
+        "you": "Sen",
+        "seen": "Görüldü",
+        "network_error_title": "Mesajlar şu an yüklenemiyor",
+        "network_error_body": "Sunucuya ulaşamadık. Bağlantını kontrol edip biraz sonra tekrar dener misin?",
+        "moderation": {
+          "title": "Bu mesaj iletişim bilgisi içeriyor",
+          "description": "Platform dışına çıkarsanız KVKK koruması ve iade hakkımız uygulanamaz. Yine de göndermek istiyor musun?",
+          "flag_phone": "Telefon numarası tespit edildi",
+          "flag_iban": "IBAN tespit edildi",
+          "flag_email": "E-posta tespit edildi",
+          "cancel": "Vazgeç",
+          "confirm": "Yine de gönder",
+          "confirming": "Gönderiliyor…"
+        },
+        "errors": {
+          "empty_body": "Boş mesaj gönderemezsin.",
+          "body_too_long": "Mesaj 4000 karakteri geçemez.",
+          "thread_closed": "Bu konuşma kapatıldı.",
+          "lead_cancelled": "Talep iptal edildiği için mesaj gönderilemez.",
+          "throttle_message_send": "Çok hızlı mesaj gönderiyorsun. Biraz sonra tekrar dene.",
+          "unauthorized": "Oturumun sona ermiş.",
+          "forbidden": "Bu konuşmaya erişimin yok.",
+          "not_found": "Konuşma bulunamadı.",
+          "network_error": "Sunucuya ulaşamadık.",
+          "upstream_error": "Sunucu şu an yanıt veremiyor.",
+          "validation_failed": "Mesaj doğrulanamadı."
+        }
+      },
+      "declined_banner": {
+        "title": "Bu talebi reddettin",
+        "body": "Bu talep için ileri bir adım atılamayacak. Aynı öğrenci yeni bir talep gönderirse listende görünür.",
+        "with_reason": "Reddetme sebebin: {reason}"
+      }
     },
     "settings": {
       "meta_title": "Ayarlar",
