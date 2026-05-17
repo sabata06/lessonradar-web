@@ -60,6 +60,16 @@ export const ENDPOINTS = {
   LEAD_TEACHER_DECLINE: (recipientUuid: string) =>
     `/api/teacher/leads/${encodeURIComponent(recipientUuid)}/decline/`,
 
+  // ── B8 Connect & Messaging (LIVE backend 2026-05-17) ────────────────────
+  LEAD_CUSTOMER_CONNECT: (leadUuid: string, recipientUuid: string) =>
+    `/api/customer/leads/${encodeURIComponent(leadUuid)}/offers/${encodeURIComponent(recipientUuid)}/connect/`,
+  MESSAGES_THREAD: (threadUuid: string) =>
+    `/api/messages/threads/${encodeURIComponent(threadUuid)}/`,
+  MESSAGES_SEND: (threadUuid: string) =>
+    `/api/messages/threads/${encodeURIComponent(threadUuid)}/send/`,
+  MESSAGES_READ: (threadUuid: string) =>
+    `/api/messages/threads/${encodeURIComponent(threadUuid)}/read/`,
+
   // ── Teacher application (B5a LIVE) ──────────────────────────────────────
   TEACHER_APPLICATION_START: "/api/teacher-applications/",
   TEACHER_APPLICATION_CURRENT: "/api/teacher-applications/current/",

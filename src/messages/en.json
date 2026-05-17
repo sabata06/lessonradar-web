@@ -180,7 +180,29 @@
       "phone": {
         "label": "Phone",
         "placeholder": "5XX XXX XX XX",
-        "hint": "Shared only with matching tutors."
+        "hint": "Your phone is shared only when you opt in. Pick \"In-app message only\" to keep it private."
+      },
+      "contact_preference": {
+        "label": "How should tutors reach you?",
+        "hint": "Pick a channel; your phone is shared only after you tap \"connect\".",
+        "options": {
+          "in_app": {
+            "title": "In-app messages only",
+            "description": "Your phone stays private. All contact happens in the platform."
+          },
+          "phone_reveal": {
+            "title": "Open phone with the tutor I pick",
+            "description": "When you choose to proceed with a tutor, phones become visible to both."
+          },
+          "whatsapp_reveal": {
+            "title": "Continue via WhatsApp",
+            "description": "Same as phone reveal, with WhatsApp emphasized in the UI."
+          },
+          "any": {
+            "title": "No preference",
+            "description": "Tutor's preference is shown as a hint; you decide when to open contact."
+          }
+        }
       },
       "email": {
         "label": "Email",
@@ -200,6 +222,8 @@
       "phone_velocity": "A request from this phone number was already sent in the last 24 hours. Please try again later.",
       "invalid_slug": "The selected subject or city is invalid. Please pick again.",
       "invalid_target_teacher": "The selected tutor is not available for this subject or city.",
+      "invalid_contact_preference": "Please choose a valid contact preference.",
+      "contact_preference_required": "Please choose a contact preference.",
       "network": "Couldn't submit due to a network problem. Please try again."
     },
     "gate": {
@@ -952,7 +976,76 @@
           "offer": {
             "message_label": "Tutor's message",
             "responded_at": "Replied on {date}",
-            "view_profile": "View profile"
+            "view_profile": "View profile",
+            "message_cta": "Send message",
+            "connection": {
+              "opened": "Contact opened",
+              "whatsapp": "Open in WhatsApp",
+              "trigger": "Proceed with this tutor",
+              "dialog_title": "Share phone numbers?",
+              "dialog_description": "{teacher} and you will see each other's phone numbers. This only happens after your confirmation.",
+              "dialog_description_whatsapp": "{teacher} and you will see each other's phone numbers. We'll surface WhatsApp prominently.",
+              "dialog_hint": "Reveal is per-tutor; other offers remain in-app only. You can keep using the in-app chat as well.",
+              "dialog_cancel": "Cancel",
+              "dialog_confirm": "Yes, open contact",
+              "dialog_confirming": "Opening…",
+              "errors": {
+                "unauthorized": "Your session looks expired. Please sign in again and retry.",
+                "forbidden": "You don't have permission to do that.",
+                "not_found": "This offer can't be found. Try reloading the page.",
+                "contact_preference_blocks_reveal": "You chose \"In-app messages only\" for this request, so phone sharing is disabled. You can still use the in-app chat.",
+                "recipient_not_responded": "This tutor hasn't replied yet.",
+                "teacher_inactive": "This tutor isn't currently active.",
+                "lead_cancelled": "This request was cancelled; contact can't be opened.",
+                "validation_failed": "We couldn't validate that request.",
+                "network_error": "Couldn't open contact due to a network problem.",
+                "upstream_error": "The server can't respond right now. Try again shortly."
+              }
+            }
+          },
+          "thread": {
+            "meta_title": "Messaging",
+            "meta_description": "Secure in-platform messaging with the tutor who replied to your request.",
+            "back_to_lead": "Back to request",
+            "header_title_with": "Chat with {teacher}",
+            "connection_state": {
+              "in_app": "In-app",
+              "revealed": "Phone open",
+              "closed": "Closed"
+            },
+            "placeholder": "Type your message…",
+            "placeholder_closed": "This conversation is closed.",
+            "send": "Send",
+            "sending": "Sending…",
+            "char_count": "{used}/{max} characters",
+            "empty": "No messages yet. Be the first to write.",
+            "you": "You",
+            "seen": "Seen",
+            "network_error_title": "Couldn't load messages",
+            "network_error_body": "We couldn't reach the server. Check your connection and try again shortly.",
+            "moderation": {
+              "title": "This message contains contact info",
+              "description": "If you move off-platform we can't guarantee KVKK protection or refund support. Send anyway?",
+              "flag_phone": "Phone number detected",
+              "flag_iban": "IBAN detected",
+              "flag_email": "Email detected",
+              "cancel": "Cancel",
+              "confirm": "Send anyway",
+              "confirming": "Sending…"
+            },
+            "errors": {
+              "empty_body": "You can't send an empty message.",
+              "body_too_long": "Message is too long. Limit is 4000 characters.",
+              "thread_closed": "This conversation is closed.",
+              "lead_cancelled": "This request was cancelled, so messages can't be sent.",
+              "throttle_message_send": "You're sending too fast. Please slow down and try again shortly.",
+              "unauthorized": "Your session looks expired. Please sign in again.",
+              "forbidden": "You don't have access to this conversation.",
+              "not_found": "Conversation not found.",
+              "network_error": "We couldn't reach the server. Try again shortly.",
+              "upstream_error": "The server can't respond right now.",
+              "validation_failed": "Couldn't validate the message."
+            }
           },
           "cancel": {
             "title": "Cancel this request",

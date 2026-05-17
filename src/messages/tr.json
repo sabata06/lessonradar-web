@@ -180,7 +180,29 @@
       "phone": {
         "label": "Telefon",
         "placeholder": "5XX XXX XX XX",
-        "hint": "Sadece eşleşen öğretmenlerle paylaşılır."
+        "hint": "Telefonun, sadece sen onayladığında öğretmenlerle paylaşılır. İletişim tercihine \"sadece uygulama içi mesaj\" dersen telefon hiç açılmaz."
+      },
+      "contact_preference": {
+        "label": "Sana nasıl ulaşılsın?",
+        "hint": "Tercih ettiğin kanalı seç; telefonun ancak \"ilerle\" dediğinde paylaşılır.",
+        "options": {
+          "in_app": {
+            "title": "Sadece uygulama içi mesaj",
+            "description": "Telefonun hiç açılmaz; her şey site/uygulama içinden konuşulur."
+          },
+          "phone_reveal": {
+            "title": "Telefonla görüşmek isterim",
+            "description": "Yanıt veren öğretmenlerden seçtiğine telefonun açılır."
+          },
+          "whatsapp_reveal": {
+            "title": "WhatsApp üzerinden ilerleyebilirim",
+            "description": "WhatsApp üzerinden hızlıca yazışmak istersen bu kanal vurgulanır."
+          },
+          "any": {
+            "title": "Fark etmez",
+            "description": "Öğretmenin tercihi gözükür; sen istediğinde telefon açılır."
+          }
+        }
       },
       "email": {
         "label": "E-posta",
@@ -200,6 +222,8 @@
       "phone_velocity": "Bu telefon numarasından son 24 saat içinde zaten bir talep gönderildi. Lütfen sonra tekrar dene.",
       "invalid_slug": "Seçtiğin branş veya şehir geçersiz. Listeden tekrar seç.",
       "invalid_target_teacher": "Seçilen öğretmen bu branş veya şehir için müsait değil.",
+      "invalid_contact_preference": "Lütfen geçerli bir iletişim tercihi seç.",
+      "contact_preference_required": "İletişim tercihi seçmen gerekiyor.",
       "network": "Bağlantı sorunu nedeniyle talep gönderilemedi. Lütfen tekrar dene."
     },
     "gate": {
@@ -952,7 +976,76 @@
           "offer": {
             "message_label": "Öğretmenin mesajı",
             "responded_at": "{date} tarihinde yanıtladı",
-            "view_profile": "Profili görüntüle"
+            "view_profile": "Profili görüntüle",
+            "message_cta": "Mesaj gönder",
+            "connection": {
+              "opened": "İletişim açıldı",
+              "whatsapp": "WhatsApp'tan yaz",
+              "trigger": "Bu öğretmenle ilerle",
+              "dialog_title": "Telefonlarınızı paylaşmak istiyor musun?",
+              "dialog_description": "{teacher} ile sen, birbirinizin telefon numarasını göreceksiniz. Bu adım sadece sen onayladığında atılır.",
+              "dialog_description_whatsapp": "{teacher} ile sen, birbirinizin telefon numarasını göreceksiniz. WhatsApp tercihini yansıtacağız.",
+              "dialog_hint": "İlerlemek istediğin bu öğretmene özeldir; diğer tekliflerle iletişim açılmaz. Site içi mesajlaşmayı kullanmaya devam edebilirsin.",
+              "dialog_cancel": "Vazgeç",
+              "dialog_confirm": "Evet, ilerle",
+              "dialog_confirming": "Açılıyor…",
+              "errors": {
+                "unauthorized": "Oturumun sona ermiş görünüyor. Tekrar giriş yapıp dener misin?",
+                "forbidden": "Bu işlem için yetkin yok.",
+                "not_found": "Bu teklif bulunamadı. Sayfayı yenileyebilirsin.",
+                "contact_preference_blocks_reveal": "Bu talepte iletişim tercihini \"sadece uygulama içi mesaj\" olarak seçtin; telefon paylaşımı kapalı. Site içi mesajlaşmayı kullanabilirsin.",
+                "recipient_not_responded": "Bu öğretmen henüz yanıt vermedi.",
+                "teacher_inactive": "Bu öğretmen şu an aktif değil.",
+                "lead_cancelled": "Bu talep iptal edilmiş; iletişim açılamaz.",
+                "validation_failed": "İşlem doğrulanamadı.",
+                "network_error": "Bağlantı sorunu nedeniyle açılamadı.",
+                "upstream_error": "Sunucu şu an yanıt veremiyor. Birazdan tekrar dene."
+              }
+            }
+          },
+          "thread": {
+            "meta_title": "Mesajlaşma",
+            "meta_description": "Talebinin yanıt veren öğretmeniyle güvenli site içi mesajlaşma.",
+            "back_to_lead": "Talep detayına dön",
+            "header_title_with": "{teacher} ile mesajlaşma",
+            "connection_state": {
+              "in_app": "Uygulama içi",
+              "revealed": "Telefon açık",
+              "closed": "Kapatıldı"
+            },
+            "placeholder": "Mesajını yaz…",
+            "placeholder_closed": "Bu konuşma kapatıldı.",
+            "send": "Gönder",
+            "sending": "Gönderiliyor…",
+            "char_count": "{used}/{max} karakter",
+            "empty": "Henüz mesaj yok. İlk mesajı sen yazabilirsin.",
+            "you": "Sen",
+            "seen": "Görüldü",
+            "network_error_title": "Mesajlar şu an yüklenemiyor",
+            "network_error_body": "Sunucuya ulaşamadık. Bağlantını kontrol edip biraz sonra tekrar dener misin?",
+            "moderation": {
+              "title": "Bu mesaj iletişim bilgisi içeriyor",
+              "description": "Platform dışına çıkarsanız KVKK koruması ve iade hakkımız uygulanamaz. Yine de göndermek istiyor musun?",
+              "flag_phone": "Telefon numarası tespit edildi",
+              "flag_iban": "IBAN tespit edildi",
+              "flag_email": "E-posta tespit edildi",
+              "cancel": "Vazgeç",
+              "confirm": "Yine de gönder",
+              "confirming": "Gönderiliyor…"
+            },
+            "errors": {
+              "empty_body": "Boş mesaj gönderemezsin.",
+              "body_too_long": "Mesaj çok uzun. 4000 karakteri geçemez.",
+              "thread_closed": "Bu konuşma kapatıldı.",
+              "lead_cancelled": "Bu talep iptal edildiği için mesaj gönderilemez.",
+              "throttle_message_send": "Çok hızlı mesaj gönderiyorsun. Lütfen biraz sonra tekrar dene.",
+              "unauthorized": "Oturumun sona ermiş. Tekrar giriş yapıp dener misin?",
+              "forbidden": "Bu konuşmaya erişimin yok.",
+              "not_found": "Konuşma bulunamadı.",
+              "network_error": "Sunucuya ulaşamadık. Biraz sonra tekrar dene.",
+              "upstream_error": "Sunucu şu an yanıt veremiyor.",
+              "validation_failed": "Mesaj doğrulanamadı."
+            }
           },
           "cancel": {
             "title": "Bu talebi iptal et",

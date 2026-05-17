@@ -3,6 +3,7 @@ import "server-only";
 import { apiClient, ApiError } from "@/api/client";
 import { ENDPOINTS } from "@/api/endpoints";
 import { getSession } from "@/lib/auth/cookies";
+import type { ContactPreference } from "@/lib/lead/schema";
 
 /**
  * Customer-owned lead detail payload from
@@ -68,6 +69,41 @@ export interface OfferTeacher {
   trust: OfferTeacherTrust;
 }
 
+/**
+ * B8 — per-offer connection state.
+ *
+ * `customer_revealed_at` / `teacher_revealed_at` are populated only after the
+ * customer hits the connect endpoint for this offer. The reveal is mutual + immediate
+ * in V1, so both timestamps move together. Phone fields are only populated when
+ * `exists=true` AND the requesting customer has reveal access.
+ *
+ * `can_connect=false` means one of:
+ *   - lead.customer_contact_preference = "in_app" (channel blocks reveal)
+ *   - offer already connected (exists=true)
+ *   - lead cancelled / teacher inactive
+ */
+export interface LeadOfferConnection {
+  exists: boolean;
+  can_connect: boolean;
+  customer_revealed_at: string | null;
+  teacher_revealed_at: string | null;
+  revealed_by?: "customer" | "auto" | null;
+  teacher_phone_e164: string | null;
+  teacher_phone_display: string | null;
+  teacher_whatsapp_url: string | null;
+}
+
+/**
+ * B8 — per-offer thread summary embedded in offer payload. Full message list
+ * is fetched separately via `GET /api/messages/threads/<uuid>/`.
+ */
+export interface LeadOfferThread {
+  uuid: string;
+  unread_count: number;
+  last_message_at: string | null;
+  last_message_preview: string | null;
+}
+
 export interface LeadOffer {
   uuid: string;
   kind: LeadOfferKind;
@@ -75,6 +111,10 @@ export interface LeadOffer {
   response_message: string;
   responded_at: string;
   teacher: OfferTeacher;
+  /** B8 — present when teacher has responded; backend always supplies. */
+  connection?: LeadOfferConnection;
+  /** B8 — present when teacher response created a thread. */
+  thread?: LeadOfferThread;
 }
 
 export interface LeadDetail {
@@ -94,6 +134,8 @@ export interface LeadDetail {
   preferred_schedule?: string | null;
   notes?: string | null;
   contact_phone_masked?: string;
+  /** B8 — channel customer chose at lead creation. Bounds reveal options. */
+  customer_contact_preference?: ContactPreference;
   recipient_count: number;
   responded_count: number;
   can_cancel: boolean;
@@ -159,3 +201,34 @@ export interface CancelLeadRequest {
 export type CancelLeadResponse =
   | { ok: true; lead: LeadDetail }
   | { ok: false; error: CancelLeadErrorCode; message?: string; status?: number };
+
+/**
+ * B8 — connect endpoint response types. Connect is idempotent: calling on an
+ * already-connected pair returns the existing reveal payload. See
+ * `docs/B8_CONNECT_BACKEND_CONTRACT.md` §Connect.
+ */
+export type ConnectLeadErrorCode =
+  | "validation_failed"
+  | "unauthorized"
+  | "forbidden"
+  | "not_found"
+  | "contact_preference_blocks_reveal"
+  | "recipient_not_responded"
+  | "teacher_inactive"
+  | "lead_cancelled"
+  | "upstream_error"
+  | "network_error";
+
+export interface ConnectLeadOk {
+  ok: true;
+  connection: LeadOfferConnection & { exists: true };
+}
+
+export interface ConnectLeadError {
+  ok: false;
+  error: ConnectLeadErrorCode;
+  message?: string;
+  status?: number;
+}
+
+export type ConnectLeadResponse = ConnectLeadOk | ConnectLeadError;

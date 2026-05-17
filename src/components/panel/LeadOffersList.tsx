@@ -61,7 +61,9 @@ export async function LeadOffersList({ lead, locale, nowIso }: Props) {
             <li key={offer.uuid}>
               <LeadOfferCard
                 offer={offer}
+                leadUuid={lead.uuid}
                 disciplineSlug={lead.discipline_slug}
+                contactPreference={lead.customer_contact_preference}
                 locale={locale}
                 nowIso={nowIso}
                 emphasizeFirst={idx === 0}

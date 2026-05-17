@@ -22,6 +22,24 @@ export const STUDENT_LEVELS = [
 
 export const MODALITIES = ["in_person", "online", "either"] as const;
 
+/**
+ * B8 customer contact preference. Set at lead creation, immutable for the
+ * lifetime of that lead — customer must create a new lead to change channel.
+ * See `docs/B8_CONNECT_BACKEND_CONTRACT.md`.
+ *   - `in_app`          → site/app içi mesajlaşma, telefon hiç açılmaz
+ *   - `phone_reveal`    → customer "ilerle" der, mutual phone reveal
+ *   - `whatsapp_reveal` → aynı reveal, UI WhatsApp'ı vurgular
+ *   - `any`             → teacher'ın tercihi hint olarak gösterilir, customer seçer
+ */
+export const CONTACT_PREFERENCES = [
+  "in_app",
+  "phone_reveal",
+  "whatsapp_reveal",
+  "any",
+] as const;
+
+export type ContactPreference = (typeof CONTACT_PREFERENCES)[number];
+
 /** Active KVKK consent text version. Bump when the consent copy changes. */
 export const KVKK_CONSENT_VERSION = "2026-05";
 
@@ -67,6 +85,9 @@ export const leadRequestSchema = z
         }
         return norm;
       }),
+    customerContactPreference: z.enum(CONTACT_PREFERENCES, {
+      message: "contact_preference_required",
+    }),
     consentKvkk: z.literal(true, {
       message: "kvkk_required",
     }),
@@ -80,8 +101,9 @@ export type LeadRequestInput = z.input<typeof leadRequestSchema>;
 export type LeadRequestPayload = z.output<typeof leadRequestSchema>;
 
 /**
- * Snake-case API payload sent to Django. Matches the contract in
- * `docs/B4_LEAD_BACKEND_CONTRACT.md`.
+ * Snake-case API payload sent to Django. Matches the contracts in
+ * `docs/B4_LEAD_BACKEND_CONTRACT.md` (B4) +
+ * `docs/B8_CONNECT_BACKEND_CONTRACT.md` (B8 `customer_contact_preference`).
  */
 export interface LeadCreateApiPayload {
   discipline_slug: string;
@@ -95,6 +117,7 @@ export interface LeadCreateApiPayload {
   preferred_schedule?: string;
   notes?: string;
   contact_phone: string;
+  customer_contact_preference: ContactPreference;
   consent_kvkk: true;
   consent_kvkk_version: string;
   source: "web";
@@ -113,6 +136,7 @@ export function toApiPayload(p: LeadRequestPayload): LeadCreateApiPayload {
     preferred_schedule: p.preferredSchedule || undefined,
     notes: p.notes || undefined,
     contact_phone: p.contactPhone,
+    customer_contact_preference: p.customerContactPreference,
     consent_kvkk: true,
     consent_kvkk_version: KVKK_CONSENT_VERSION,
     source: "web",
@@ -138,6 +162,7 @@ export interface LeadApiRow {
   notes?: string | null;
   contact_phone_masked?: string;
   contact_email?: string;
+  customer_contact_preference?: ContactPreference;
   recipient_count: number;
   responded_count: number;
   created_at: string;
@@ -164,6 +189,7 @@ export type LeadSubmitErrorCode =
   | "phone_invalid"
   | "phone_velocity"
   | "invalid_target_teacher"
+  | "invalid_contact_preference"
   | "upstream_error"
   | "network_error"
   | "unknown_error";

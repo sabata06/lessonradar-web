@@ -3,8 +3,12 @@ import { getTranslations } from "next-intl/server";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight01Icon,
+  BubbleChatIcon,
+  CheckmarkCircle02Icon,
   MapsLocation01Icon,
   QuoteDownIcon,
+  TelephoneIcon,
+  WhatsappIcon,
 } from "@hugeicons/core-free-icons";
 
 import { Link } from "@/i18n/navigation";
@@ -18,12 +22,18 @@ import {
   ResponseTimePill,
   VerifiedBadge,
 } from "@/components/teacher/TrustSignals";
+import { ConnectButton } from "@/components/panel/ConnectButton";
 import type { LeadOffer } from "@/lib/lead/customer-lead-detail";
+import type { ContactPreference } from "@/lib/lead/schema";
 
 interface Props {
   offer: LeadOffer;
+  /** Customer's lead UUID — needed for the connect endpoint. */
+  leadUuid: string;
   /** Customer's lead discipline — used to pick the right hourly rate. */
   disciplineSlug?: string;
+  /** B8 — passes through so card can decide phone vs in-app emphasis. */
+  contactPreference?: ContactPreference;
   locale: Locale;
   nowIso: string;
   /** Subtle "first responder" emphasis for the top card. */
@@ -38,13 +48,18 @@ interface Props {
  */
 export async function LeadOfferCard({
   offer,
+  leadUuid,
   disciplineSlug,
+  contactPreference,
   locale,
   nowIso,
   emphasizeFirst,
 }: Props) {
   const t = await getTranslations("panel.customer.leads.detail.offer");
   const { teacher } = offer;
+  const connection = offer.connection;
+  const thread = offer.thread;
+  const prefersWhatsApp = contactPreference === "whatsapp_reveal";
 
   const cityLabel = teacher.city_name ?? teacher.city_slug ?? null;
   const districtLabel = teacher.district_name ?? teacher.district_slug ?? null;
@@ -174,7 +189,45 @@ export async function LeadOfferCard({
         />
       </div>
 
-      <div className="mt-5">
+      {/* B8 — reveal block (after customer "ilerle"). Brand-soft surface, not
+          action color: the conversion already happened. */}
+      {connection?.exists ? (
+        <div className="mt-5 space-y-3 rounded-xl border border-success/30 bg-success/5 p-4">
+          <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-success">
+            <HugeiconsIcon
+              icon={CheckmarkCircle02Icon}
+              size={14}
+              strokeWidth={2}
+            />
+            {t("connection.opened")}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {connection.teacher_phone_display ? (
+              <a
+                href={`tel:${connection.teacher_phone_e164 ?? connection.teacher_phone_display}`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-card px-3.5 py-2 text-sm font-semibold text-primary transition hover:bg-primary/5"
+              >
+                <HugeiconsIcon icon={TelephoneIcon} size={14} strokeWidth={2} />
+                {connection.teacher_phone_display}
+              </a>
+            ) : null}
+            {connection.teacher_whatsapp_url ? (
+              <a
+                href={connection.teacher_whatsapp_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-card px-3.5 py-2 text-sm font-semibold text-primary transition hover:bg-primary/5"
+              >
+                <HugeiconsIcon icon={WhatsappIcon} size={14} strokeWidth={2} />
+                {t("connection.whatsapp")}
+              </a>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Actions row — profile + (optional) connect / message CTAs. */}
+      <div className="mt-5 flex flex-wrap gap-2">
         <Link
           href={`/ogretmen/${teacher.slug}`}
           className="inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-card px-3.5 py-2 text-sm font-semibold text-primary transition hover:bg-primary/5"
@@ -182,6 +235,70 @@ export async function LeadOfferCard({
           {t("view_profile")}
           <HugeiconsIcon icon={ArrowRight01Icon} size={14} strokeWidth={2.5} />
         </Link>
+
+        {/* B8 — message thread access. Present whenever teacher responded
+            (backend always creates thread on respond). For in_app-pref leads
+            this is the only contact channel, so we emphasize it slightly. */}
+        {thread ? (
+          <Link
+            href={`/panel/talepler/${leadUuid}/mesaj/${offer.uuid}`}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold transition",
+              contactPreference === "in_app"
+                ? "border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+                : "border border-border bg-card text-foreground hover:bg-muted/40",
+            )}
+          >
+            <HugeiconsIcon icon={BubbleChatIcon} size={14} strokeWidth={2} />
+            {t("message_cta")}
+            {thread.unread_count > 0 ? (
+              <span className="ml-1 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-action px-1.5 text-[11px] font-bold text-action-foreground">
+                {thread.unread_count}
+              </span>
+            ) : null}
+          </Link>
+        ) : null}
+
+        {/* B8 — connect CTA. Action color (conversion moment). Hidden when
+            preference is in_app (backend would 403), already revealed, or
+            recipient not responded. */}
+        {connection?.can_connect ? (
+          <ConnectButton
+            leadUuid={leadUuid}
+            recipientUuid={offer.uuid}
+            labels={{
+              trigger: t("connection.trigger"),
+              title: t("connection.dialog_title"),
+              description: prefersWhatsApp
+                ? t("connection.dialog_description_whatsapp", {
+                    teacher: teacher.display_name,
+                  })
+                : t("connection.dialog_description", {
+                    teacher: teacher.display_name,
+                  }),
+              hint: t("connection.dialog_hint"),
+              cancel: t("connection.dialog_cancel"),
+              confirm: t("connection.dialog_confirm"),
+              confirming: t("connection.dialog_confirming"),
+              errors: {
+                unauthorized: t("connection.errors.unauthorized"),
+                forbidden: t("connection.errors.forbidden"),
+                not_found: t("connection.errors.not_found"),
+                contact_preference_blocks_reveal: t(
+                  "connection.errors.contact_preference_blocks_reveal",
+                ),
+                recipient_not_responded: t(
+                  "connection.errors.recipient_not_responded",
+                ),
+                teacher_inactive: t("connection.errors.teacher_inactive"),
+                lead_cancelled: t("connection.errors.lead_cancelled"),
+                validation_failed: t("connection.errors.validation_failed"),
+                network_error: t("connection.errors.network_error"),
+                upstream_error: t("connection.errors.upstream_error"),
+              },
+            }}
+          />
+        ) : null}
       </div>
     </article>
   );

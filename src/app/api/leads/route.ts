@@ -33,6 +33,7 @@ function classifyDjangoError(err: ApiError): LeadSubmitErrorCode {
     if (code.includes("phone_velocity")) return "phone_velocity";
     if (code.includes("kvkk")) return "kvkk_required";
     if (code.includes("phone")) return "phone_invalid";
+    if (code.includes("contact_preference")) return "invalid_contact_preference";
     if (code.includes("target_teacher")) return "invalid_target_teacher";
     // Walk the detail object to spot specific codes
     const detail = err.detail;
@@ -41,6 +42,9 @@ function classifyDjangoError(err: ApiError): LeadSubmitErrorCode {
       if (flat.includes("phone_velocity")) return "phone_velocity";
       if (flat.includes("kvkk")) return "kvkk_required";
       if (flat.includes("phone")) return "phone_invalid";
+      if (flat.includes("contact_preference")) {
+        return "invalid_contact_preference";
+      }
       if (flat.includes("target_teacher")) return "invalid_target_teacher";
       if (flat.includes("slug")) return "invalid_slug";
     }

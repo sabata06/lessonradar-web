@@ -8,7 +8,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   AlertCircleIcon,
   ArrowRight01Icon,
+  BubbleChatIcon,
   CheckmarkCircle02Icon,
+  PhoneOff01Icon,
+  TelephoneIcon,
+  WhatsappIcon,
 } from "@hugeicons/core-free-icons";
 
 import { useRouter } from "@/i18n/navigation";
@@ -32,6 +36,8 @@ import {
   leadRequestSchema,
   STUDENT_LEVELS,
   MODALITIES,
+  CONTACT_PREFERENCES,
+  type ContactPreference,
   type LeadRequestInput,
   type LeadRequestPayload,
   type LeadSubmitErrorCode,
@@ -147,6 +153,7 @@ export function LeadForm({
       preferredSchedule: "",
       notes: "",
       contactPhone: "",
+      customerContactPreference: "any",
       consentKvkk: false as unknown as true,
     },
   });
@@ -265,6 +272,8 @@ export function LeadForm({
         return t("errors.invalid_slug");
       case "invalid_target_teacher":
         return t("errors.invalid_target_teacher");
+      case "invalid_contact_preference":
+        return t("errors.invalid_contact_preference");
       case "network_error":
         return t("errors.network");
       default:
@@ -558,11 +567,46 @@ export function LeadForm({
         </FieldRow>
       </FieldGroup>
 
-      {/* Section 4 — contact */}
+      {/* Section 4 — contact preference + phone + KVKK */}
       <FieldGroup
         title={t("sections.contact.title")}
         description={t("sections.contact.description")}
       >
+        <FieldRow
+          label={t("fields.contact_preference.label")}
+          error={
+            errors.customerContactPreference?.message === "contact_preference_required"
+              ? t("errors.contact_preference_required")
+              : errors.customerContactPreference?.message
+          }
+          hint={t("fields.contact_preference.hint")}
+        >
+          <Controller
+            control={control}
+            name="customerContactPreference"
+            render={({ field }) => (
+              <div
+                role="radiogroup"
+                aria-label={t("fields.contact_preference.label")}
+                className="grid gap-2 sm:grid-cols-2"
+              >
+                {CONTACT_PREFERENCES.map((pref) => (
+                  <ContactPreferenceCard
+                    key={pref}
+                    value={pref}
+                    checked={field.value === pref}
+                    onSelect={() => field.onChange(pref)}
+                    title={t(`fields.contact_preference.options.${pref}.title`)}
+                    description={t(
+                      `fields.contact_preference.options.${pref}.description`,
+                    )}
+                  />
+                ))}
+              </div>
+            )}
+          />
+        </FieldRow>
+
         <FieldRow
           label={t("fields.phone.label")}
           error={
@@ -674,6 +718,67 @@ function FieldGroup({
       )}
       <div className="mt-4 space-y-4">{children}</div>
     </fieldset>
+  );
+}
+
+const PREFERENCE_ICONS: Record<ContactPreference, typeof BubbleChatIcon> = {
+  in_app: BubbleChatIcon,
+  phone_reveal: TelephoneIcon,
+  whatsapp_reveal: WhatsappIcon,
+  any: PhoneOff01Icon,
+};
+
+function ContactPreferenceCard({
+  value,
+  checked,
+  onSelect,
+  title,
+  description,
+}: {
+  value: ContactPreference;
+  checked: boolean;
+  onSelect: () => void;
+  title: string;
+  description: string;
+}) {
+  const Icon = PREFERENCE_ICONS[value];
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={checked}
+      onClick={onSelect}
+      className={cn(
+        "flex min-h-[5.5rem] items-start gap-3 rounded-xl border p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+        checked
+          ? "border-brand bg-brand-soft/40 shadow-card"
+          : "border-border bg-card hover:border-brand/40",
+      )}
+    >
+      <span
+        className={cn(
+          "mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg transition-colors",
+          checked
+            ? "bg-brand text-white"
+            : "bg-muted text-muted-foreground",
+        )}
+      >
+        <HugeiconsIcon icon={Icon} size={16} strokeWidth={2} />
+      </span>
+      <span className="min-w-0 flex-1 space-y-0.5">
+        <span
+          className={cn(
+            "block text-sm font-semibold",
+            checked ? "text-foreground" : "text-foreground",
+          )}
+        >
+          {title}
+        </span>
+        <span className="block text-xs leading-relaxed text-muted-foreground">
+          {description}
+        </span>
+      </span>
+    </button>
   );
 }
 
