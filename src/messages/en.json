@@ -870,6 +870,18 @@
     }
   },
   "panel": {
+    "messages": {
+      "meta_title": "Messages",
+      "meta_description": "All your conversations in one place — pick up where you left off.",
+      "title": "Messages",
+      "subtitle": "Every conversation you've replied to or received a reply on is listed here.",
+      "empty": {
+        "title": "No conversations yet",
+        "body": "When you start a chat with a tutor or student, it appears here."
+      },
+      "network_error_title": "Couldn't load messages",
+      "network_error_body": "We can't reach the server. Try again shortly."
+    },
     "common": {
       "soon_pill": "Coming soon",
       "greeting": "Hi {name}"

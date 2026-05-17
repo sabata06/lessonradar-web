@@ -123,3 +123,37 @@ export type MarkReadErrorCode =
 export type MarkReadResponse =
   | { ok: true; receipts: ThreadReadReceipts }
   | { ok: false; error: MarkReadErrorCode; status?: number };
+
+/* ──────────────────────── Thread list ──────────────────────── */
+
+/**
+ * Single row in the WhatsApp-style "Mesajlarım" inbox. Backend returns the
+ * OTHER participant's display info so both customer and teacher viewers
+ * render the same compact row shape.
+ */
+export interface ThreadListItem {
+  uuid: string;
+  recipient_uuid: string;
+  lead_uuid: string;
+  lead_discipline_name: string | null;
+  other_display_name: string;
+  other_avatar_url: string | null;
+  other_role: "customer" | "teacher";
+  last_message_preview: string | null;
+  last_message_at: string | null;
+  last_message_sender_role: MessageSenderRole | null;
+  unread_count: number;
+  connection_state: ThreadConnectionState;
+  updated_at: string;
+}
+
+export interface ThreadListPayload {
+  count: number;
+  results: ThreadListItem[];
+}
+
+export type ThreadListFetchOutcome =
+  | { ok: true; data: ThreadListPayload }
+  | { ok: false; reason: "unauthorized" }
+  | { ok: false; reason: "forbidden" }
+  | { ok: false; reason: "network_error" };

@@ -874,6 +874,18 @@
       "soon_pill": "Yakında",
       "greeting": "Merhaba {name}"
     },
+    "messages": {
+      "meta_title": "Mesajlarım",
+      "meta_description": "Tüm konuşmalarını tek yerde gör ve mesajlaşmaya devam et.",
+      "title": "Mesajlarım",
+      "subtitle": "Yanıt verdiğin veya yanıt aldığın tüm konuşmalar burada listelenir.",
+      "empty": {
+        "title": "Henüz mesaj yok",
+        "body": "Öğretmen veya öğrenci ile bir konuşma başlatıldığında burada görünecek."
+      },
+      "network_error_title": "Mesajlar şu an yüklenemiyor",
+      "network_error_body": "Sunucuya ulaşamıyoruz. Biraz sonra tekrar dene."
+    },
     "customer": {
       "meta_title": "Panelim",
       "meta_description": "LessonRadar hesabını yönet — talepler, teklifler, ödemeler.",

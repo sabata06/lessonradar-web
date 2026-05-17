@@ -63,6 +63,7 @@ export const ENDPOINTS = {
   // ── B8 Connect & Messaging (LIVE backend 2026-05-17) ────────────────────
   LEAD_CUSTOMER_CONNECT: (leadUuid: string, recipientUuid: string) =>
     `/api/customer/leads/${encodeURIComponent(leadUuid)}/offers/${encodeURIComponent(recipientUuid)}/connect/`,
+  MESSAGES_THREAD_LIST: "/api/messages/threads/",
   MESSAGES_THREAD: (threadUuid: string) =>
     `/api/messages/threads/${encodeURIComponent(threadUuid)}/`,
   MESSAGES_SEND: (threadUuid: string) =>
