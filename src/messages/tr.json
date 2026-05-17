@@ -1084,6 +1084,7 @@
       "features": {
         "requests_title": "Gelen ders talepleri",
         "requests_description": "Şehrindeki yeni talepleri görüp tek tıkla teklif gönder.",
+        "requests_cta": "Talepleri aç",
         "schedule_title": "Müsaitlik takvimi",
         "schedule_description": "Hangi gün/saat aralıklarında ders verebileceğini paylaş.",
         "earnings_title": "Kazançlar ve ödemeler",

@@ -1084,6 +1084,7 @@
       "features": {
         "requests_title": "Incoming requests",
         "requests_description": "See new lesson requests in your city and send an offer in one tap.",
+        "requests_cta": "Open inbox",
         "schedule_title": "Availability calendar",
         "schedule_description": "Share the days and time slots when you're free to teach.",
         "earnings_title": "Earnings & payouts",
