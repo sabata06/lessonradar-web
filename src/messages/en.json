@@ -713,7 +713,8 @@
       "register_link": "Create one for free",
       "or": "or",
       "google": "Continue with Google",
-      "apple": "Continue with Apple"
+      "apple": "Continue with Apple",
+      "or_separator": "or"
     },
     "register": {
       "meta_title": "Sign up",
@@ -736,7 +737,8 @@
       "have_account": "Already have an account?",
       "login_link": "Sign in",
       "verification_notice": "We'll send a 6-digit verification code to your email after sign-up.",
-      "teacher_note": "Want to register as a tutor? Apply through <a>Become a Tutor</a> instead."
+      "teacher_note": "Want to register as a tutor? Apply through <a>Become a Tutor</a> instead.",
+      "or_separator": "or"
     },
     "verify": {
       "meta_title": "Verify your email",
@@ -874,6 +876,18 @@
       "reset_failed": "Couldn't reset your password. Please try again.",
       "password_confirm_mismatch": "Passwords do not match.",
       "unknown_error": "Unexpected error. Please try again."
+    },
+    "google": {
+      "errors": {
+        "rate_limited": "Too many attempts. Please try again in a few minutes.",
+        "auth_failed": "Sign in with Google failed. Please try again.",
+        "account_inactive": "Your account isn't active right now. Contact support to restore it.",
+        "account_deleted": "This account is being deleted. Reach out to support@lessonradar.com within 30 days to recover it.",
+        "upstream_error": "We couldn't reach the server. Please try again in a few seconds.",
+        "network_error": "Connection issue. Please try again.",
+        "unknown": "Sign in with Google failed. Please try again."
+      },
+      "config_missing": "Sign in with Google is disabled (NEXT_PUBLIC_GOOGLE_CLIENT_ID is unset)."
     }
   },
   "panel": {

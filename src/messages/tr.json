@@ -713,7 +713,8 @@
       "register_link": "Ücretsiz kayıt ol",
       "or": "veya",
       "google": "Google ile devam et",
-      "apple": "Apple ile devam et"
+      "apple": "Apple ile devam et",
+      "or_separator": "veya"
     },
     "register": {
       "meta_title": "Kayıt ol",
@@ -736,7 +737,8 @@
       "have_account": "Zaten hesabın var mı?",
       "login_link": "Giriş yap",
       "verification_notice": "Kayıt sonrası e-postanı doğrulamak için 6 haneli bir kod göndereceğiz.",
-      "teacher_note": "Öğretmen olarak kayıt olmak istiyorsan <a>Öğretmen Ol</a> sayfasından başvurabilirsin."
+      "teacher_note": "Öğretmen olarak kayıt olmak istiyorsan <a>Öğretmen Ol</a> sayfasından başvurabilirsin.",
+      "or_separator": "veya"
     },
     "verify": {
       "meta_title": "E-postanı doğrula",
@@ -874,6 +876,18 @@
       "reset_failed": "Şifre sıfırlama tamamlanamadı. Lütfen tekrar dene.",
       "password_confirm_mismatch": "Şifreler eşleşmiyor.",
       "unknown_error": "Beklenmeyen bir hata oluştu. Lütfen tekrar dene."
+    },
+    "google": {
+      "errors": {
+        "rate_limited": "Çok fazla deneme oldu. Birkaç dakika sonra tekrar dene.",
+        "auth_failed": "Google ile giriş tamamlanamadı. Lütfen tekrar dene.",
+        "account_inactive": "Hesabın şu an aktif değil. Destek ekibiyle iletişime geç.",
+        "account_deleted": "Bu hesap silinme sürecinde. 30 gün içinde destek@lessonradar.com ile iletişime geçerek geri alabilirsin.",
+        "upstream_error": "Sunucuya ulaşılamadı. Birkaç saniye sonra tekrar dene.",
+        "network_error": "Bağlantı sorunu. Lütfen tekrar dene.",
+        "unknown": "Google ile giriş başarısız oldu. Lütfen tekrar dene."
+      },
+      "config_missing": "Google ile giriş şu an etkin değil (NEXT_PUBLIC_GOOGLE_CLIENT_ID tanımlanmamış)."
     }
   },
   "panel": {

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
 import { Container } from "@/components/layout/Container";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -68,6 +69,14 @@ export default async function RegisterPage({ params, searchParams }: PageProps) 
         </header>
 
         <div className="rounded-2xl border border-border bg-card p-6 shadow-card md:p-8">
+          <div className="flex justify-center">
+            <GoogleSignInButton context="signup" next={next} />
+          </div>
+          <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            <span>{t("or_separator")}</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
           <RegisterForm next={next} legalUrls={legalUrls} />
         </div>
 
