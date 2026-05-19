@@ -1092,6 +1092,11 @@
             }
           }
         }
+      },
+      "mini": {
+        "completion_label": "Profil tamamlanma",
+        "edit_profile": "Profili düzenle",
+        "settings": "Ayarlar"
       }
     },
     "teacher": {
@@ -1334,24 +1339,279 @@
     },
     "settings": {
       "meta_title": "Ayarlar",
-      "meta_description": "Hesap ayarlarını yönet — profil, şifre, bildirimler ve dil tercihleri.",
-      "title": "Hesap ayarların hazırlanıyor",
-      "subtitle": "Yakında profilini, şifreni, bildirim tercihlerini ve dil seçimini buradan yöneteceksin.",
-      "features_heading": "Yakında bu sayfada",
-      "features": {
-        "profile_title": "Profil bilgileri",
-        "profile_description": "Adını, telefonunu ve ders tercihlerini güncelle.",
-        "password_title": "Şifre güvenliği",
-        "password_description": "Şifreni değiştir, oturumlarını yönet.",
-        "notifications_title": "Bildirimler",
-        "notifications_description": "E-posta ve uygulama bildirimlerini özelleştir.",
-        "language_title": "Dil ve bölge",
-        "language_description": "Arayüz dilini ve para birimi tercihini seç."
+      "meta_description": "Hesabını, gizliliğini ve bildirim tercihlerini bir bakışta yönet.",
+      "title": "Hesap ayarları",
+      "subtitle": "Profilinin görünürlüğünü, iletişim tercihlerini ve hesap güvenliğini buradan kontrol edebilirsin.",
+      "sections_heading": "Hızlı erişim",
+      "nav": {
+        "aria_label": "Ayarlar bölümleri",
+        "profile": "Profilim",
+        "password": "Şifre",
+        "notifications": "Bildirimler",
+        "account": "Hesap"
       },
-      "danger_heading": "Hesap yönetimi",
-      "danger_title": "Hesabımı sil",
-      "danger_description": "Hesabını ve verilerini kalıcı olarak silmek istiyorsan, KVKK kapsamında bizimle iletişime geç.",
-      "danger_cta": "destek@lessonradar.com"
+      "sections": {
+        "profile": {
+          "title": "Profilim",
+          "description": "Avatar, ad-soyad, iletişim bilgileri ve eğitim detayları.",
+          "completion": "%{value} tamamlandı"
+        },
+        "password": {
+          "title": "Şifre",
+          "description": "Hesap şifreni güncelle veya ilk kez bir şifre belirle."
+        },
+        "notifications": {
+          "title": "Bildirimler",
+          "description": "Hangi olaylarda haber alacağını ve sessiz saatleri belirle."
+        },
+        "account": {
+          "title": "Hesap ve gizlilik",
+          "description": "E-posta doğrulama, dil tercihi ve hesap silme işlemleri.",
+          "email_unverified_pill": "E-posta doğrulanmadı"
+        }
+      },
+      "email_unverified": {
+        "title": "E-posta adresini doğrula",
+        "body": "Doğrulanmamış hesaplar talep oluşturamaz. Doğrulama e-postası iki dakikadan kısa sürer.",
+        "cta": "Doğrulamaya git"
+      },
+      "profile": {
+        "meta_title": "Profilim",
+        "meta_description": "Avatar, iletişim bilgileri ve eğitim detayları.",
+        "network_error": "Profil bilgileri şu an yüklenemedi. Birkaç dakika sonra tekrar dene.",
+        "unavailable": "Bu sayfa şu an gösterilemiyor. Yardım için destek@lessonradar.com adresinden bize ulaşabilirsin.",
+        "sections": {
+          "photo": {
+            "title": "Profil fotoğrafı",
+            "description": "Öğretmenler ve mesajlaşma arayüzünde görünür."
+          },
+          "identity": {
+            "title": "Kimlik bilgileri",
+            "description": "Hesabınla ilişkili temel bilgiler."
+          },
+          "phone": {
+            "title": "Telefon",
+            "description": "Sadece bağlantı kurmayı onayladığın öğretmenlerle paylaşılır."
+          },
+          "education": {
+            "title": "Eğitim bilgileri",
+            "description": "Bu bilgiler talep oluştururken öğretmenlerin doğru teklif vermesine yardım eder."
+          },
+          "parent": {
+            "title": "Veli bilgileri",
+            "description": "Öğrenci için talep oluşturuyorsan veli iletişim bilgilerini ekleyebilirsin."
+          }
+        },
+        "fields": {
+          "email": {
+            "label": "E-posta",
+            "google_locked": "Google hesabına bağlı e-posta değiştirilemez.",
+            "change_warning": "E-postanı değiştirirsen oturumun kapatılır ve yeni adrese doğrulama maili gönderilir."
+          },
+          "first_name": {
+            "label": "Ad"
+          },
+          "last_name": {
+            "label": "Soyad"
+          },
+          "phone": {
+            "label": "Telefon",
+            "placeholder": "555 555 5555",
+            "code_aria": "Ülke kodu"
+          },
+          "school": {
+            "label": "Okul"
+          },
+          "grade": {
+            "label": "Sınıf",
+            "placeholder": "Seçim yapma"
+          },
+          "subjects": {
+            "label": "İlgilendiğin dersler",
+            "hint": "Örnek: matematik, fizik, İngilizce"
+          },
+          "address": {
+            "label": "Adres"
+          },
+          "parent_name": {
+            "label": "Veli adı"
+          },
+          "parent_phone": {
+            "label": "Veli telefonu",
+            "placeholder": "555 555 5555",
+            "code_aria": "Veli telefon ülke kodu"
+          },
+          "parent_email": {
+            "label": "Veli e-postası"
+          }
+        },
+        "actions": {
+          "save": "Kaydet",
+          "saving": "Kaydediliyor…",
+          "cancel": "Geri al"
+        },
+        "status": {
+          "title": "Hesap durumu",
+          "login_method_label": "Giriş yöntemi",
+          "email_verified_label": "E-posta doğrulama",
+          "email_verified_yes": "Doğrulandı",
+          "email_verified_no": "Doğrulanmadı",
+          "saved": "Profilin güncellendi.",
+          "saved_email_changed": "Yeni e-postana doğrulama maili gönderdik. Bu adresle giriş yapmalısın."
+        },
+        "email_dialog": {
+          "title": "E-postanı değiştirmek istediğine emin misin?",
+          "body": "Yeni adresine doğrulama maili göndereceğiz: {email}. Onay verene kadar hesabın askıya alınır.",
+          "cancel": "Vazgeç",
+          "confirm": "Evet, değiştir"
+        },
+        "avatar": {
+          "upload": "Fotoğraf yükle",
+          "change": "Fotoğrafı değiştir",
+          "uploading": "Yükleniyor…",
+          "hint": "JPEG, PNG veya WebP. Kare görseller daha temiz görünür."
+        }
+      },
+      "password": {
+        "meta_title": "Şifre",
+        "meta_description": "Hesap şifreni yenile.",
+        "form_title": "Şifreni değiştir",
+        "form_subtitle": "Yeni şifren en az 8 karakter olmalı.",
+        "first_time_title": "Şifre belirle",
+        "first_time_subtitle": "Google veya Apple ile giriş yapıyorsun; istersen ek olarak bir şifre belirleyebilirsin.",
+        "network_error": "Şifre paneli şu an yüklenemedi. Birkaç dakika sonra tekrar dene.",
+        "unavailable": "Bu sayfa şu an gösterilemiyor.",
+        "oauth_notice": {
+          "title": "{provider} ile giriş yapıyorsun",
+          "body": "Şifre belirlemen şart değil. İstersen aşağıdan bir şifre oluşturup e-postayla da giriş yapabilirsin."
+        },
+        "fields": {
+          "current": {
+            "label": "Mevcut şifre"
+          },
+          "new": {
+            "label": "Yeni şifre",
+            "hint": "En az 8 karakter. Kişisel bilgilerine veya yaygın şifrelere benzemesin."
+          },
+          "confirm": {
+            "label": "Yeni şifre (tekrar)"
+          }
+        },
+        "status": {
+          "saved": "Şifren güncellendi."
+        },
+        "actions": {
+          "save": "Şifreyi kaydet",
+          "saving": "Kaydediliyor…"
+        }
+      },
+      "notifications": {
+        "meta_title": "Bildirimler",
+        "meta_description": "Push bildirimleri ve sessiz saatler.",
+        "network_error": "Bildirim ayarları şu an yüklenemedi. Birkaç dakika sonra tekrar dene.",
+        "unavailable": "Bu sayfa şu an gösterilemiyor.",
+        "sections": {
+          "general": {
+            "title": "Genel",
+            "description": "Bildirim akışını tamamen aç veya kapat."
+          },
+          "updates": {
+            "title": "Güncellemeler",
+            "description": "Hangi olaylarda haber almak istersin?"
+          },
+          "quiet": {
+            "title": "Sessiz saatler",
+            "description": "Belirli saatler arasında push gönderilmesin."
+          }
+        },
+        "toggles": {
+          "push": {
+            "title": "Push bildirimleri",
+            "description": "Uygulamadan gelen anlık bildirimlerin ana kontrolü."
+          },
+          "lesson_updates": {
+            "title": "Ders güncellemeleri",
+            "description": "Tekliflerin durumunda değişiklik olduğunda haber al."
+          },
+          "lesson_change_updates": {
+            "title": "Değişiklik talepleri",
+            "description": "Öğretmenin ders zamanı veya yöntemiyle ilgili önerileri."
+          },
+          "enrollment_updates": {
+            "title": "Talep ve kayıt bildirimleri",
+            "description": "Yeni teklifler ve öğretmenle bağlantı kurma durumları."
+          },
+          "quiet": {
+            "title": "Sessiz saatleri kullan",
+            "description": "Belirlediğin saatler arasında push bildirimi gönderilmez."
+          }
+        },
+        "fields": {
+          "quiet_start": {
+            "label": "Başlangıç"
+          },
+          "quiet_end": {
+            "label": "Bitiş"
+          }
+        },
+        "status": {
+          "saved": "Tercihin kaydedildi."
+        }
+      },
+      "account": {
+        "meta_title": "Hesap",
+        "meta_description": "E-posta doğrulama, dil tercihi ve hesap silme.",
+        "network_error": "Hesap bilgileri şu an yüklenemedi. Birkaç dakika sonra tekrar dene.",
+        "unavailable": "Bu sayfa şu an gösterilemiyor.",
+        "email": {
+          "verified_title": "E-postan doğrulandı",
+          "unverified_title": "E-posta doğrulanmadı",
+          "unverified_body": "Gönderdiğimiz e-postadaki 6 haneli kodu girerek doğrulamayı tamamlayabilirsin.",
+          "resend": {
+            "cta": "Doğrulama e-postasını yeniden gönder",
+            "sending": "Gönderiliyor…",
+            "sent": "E-posta gönderildi. Kutunu kontrol et."
+          }
+        },
+        "language": {
+          "title": "Dil tercihi",
+          "description": "Web, mobil ve e-postalarda kullanılacak dil.",
+          "placeholder": "Dil seç",
+          "options": {
+            "tr": "Türkçe",
+            "en": "İngilizce"
+          },
+          "saved": "Dil tercihi güncellendi."
+        },
+        "danger": {
+          "title": "Tehlikeli alan",
+          "description": "Aşağıdaki işlemler geri alınamaz.",
+          "delete_title": "Hesabımı sil",
+          "delete_subtitle": "Tüm taleplerin, mesajların ve profilin 30 gün içinde kalıcı olarak silinir."
+        },
+        "delete": {
+          "trigger": "Hesabımı sil",
+          "dialog_title": "Hesabını silmek üzeresin",
+          "dialog_body": "Bu işlem geri alınamaz. Onaylarsan hesabın hemen askıya alınır ve 30 gün içinde kalıcı olarak silinir.",
+          "cooling_off_notice": "Yanlışlıkla başlattıysan 30 gün içinde destek@lessonradar.com ile iletişime geçerek geri alabilirsin.",
+          "fields": {
+            "confirmation": {
+              "label": "Onaylamak için \"SİL\" yaz",
+              "hint": "Büyük harflerle aynen yazman gerekiyor."
+            },
+            "reason": {
+              "label": "Neden ayrılıyorsun?",
+              "optional": "opsiyonel",
+              "placeholder": "Görüşlerin geliştirmemize yardımcı olur."
+            }
+          },
+          "actions": {
+            "cancel": "Vazgeç",
+            "confirm": "Hesabımı sil",
+            "submitting": "İşleniyor…"
+          }
+        }
+      }
     }
   },
   "footer": {
@@ -1442,6 +1702,77 @@
       "title": "Bu metin taslak halindedir.",
       "body": "Aşağıdaki sözleşme, sektör standartları çerçevesinde hazırlanmış bir ön taslaktır. Yayına alınmadan önce avukat incelemesinden geçirilecek ve final versiyonu yüklenecektir. Bu sebeple sayfa şu an arama motorlarına dizinlenmemektedir.",
       "contact": "Sözleşme metniyle ilgili görüş ve önerileriniz için <link>{email}</link> adresine yazabilirsiniz."
+    }
+  },
+  "account": {
+    "errors": {
+      "unauthorized": "Bu işlem için oturum açman gerekiyor. Lütfen tekrar giriş yap.",
+      "forbidden": "Bu işlemi yapma yetkin yok.",
+      "not_found": "Aradığın kayıt bulunamadı.",
+      "network_error": "Bağlantı sorunu. Bir kaç saniye sonra tekrar dene.",
+      "unknown": "Beklenmedik bir hata oldu. Lütfen tekrar dene.",
+      "validation_error": "Lütfen alanları kontrol et.",
+      "field_invalid": "Bu alanı kontrol etmen gerekiyor.",
+      "invalid_value": "Geçersiz değer.",
+      "email_required": "E-posta gerekli.",
+      "email_invalid": "Geçerli bir e-posta gir.",
+      "email_too_long": "E-posta çok uzun.",
+      "email_already_in_use": "Bu e-posta zaten başka bir hesapta kullanılıyor.",
+      "first_name_required": "Ad gerekli.",
+      "first_name_too_long": "Ad çok uzun.",
+      "first_name_invalid": "Adı kontrol et.",
+      "last_name_required": "Soyad gerekli.",
+      "last_name_too_long": "Soyad çok uzun.",
+      "last_name_invalid": "Soyadı kontrol et.",
+      "phone_required": "Telefon numarası gerekli.",
+      "phone_invalid": "10 haneli telefon numarası gir (5XX XXX XX XX).",
+      "phone_code_required": "Ülke kodu gerekli.",
+      "phone_code_invalid": "Geçerli bir ülke kodu seç (örn. +90).",
+      "parent_phone_invalid": "Veli telefonunu 10 hane olarak gir.",
+      "parent_phone_code_invalid": "Veli ülke kodunu kontrol et.",
+      "parent_email_invalid": "Geçerli bir veli e-postası gir.",
+      "parent_name_too_long": "Veli adı çok uzun.",
+      "birth_date_invalid": "Doğum tarihini YYYY-AA-GG olarak gir.",
+      "address_too_long": "Adres çok uzun (en fazla 500 karakter).",
+      "school_name_too_long": "Okul adı çok uzun.",
+      "grade_invalid": "Listedeki sınıflardan birini seç.",
+      "subjects_too_long": "Ders listesi çok uzun.",
+      "locale_invalid": "Geçerli bir dil seç.",
+      "current_password_required": "Mevcut şifren gerekli.",
+      "current_password_incorrect": "Mevcut şifre hatalı.",
+      "new_password_too_short": "Yeni şifre en az 8 karakter olmalı.",
+      "new_password_too_long": "Yeni şifre çok uzun.",
+      "new_password_too_weak": "Bu şifre çok yaygın veya tahmin edilebilir. Daha güçlü bir şifre dene.",
+      "new_password_same_as_current": "Yeni şifre mevcut şifrenle aynı olamaz.",
+      "new_password_mismatch": "İki şifre alanı birbiriyle eşleşmiyor.",
+      "new_password_confirm_required": "Yeni şifreyi tekrar gir.",
+      "file_required": "Lütfen bir dosya seç.",
+      "file_too_large": "Dosya çok büyük (en fazla 10 MB).",
+      "file_type_invalid": "Sadece JPEG, PNG veya WebP yükleyebilirsin.",
+      "upload_failed": "Yükleme tamamlanamadı. Tekrar dene.",
+      "already_requested": "Bu işlem zaten başlatılmış. Lütfen e-postanı kontrol et.",
+      "confirmation_mismatch": "Onaylamak için \"SİL\" yazman gerekiyor.",
+      "reason_too_long": "Neden çok uzun (en fazla 500 karakter)."
+    },
+    "providers": {
+      "email": "E-posta",
+      "google": "Google",
+      "apple": "Apple"
+    },
+    "grade": {
+      "grade1": "1. Sınıf",
+      "grade2": "2. Sınıf",
+      "grade3": "3. Sınıf",
+      "grade4": "4. Sınıf",
+      "grade5": "5. Sınıf",
+      "grade6": "6. Sınıf",
+      "grade7": "7. Sınıf",
+      "grade8": "8. Sınıf",
+      "grade9": "9. Sınıf (Lise 1)",
+      "grade10": "10. Sınıf (Lise 2)",
+      "grade11": "11. Sınıf (Lise 3)",
+      "grade12": "12. Sınıf (Lise 4)",
+      "graduate": "Mezun / Üniversite"
     }
   }
 }

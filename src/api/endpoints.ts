@@ -32,6 +32,11 @@ export const ENDPOINTS = {
   AUTH_TEACHER_PROFILE: "/api/auth/teacher-profile/",
   AUTH_REGISTER_DEVICE: "/api/auth/register-device/",
   AUTH_LOGOUT: "/api/auth/logout/",
+  AUTH_DELETE_ACCOUNT: "/api/auth/delete-account/",
+
+  // ── Notification preferences (B6 customer dashboard real) ──────────────
+  ACCOUNT_NOTIFICATIONS: "/api/notification-preferences/",
+  ACCOUNT_NOTIFICATIONS_CHOICES: "/api/notification-preferences/choices/",
 
   // ── Marketplace public (LIVE as of B3.1.A–D, B3.4) ──────────────────────
   MARKETPLACE_TAXONOMY: "/api/marketplace/taxonomy/",

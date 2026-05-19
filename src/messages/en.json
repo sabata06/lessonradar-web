@@ -1092,6 +1092,11 @@
             }
           }
         }
+      },
+      "mini": {
+        "completion_label": "Profile completion",
+        "edit_profile": "Edit profile",
+        "settings": "Settings"
       }
     },
     "teacher": {
@@ -1334,24 +1339,279 @@
     },
     "settings": {
       "meta_title": "Settings",
-      "meta_description": "Manage your account settings — profile, password, notifications, and language preferences.",
-      "title": "Your settings are on the way",
-      "subtitle": "Soon you'll manage your profile, password, notification preferences and language — all from here.",
-      "features_heading": "Coming to this page",
-      "features": {
-        "profile_title": "Profile details",
-        "profile_description": "Update your name, phone, and lesson preferences.",
-        "password_title": "Password & security",
-        "password_description": "Change your password and manage active sessions.",
-        "notifications_title": "Notifications",
-        "notifications_description": "Customize email and in-app notifications.",
-        "language_title": "Language & region",
-        "language_description": "Pick your interface language and currency preference."
+      "meta_description": "Manage your account, privacy, and notification preferences.",
+      "title": "Account settings",
+      "subtitle": "Control your profile visibility, contact preferences, and account security from here.",
+      "sections_heading": "Quick access",
+      "nav": {
+        "aria_label": "Settings sections",
+        "profile": "Profile",
+        "password": "Password",
+        "notifications": "Notifications",
+        "account": "Account"
       },
-      "danger_heading": "Account management",
-      "danger_title": "Delete my account",
-      "danger_description": "If you want to permanently delete your account and data, contact us under KVKK / GDPR.",
-      "danger_cta": "support@lessonradar.com"
+      "sections": {
+        "profile": {
+          "title": "Profile",
+          "description": "Avatar, name, contact info, and education details.",
+          "completion": "{value}% complete"
+        },
+        "password": {
+          "title": "Password",
+          "description": "Change your password or set one for the first time."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "Choose what you get notified about and set quiet hours."
+        },
+        "account": {
+          "title": "Account & privacy",
+          "description": "Email verification, language, and account deletion.",
+          "email_unverified_pill": "Email not verified"
+        }
+      },
+      "email_unverified": {
+        "title": "Verify your email address",
+        "body": "Unverified accounts can't submit requests. Verification takes less than two minutes.",
+        "cta": "Go to verification"
+      },
+      "profile": {
+        "meta_title": "Profile",
+        "meta_description": "Avatar, contact info, and education details.",
+        "network_error": "Profile data couldn't be loaded right now. Please try again in a few minutes.",
+        "unavailable": "This page is unavailable. For help, contact support@lessonradar.com.",
+        "sections": {
+          "photo": {
+            "title": "Profile photo",
+            "description": "Visible to teachers and inside messaging threads."
+          },
+          "identity": {
+            "title": "Identity",
+            "description": "Basic info linked to your account."
+          },
+          "phone": {
+            "title": "Phone",
+            "description": "Shared only with teachers you choose to connect with."
+          },
+          "education": {
+            "title": "Education",
+            "description": "Helps teachers give you better quotes when you submit a request."
+          },
+          "parent": {
+            "title": "Parent / guardian",
+            "description": "If you're requesting for a student, you can add a guardian's contact."
+          }
+        },
+        "fields": {
+          "email": {
+            "label": "Email",
+            "google_locked": "Email is locked because the account is linked to Google.",
+            "change_warning": "Changing your email will sign you out and send a verification link to the new address."
+          },
+          "first_name": {
+            "label": "First name"
+          },
+          "last_name": {
+            "label": "Last name"
+          },
+          "phone": {
+            "label": "Phone",
+            "placeholder": "555 555 5555",
+            "code_aria": "Country code"
+          },
+          "school": {
+            "label": "School"
+          },
+          "grade": {
+            "label": "Grade",
+            "placeholder": "Select"
+          },
+          "subjects": {
+            "label": "Subjects of interest",
+            "hint": "e.g. math, physics, English"
+          },
+          "address": {
+            "label": "Address"
+          },
+          "parent_name": {
+            "label": "Parent / guardian name"
+          },
+          "parent_phone": {
+            "label": "Parent / guardian phone",
+            "placeholder": "555 555 5555",
+            "code_aria": "Parent country code"
+          },
+          "parent_email": {
+            "label": "Parent / guardian email"
+          }
+        },
+        "actions": {
+          "save": "Save",
+          "saving": "Saving…",
+          "cancel": "Cancel"
+        },
+        "status": {
+          "title": "Account status",
+          "login_method_label": "Sign-in method",
+          "email_verified_label": "Email verification",
+          "email_verified_yes": "Verified",
+          "email_verified_no": "Not verified",
+          "saved": "Your profile was updated.",
+          "saved_email_changed": "We sent a verification email to the new address. Sign in with the new address to continue."
+        },
+        "email_dialog": {
+          "title": "Change your email?",
+          "body": "We'll send a verification email to {email}. Your account will be paused until you confirm.",
+          "cancel": "Cancel",
+          "confirm": "Yes, change"
+        },
+        "avatar": {
+          "upload": "Upload photo",
+          "change": "Change photo",
+          "uploading": "Uploading…",
+          "hint": "JPEG, PNG, or WebP. Square images look the cleanest."
+        }
+      },
+      "password": {
+        "meta_title": "Password",
+        "meta_description": "Update your account password.",
+        "form_title": "Change your password",
+        "form_subtitle": "Your new password must be at least 8 characters.",
+        "first_time_title": "Set a password",
+        "first_time_subtitle": "You sign in with Google or Apple. You can optionally set a password to also sign in with email.",
+        "network_error": "Password settings couldn't be loaded. Please try again in a few minutes.",
+        "unavailable": "This page is unavailable.",
+        "oauth_notice": {
+          "title": "You're signed in with {provider}",
+          "body": "Setting a password is optional. If you do, you can also sign in with email."
+        },
+        "fields": {
+          "current": {
+            "label": "Current password"
+          },
+          "new": {
+            "label": "New password",
+            "hint": "At least 8 characters. Avoid common or personal patterns."
+          },
+          "confirm": {
+            "label": "New password (confirm)"
+          }
+        },
+        "status": {
+          "saved": "Your password was updated."
+        },
+        "actions": {
+          "save": "Save password",
+          "saving": "Saving…"
+        }
+      },
+      "notifications": {
+        "meta_title": "Notifications",
+        "meta_description": "Push notifications and quiet hours.",
+        "network_error": "Notification settings couldn't be loaded. Please try again in a few minutes.",
+        "unavailable": "This page is unavailable.",
+        "sections": {
+          "general": {
+            "title": "General",
+            "description": "Turn the entire notification stream on or off."
+          },
+          "updates": {
+            "title": "Updates",
+            "description": "Choose which events trigger a notification."
+          },
+          "quiet": {
+            "title": "Quiet hours",
+            "description": "Don't send push during the hours you choose."
+          }
+        },
+        "toggles": {
+          "push": {
+            "title": "Push notifications",
+            "description": "Master toggle for instant push notifications."
+          },
+          "lesson_updates": {
+            "title": "Lesson updates",
+            "description": "Hear when the status of your offers changes."
+          },
+          "lesson_change_updates": {
+            "title": "Schedule change requests",
+            "description": "Teacher suggestions for time or modality changes."
+          },
+          "enrollment_updates": {
+            "title": "Requests & connections",
+            "description": "New offers and teacher connection updates."
+          },
+          "quiet": {
+            "title": "Use quiet hours",
+            "description": "No push notifications between your chosen hours."
+          }
+        },
+        "fields": {
+          "quiet_start": {
+            "label": "Start"
+          },
+          "quiet_end": {
+            "label": "End"
+          }
+        },
+        "status": {
+          "saved": "Preference saved."
+        }
+      },
+      "account": {
+        "meta_title": "Account",
+        "meta_description": "Email verification, language, and account deletion.",
+        "network_error": "Account info couldn't be loaded. Please try again in a few minutes.",
+        "unavailable": "This page is unavailable.",
+        "email": {
+          "verified_title": "Your email is verified",
+          "unverified_title": "Email not verified",
+          "unverified_body": "Enter the 6-digit code from your email to complete verification.",
+          "resend": {
+            "cta": "Resend verification email",
+            "sending": "Sending…",
+            "sent": "Email sent. Please check your inbox."
+          }
+        },
+        "language": {
+          "title": "Language",
+          "description": "Used across web, mobile, and emails.",
+          "placeholder": "Select language",
+          "options": {
+            "tr": "Turkish",
+            "en": "English"
+          },
+          "saved": "Language updated."
+        },
+        "danger": {
+          "title": "Danger zone",
+          "description": "The actions below cannot be undone.",
+          "delete_title": "Delete account",
+          "delete_subtitle": "All your requests, messages, and profile will be permanently deleted within 30 days."
+        },
+        "delete": {
+          "trigger": "Delete account",
+          "dialog_title": "You're about to delete your account",
+          "dialog_body": "This cannot be undone. Once confirmed, your account is suspended immediately and permanently deleted within 30 days.",
+          "cooling_off_notice": "Started by mistake? You have 30 days to reach out to support@lessonradar.com to undo this.",
+          "fields": {
+            "confirmation": {
+              "label": "Type \"SİL\" to confirm",
+              "hint": "You must type it in capital Turkish letters."
+            },
+            "reason": {
+              "label": "Why are you leaving?",
+              "optional": "optional",
+              "placeholder": "Your feedback helps us improve."
+            }
+          },
+          "actions": {
+            "cancel": "Cancel",
+            "confirm": "Delete my account",
+            "submitting": "Processing…"
+          }
+        }
+      }
     }
   },
   "footer": {
@@ -1442,6 +1702,77 @@
       "title": "This document is a draft.",
       "body": "The agreement below is a preliminary draft prepared in line with industry standards. It will be reviewed by counsel before publication, and the final version will replace this draft. For that reason this page is currently not indexed by search engines.",
       "contact": "For comments or questions about this draft, please write to <link>{email}</link>."
+    }
+  },
+  "account": {
+    "errors": {
+      "unauthorized": "You need to be signed in. Please sign in again.",
+      "forbidden": "You don't have permission for this.",
+      "not_found": "The record you're looking for wasn't found.",
+      "network_error": "Connection issue. Please try again in a few seconds.",
+      "unknown": "Unexpected error. Please try again.",
+      "validation_error": "Please check the fields and try again.",
+      "field_invalid": "Please check this field.",
+      "invalid_value": "Invalid value.",
+      "email_required": "Email is required.",
+      "email_invalid": "Enter a valid email.",
+      "email_too_long": "Email is too long.",
+      "email_already_in_use": "This email is already in use by another account.",
+      "first_name_required": "First name is required.",
+      "first_name_too_long": "First name is too long.",
+      "first_name_invalid": "Please check your first name.",
+      "last_name_required": "Last name is required.",
+      "last_name_too_long": "Last name is too long.",
+      "last_name_invalid": "Please check your last name.",
+      "phone_required": "Phone number is required.",
+      "phone_invalid": "Enter a 10-digit phone (5XX XXX XX XX).",
+      "phone_code_required": "Country code is required.",
+      "phone_code_invalid": "Pick a valid country code (e.g. +90).",
+      "parent_phone_invalid": "Enter parent phone as 10 digits.",
+      "parent_phone_code_invalid": "Check the parent country code.",
+      "parent_email_invalid": "Enter a valid parent email.",
+      "parent_name_too_long": "Parent name is too long.",
+      "birth_date_invalid": "Enter date of birth as YYYY-MM-DD.",
+      "address_too_long": "Address is too long (max 500 characters).",
+      "school_name_too_long": "School name is too long.",
+      "grade_invalid": "Pick a grade from the list.",
+      "subjects_too_long": "Subject list is too long.",
+      "locale_invalid": "Pick a valid language.",
+      "current_password_required": "Your current password is required.",
+      "current_password_incorrect": "Current password is incorrect.",
+      "new_password_too_short": "New password must be at least 8 characters.",
+      "new_password_too_long": "New password is too long.",
+      "new_password_too_weak": "This password is too common or guessable. Pick a stronger one.",
+      "new_password_same_as_current": "New password can't be the same as your current one.",
+      "new_password_mismatch": "The two password fields don't match.",
+      "new_password_confirm_required": "Confirm your new password.",
+      "file_required": "Please pick a file.",
+      "file_too_large": "File is too large (max 10 MB).",
+      "file_type_invalid": "Only JPEG, PNG, or WebP files are allowed.",
+      "upload_failed": "Upload couldn't complete. Please try again.",
+      "already_requested": "This is already in progress. Please check your email.",
+      "confirmation_mismatch": "Type \"SİL\" to confirm.",
+      "reason_too_long": "Reason is too long (max 500 characters)."
+    },
+    "providers": {
+      "email": "Email",
+      "google": "Google",
+      "apple": "Apple"
+    },
+    "grade": {
+      "grade1": "1st grade",
+      "grade2": "2nd grade",
+      "grade3": "3rd grade",
+      "grade4": "4th grade",
+      "grade5": "5th grade",
+      "grade6": "6th grade",
+      "grade7": "7th grade",
+      "grade8": "8th grade",
+      "grade9": "9th grade (HS year 1)",
+      "grade10": "10th grade (HS year 2)",
+      "grade11": "11th grade (HS year 3)",
+      "grade12": "12th grade (HS year 4)",
+      "graduate": "Graduate / university"
     }
   }
 }

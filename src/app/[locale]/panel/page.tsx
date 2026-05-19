@@ -3,9 +3,6 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight01Icon,
-  ClipboardIcon,
-  Coins01Icon,
-  InboxIcon,
   MessageAdd01Icon,
   Search01Icon,
 } from "@hugeicons/core-free-icons";
@@ -13,9 +10,11 @@ import {
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
 import { CustomerLeadsSection } from "@/components/panel/CustomerLeadsSection";
+import { CustomerMiniProfile } from "@/components/panel/CustomerMiniProfile";
 import { Link } from "@/i18n/navigation";
 import { type Locale } from "@/i18n/routing";
 import { requireAuth } from "@/lib/auth/guards";
+import { fetchAccountSummary } from "@/lib/account/server";
 import { fetchCustomerLeads } from "@/lib/lead/customer-leads";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
@@ -46,7 +45,6 @@ export default async function CustomerPanelPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  // Customer-or-admin only. Teachers bounce to /panel-ogretmen via roleHomepage.
   const user = await requireAuth({
     role: ["customer", "admin"],
     next: "/panel",
@@ -54,13 +52,18 @@ export default async function CustomerPanelPage({ params }: PageProps) {
 
   const t = await getTranslations("panel.customer");
   const tCommon = await getTranslations("panel.common");
-  const leads = await fetchCustomerLeads();
+  const [leads, summary] = await Promise.all([
+    fetchCustomerLeads(),
+    fetchAccountSummary(),
+  ]);
 
   const greetingName = user.firstName?.trim() || user.email.split("@")[0];
+  const profile = summary.kind === "ok" ? summary.data.profile : null;
+  const customer = summary.kind === "ok" ? summary.data.customer : null;
 
   return (
     <Container className="py-10 md:py-16">
-      <div className="mx-auto max-w-3xl space-y-10">
+      <div className="mx-auto max-w-3xl space-y-8">
         <header className="space-y-2">
           <p className="text-sm font-medium text-muted-foreground">
             {tCommon("greeting", { name: greetingName })}
@@ -73,36 +76,11 @@ export default async function CustomerPanelPage({ params }: PageProps) {
           </p>
         </header>
 
-        <CustomerLeadsSection data={leads} locale={locale} />
+        {profile ? (
+          <CustomerMiniProfile profile={profile} customer={customer} />
+        ) : null}
 
-        <section aria-labelledby="features-heading" className="space-y-4">
-          <h2
-            id="features-heading"
-            className="text-sm font-semibold uppercase tracking-wider text-muted-foreground"
-          >
-            {t("features_heading")}
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <FeatureCard
-              icon={InboxIcon}
-              title={t("features.offers_title")}
-              description={t("features.offers_description")}
-              soonLabel={tCommon("soon_pill")}
-            />
-            <FeatureCard
-              icon={ClipboardIcon}
-              title={t("features.history_title")}
-              description={t("features.history_description")}
-              soonLabel={tCommon("soon_pill")}
-            />
-            <FeatureCard
-              icon={Coins01Icon}
-              title={t("features.payments_title")}
-              description={t("features.payments_description")}
-              soonLabel={tCommon("soon_pill")}
-            />
-          </div>
-        </section>
+        <CustomerLeadsSection data={leads} locale={locale} />
 
         <section
           aria-labelledby="actions-heading"
@@ -138,34 +116,8 @@ export default async function CustomerPanelPage({ params }: PageProps) {
   );
 }
 
-interface FeatureCardProps {
-  icon: typeof InboxIcon;
-  title: string;
-  description: string;
-  soonLabel: string;
-}
-
-function FeatureCard({ icon, title, description, soonLabel }: FeatureCardProps) {
-  return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
-      <div className="flex items-center justify-between gap-2">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <HugeiconsIcon icon={icon} size={18} strokeWidth={2} />
-        </span>
-        <span className="rounded-full bg-action/15 px-2.5 py-0.5 text-xs font-semibold text-action-foreground">
-          {soonLabel}
-        </span>
-      </div>
-      <h3 className="mt-3 text-sm font-semibold text-foreground">{title}</h3>
-      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-        {description}
-      </p>
-    </div>
-  );
-}
-
 interface ActionRowProps {
-  icon: typeof InboxIcon;
+  icon: typeof MessageAdd01Icon;
   title: string;
   description: string;
   cta: string;
