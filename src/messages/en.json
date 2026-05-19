@@ -888,6 +888,9 @@
         "unknown": "Sign in with Google failed. Please try again."
       },
       "config_missing": "Sign in with Google is disabled (NEXT_PUBLIC_GOOGLE_CLIENT_ID is unset)."
+    },
+    "pwned": {
+      "warning": "⚠️ This password has appeared in {count} known breaches. Picking a stronger one keeps your account safer."
     }
   },
   "panel": {

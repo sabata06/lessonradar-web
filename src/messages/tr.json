@@ -888,6 +888,9 @@
         "unknown": "Google ile giriş başarısız oldu. Lütfen tekrar dene."
       },
       "config_missing": "Google ile giriş şu an etkin değil (NEXT_PUBLIC_GOOGLE_CLIENT_ID tanımlanmamış)."
+    },
+    "pwned": {
+      "warning": "⚠️ Bu şifre, daha önce {count} kez bilinen veri sızıntısında görülmüş. Daha güçlü bir şifre seçmen güvenliğin için önemli."
     }
   },
   "panel": {

@@ -26,6 +26,8 @@ import {
   type TurnstileWidgetHandle,
 } from "./TurnstileWidget";
 import { RecoveryCard } from "./RecoveryCard";
+import { PwnedPasswordWarning } from "./PwnedPasswordWarning";
+import { usePwnedPasswordCheck } from "@/hooks/usePwnedPasswordCheck";
 
 interface RegisterFormProps {
   /** Server-validated next path (already passed through `safeRedirect`). */
@@ -86,6 +88,7 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
   });
 
   const passwordValue = watch("password");
+  const { count: pwnedCount } = usePwnedPasswordCheck(passwordValue ?? "");
   const emailValue = watch("email");
   const strength = useMemo(() => computePasswordStrength(passwordValue), [passwordValue]);
 
@@ -344,6 +347,7 @@ export function RegisterForm({ next, legalUrls }: RegisterFormProps) {
       {passwordValue && passwordValue.length > 0 && (
         <PasswordStrengthMeter score={strength.score} label={strength.label} />
       )}
+      <PwnedPasswordWarning count={pwnedCount} />
 
       <FormField
         label={t("register.password_confirm_label")}

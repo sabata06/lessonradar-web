@@ -24,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { cn } from "@/lib/utils";
+import { usePwnedPasswordCheck } from "@/hooks/usePwnedPasswordCheck";
+import { PwnedPasswordWarning } from "./PwnedPasswordWarning";
 
 interface ResetPasswordFormProps {
   /** Pre-filled email from `?email=` query (forgot-password redirect). */
@@ -93,6 +95,7 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
   }, [code, setValue]);
 
   const passwordValue = watch("newPassword") ?? "";
+  const { count: pwnedCount } = usePwnedPasswordCheck(passwordValue);
   const strength = useMemo(
     () => computePasswordStrength(passwordValue),
     [passwordValue],
@@ -336,6 +339,7 @@ export function ResetPasswordForm({ initialEmail }: ResetPasswordFormProps) {
         {passwordValue && (
           <PasswordStrengthMeter score={strength.score} label={strength.label} />
         )}
+        <PwnedPasswordWarning count={pwnedCount} />
         <p className="text-xs text-muted-foreground">{t("new_password_help")}</p>
         {errors.newPassword?.message && (
           <p

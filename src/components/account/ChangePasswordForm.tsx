@@ -13,6 +13,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PwnedPasswordWarning } from "@/components/auth/PwnedPasswordWarning";
+import { usePwnedPasswordCheck } from "@/hooks/usePwnedPasswordCheck";
 import { changePasswordRequest } from "@/lib/account/client";
 import { buildPasswordFormSchema } from "@/lib/account/schemas";
 import type { ChangePasswordErrorCode } from "@/lib/account/types";
@@ -40,6 +42,7 @@ export function ChangePasswordForm({ hasUsablePassword }: Props) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     reset,
   } = useForm<FormInput, unknown, FormOutput>({
@@ -50,6 +53,9 @@ export function ChangePasswordForm({ hasUsablePassword }: Props) {
       newPasswordConfirm: "",
     } as FormInput,
   });
+
+  const newPasswordValue = (watch("newPassword") as string) ?? "";
+  const { count: pwnedCount } = usePwnedPasswordCheck(newPasswordValue);
 
   function fieldError(message: unknown): string | undefined {
     if (typeof message !== "string") return undefined;
@@ -116,6 +122,7 @@ export function ChangePasswordForm({ hasUsablePassword }: Props) {
           autoComplete="new-password"
           {...register("newPassword")}
         />
+        <PwnedPasswordWarning count={pwnedCount} />
       </Field>
 
       <Field
