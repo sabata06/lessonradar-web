@@ -8,6 +8,7 @@ import {
 } from "@hugeicons/core-free-icons";
 
 import { Link } from "@/i18n/navigation";
+import { resolveAvatarSrc } from "@/lib/account/avatar";
 import type {
   AccountCustomerProfilePayload,
   AccountProfilePayload,
@@ -30,8 +31,10 @@ export async function CustomerMiniProfile({ profile, customer }: Props) {
   const displayName =
     [profile.first_name, profile.last_name].filter(Boolean).join(" ") ||
     profile.email.split("@")[0];
-  const avatarUrl =
-    customer?.profile_image_url ?? profile.profile_image_url ?? profile.avatar_url;
+  const avatarUrl = resolveAvatarSrc({
+    uploadedUrl: customer?.profile_image_url || profile.profile_image_url,
+    oauthUrl: profile.avatar_url,
+  });
   const initials = displayName
     .trim()
     .split(/\s+/)

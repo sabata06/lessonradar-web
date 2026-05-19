@@ -15,6 +15,7 @@ import { AvatarUpload } from "@/components/account/AvatarUpload";
 import { ProfileForm } from "@/components/account/ProfileForm";
 import { type Locale } from "@/i18n/routing";
 import { requireAuth } from "@/lib/auth/guards";
+import { resolveAvatarSrc } from "@/lib/account/avatar";
 import { fetchAccountSummary } from "@/lib/account/server";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
@@ -96,9 +97,11 @@ export default async function ProfilePage({ params }: PageProps) {
         </p>
         <div className="mt-4">
           <AvatarUpload
-            initialImageUrl={
-              customer?.profile_image_url || profile.profile_image_url
-            }
+            initialImageUrl={resolveAvatarSrc({
+              uploadedUrl:
+                customer?.profile_image_url || profile.profile_image_url,
+              oauthUrl: profile.avatar_url,
+            })}
             fallbackName={fallbackName}
           />
         </div>

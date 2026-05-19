@@ -13,6 +13,7 @@ import {
 
 import { uploadAvatarRequest } from "@/lib/account/client";
 import type { AvatarUploadErrorCode } from "@/lib/account/types";
+import { useAuth } from "@/lib/auth/client";
 import { compressImage } from "@/lib/image/compress";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,7 @@ export function AvatarUpload({ initialImageUrl, fallbackName }: Props) {
   const t = useTranslations("panel.settings.profile.avatar");
   const tErrors = useTranslations("account.errors");
   const router = useRouter();
+  const { refresh: refreshAuth } = useAuth();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [serverUrl, setServerUrl] = useState<string | null>(initialImageUrl);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -87,8 +89,16 @@ export function AvatarUpload({ initialImageUrl, fallbackName }: Props) {
       setServerUrl(result.data.profile_image_url);
       setPreviewUrl(null);
       setSuccess(true);
-      // Refresh the surrounding page so the header avatar + completion bar
-      // pick up the new image without a full reload.
+      // Two-tier refresh so the new avatar surfaces everywhere:
+      //   1. `useAuth().refresh()` → re-hydrates the client AuthProvider,
+      //      which feeds the Header + MobileMenu avatar (they read `user`
+      //      from the context, not from the page tree).
+      //   2. `router.refresh()` → re-runs the surrounding RSC tree so
+      //      server-rendered cards (CustomerMiniProfile completion bar,
+      //      profile sub-page summary) pick up the new image URL.
+      void refreshAuth().catch(() => {
+        // Refresh failures are non-fatal — the upload still succeeded.
+      });
       startTransition(() => router.refresh());
     } catch {
       setError("upload_failed");

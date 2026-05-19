@@ -13,6 +13,7 @@ import {
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth/client";
+import { resolveAvatarSrc } from "@/lib/account/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,6 +61,10 @@ export function HeaderAuth() {
     "?";
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email;
+  const avatarSrc = resolveAvatarSrc({
+    uploadedUrl: user.profileImageUrl,
+    oauthUrl: user.avatarUrl,
+  });
 
   const handleLogout = async () => {
     setOpen(false);
@@ -79,16 +84,10 @@ export function HeaderAuth() {
           aria-label={displayName}
         >
           <Avatar className="size-7">
-            {/* Prefer OAuth photo (Google / Apple) — falls back to the
-                teacher-uploaded profile image so educators who set a
-                photo on their public profile get it in the header too.
-                Final fallback is the initials chip below. */}
-            {(user.avatarUrl || user.profileImageUrl) && (
-              <AvatarImage
-                src={(user.avatarUrl ?? user.profileImageUrl) as string}
-                alt={displayName}
-              />
-            )}
+            {/* Uploaded image wins, OAuth avatar is the fallback — see
+                `resolveAvatarSrc` for rationale. Final fallback is the
+                initials chip below. */}
+            {avatarSrc && <AvatarImage src={avatarSrc} alt={displayName} />}
             <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
               {initials}
             </AvatarFallback>

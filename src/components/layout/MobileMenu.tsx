@@ -15,6 +15,7 @@ import {
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth/client";
+import { resolveAvatarSrc } from "@/lib/account/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -91,16 +92,20 @@ export function MobileMenu() {
           <div className="border-t border-border p-4">
             <div className="mb-3 flex items-center gap-3 rounded-xl bg-muted/40 px-3 py-3">
               <Avatar className="size-10">
-                {/* Header avatar: OAuth photo first, then the
-                    teacher-uploaded profile image (so educators
-                    without Google login still see their face), then
-                    initials. */}
-                {(user.avatarUrl || user.profileImageUrl) && (
-                  <AvatarImage
-                    src={(user.avatarUrl ?? user.profileImageUrl) as string}
-                    alt={`${user.firstName} ${user.lastName}`}
-                  />
-                )}
+                {/* Uploaded image wins, OAuth avatar is the fallback —
+                    see `resolveAvatarSrc` for rationale. */}
+                {(() => {
+                  const src = resolveAvatarSrc({
+                    uploadedUrl: user.profileImageUrl,
+                    oauthUrl: user.avatarUrl,
+                  });
+                  return src ? (
+                    <AvatarImage
+                      src={src}
+                      alt={`${user.firstName} ${user.lastName}`}
+                    />
+                  ) : null;
+                })()}
                 <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
                   {`${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase() ||
                     user.email[0]?.toUpperCase() ||
