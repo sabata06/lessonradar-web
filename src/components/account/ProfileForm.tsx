@@ -8,7 +8,7 @@ import {
   useTransition,
 } from "react";
 import { useRouter } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, type Resolver, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import type { z } from "zod";
@@ -55,10 +55,13 @@ interface Props {
   customer: AccountCustomerProfilePayload | null;
 }
 
-// The combined schema is the source of truth for both the form input shape
-// (what we feed `defaultValues`) and the post-parse output (what
-// `handleSubmit` hands us). Splitting `input` / `output` lets RHF accept
-// `defaultValues: ""` for `.default("")` fields without complaining.
+// The form drives one schema or the other depending on whether the user has
+// a customer profile row. Teachers see only base profile fields (email /
+// name) because backend's `/auth/customer-profile/` is gated by
+// `IsCustomerOrAdmin`; running the customer schema in that case would
+// reject the form on phone_required even though the customer inputs aren't
+// visible. Splitting `input` / `output` lets RHF accept `defaultValues: ""`
+// for `.default("")` fields without complaining.
 type FormInput = z.input<typeof customerProfileFormSchema> &
   z.input<typeof profileFormSchema>;
 type FormOutput = z.output<typeof customerProfileFormSchema> &
@@ -105,9 +108,15 @@ export function ProfileForm({ profile, customer }: Props) {
     [profile, customer],
   );
 
-  const combinedSchema = useMemo(
-    () => profileFormSchema.and(customerProfileFormSchema),
-    [],
+  // Run the customer schema only when the user actually has a customer row;
+  // otherwise stick to base profile fields to avoid `phone_required` etc.
+  // firing on a form that doesn't even render those inputs.
+  const activeSchema = useMemo(
+    () =>
+      customer
+        ? profileFormSchema.and(customerProfileFormSchema)
+        : profileFormSchema,
+    [customer],
   );
 
   const {
@@ -119,7 +128,14 @@ export function ProfileForm({ profile, customer }: Props) {
     watch,
     getValues,
   } = useForm<FormInput, unknown, FormOutput>({
-    resolver: zodResolver(combinedSchema),
+    // Cast: when `customer === null` the schema narrows to base profile
+    // fields only, but the form values type stays wide (so the same JSX
+    // can render both shapes). The runtime parser ignores unrelated keys.
+    resolver: zodResolver(activeSchema) as unknown as Resolver<
+      FormInput,
+      unknown,
+      FormOutput
+    >,
     defaultValues: initialValues,
   });
 
@@ -326,6 +342,11 @@ export function ProfileForm({ profile, customer }: Props) {
           </div>
         </FieldGroup>
 
+        {/* Customer-specific sections — backend's `/auth/customer-profile/` is
+            gated by `IsCustomerOrAdmin`, so teachers would just get 403s on
+            save. Hide the inputs entirely instead of letting the form lie. */}
+        {customer ? (
+        <>
         {/* Phone */}
         <FieldGroup
           title={t("sections.phone.title")}
@@ -471,6 +492,8 @@ export function ProfileForm({ profile, customer }: Props) {
             <Input type="email" {...register("parentEmail")} />
           </Field>
         </FieldGroup>
+        </>
+        ) : null}
 
         <FormStatus state={submitState} t={t} />
 

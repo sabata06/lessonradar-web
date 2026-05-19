@@ -5,8 +5,8 @@ import { getSession } from "@/lib/auth/cookies";
 import { validateCsrf } from "@/lib/security/csrf";
 import { validateOrigin } from "@/lib/security/origin";
 import type {
-  AccountCustomerProfilePayload,
   AvatarUploadErrorCode,
+  AvatarUploadPayload,
   AvatarUploadResponse,
 } from "@/lib/account/types";
 
@@ -25,9 +25,11 @@ const ACCEPTED_TYPES = new Set([
 ]);
 
 /**
- * POST — upload a new profile image. Forwarded to Django as a multipart PATCH
- * on `/api/auth/customer-profile/`, since the existing endpoint accepts the
- * `profile_image` file field. Same Origin+CSRF gates as JSON mutations.
+ * POST — upload a new profile image. Role-aware proxy: teacher accounts
+ * PATCH `/api/auth/teacher-profile/`, customer/admin accounts PATCH
+ * `/api/auth/customer-profile/`. Both endpoints accept the same
+ * `profile_image` multipart field but enforce `IsTeacherOrAdmin` /
+ * `IsCustomerOrAdmin` respectively — hitting the wrong one returns 403.
  *
  * Pre-flight rejects on type / size to save bandwidth, but the server-side
  * `image_pipeline` is still the authoritative validator (magic-byte check,
@@ -91,8 +93,12 @@ export async function POST(req: Request) {
     );
   }
 
+  const targetPath =
+    session.user.role === "teacher"
+      ? ENDPOINTS.AUTH_TEACHER_PROFILE
+      : ENDPOINTS.AUTH_CUSTOMER_PROFILE;
   const url = new URL(
-    ENDPOINTS.AUTH_CUSTOMER_PROFILE.replace(/^\/+/, "/"),
+    targetPath.replace(/^\/+/, "/"),
     DJANGO_API_BASE,
   ).toString();
 
@@ -147,6 +153,6 @@ export async function POST(req: Request) {
 
   return NextResponse.json<AvatarUploadResponse>({
     ok: true,
-    data: payload as AccountCustomerProfilePayload,
+    data: payload as AvatarUploadPayload,
   });
 }

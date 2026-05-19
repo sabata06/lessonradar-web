@@ -218,8 +218,17 @@ export type CustomerProfileUpdateResponse =
       fieldErrors?: Record<string, string[]>;
     };
 
+/** Avatar upload returns whichever profile serializer the user's role maps
+ * to (customer-profile or teacher-profile). The only field consumers read is
+ * `profile_image_url`; the rest of the payload is forwarded as-is for
+ * future use without leaking serializer-specific fields into the contract. */
+export interface AvatarUploadPayload {
+  profile_image_url: string | null;
+  [key: string]: unknown;
+}
+
 export type AvatarUploadResponse =
-  | { ok: true; data: AccountCustomerProfilePayload }
+  | { ok: true; data: AvatarUploadPayload }
   | { ok: false; code: AvatarUploadErrorCode };
 
 export type ChangePasswordResponse =
